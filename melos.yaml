@@ -1,0 +1,24 @@
+name: flutter_fluent
+
+packages:
+  - packages/*
+  - packages/**
+
+ignore:
+  - packages/*/example
+  - packages/**/example
+
+scripts:
+  format:
+    run: melos exec "dart format --set-exit-if-changed lib test"
+    description: Format dart files in all packages
+  analyze:
+    run: melos exec --dir-exists="test" "flutter analyze --no-pub lib test"
+    description: Analyze dart files in all packages
+  test:
+    run: melos exec --dir-exists="test" "very_good test -j 4 --optimization --min-coverage 100 --test-randomize-ordering-seed random"
+    description: Run tests in all packages
+  coverage:
+    run: melos exec --dir-exists="test" "very_good test -j 4 --optimization --coverage --test-randomize-ordering-seed random"
+    description: Run tests and generate coverage in all packages
+  

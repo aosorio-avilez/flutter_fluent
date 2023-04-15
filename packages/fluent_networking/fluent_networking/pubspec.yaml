@@ -1,0 +1,35 @@
+name: fluent_networking
+description: Package that provides a simple way to make http requests
+version: 0.0.1
+homepage:
+publish_to: none
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fluent_sdk:
+    git:
+      url: https://github.com/aosorio-avilez/flutter_fluent.git
+      ref: main
+      path: packages/fluent_sdk
+  fluent_networking_api:
+    git:
+      url: https://github.com/aosorio-avilez/flutter_fluent.git
+      ref: main
+      path: packages/fluent_networking/fluent_networking_api
+  dio: ^5.1.1
+  equatable: ^2.0.5
+  freezed_annotation: ^2.2.0
+  flutter_loggy_dio: ^3.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^4.0.0+1
+  build_runner: ^2.3.3
+  freezed: ^2.3.2
+  mocktail: ^0.3.0

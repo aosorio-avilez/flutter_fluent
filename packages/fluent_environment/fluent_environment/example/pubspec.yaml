@@ -1,0 +1,29 @@
+name: fluent_environment_example
+description: A new Flutter project.
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fluent_sdk:
+    git:
+      url: https://github.com/aosorio-avilez/flutter_fluent.git
+      ref: main
+      path: packages/fluent_sdk
+  fluent_environment:
+    git:
+      url: https://github.com/aosorio-avilez/flutter_fluent.git
+      ref: main
+      path: packages/fluent_environment/fluent_environment
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true

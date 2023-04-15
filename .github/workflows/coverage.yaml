@@ -1,0 +1,35 @@
+name: coverage
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps: 
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v3
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
+
+      - name: ⚙️ Install Tools
+        run: ./.github/workflows/scripts/install-tools.sh
+
+      - name: 📦 Install Dependencies
+        run: melos bs
+
+      - name: 🧪 Run Tests with Coverage
+        run: melos coverage
+      
+      - name: 📊 Upload Code Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
