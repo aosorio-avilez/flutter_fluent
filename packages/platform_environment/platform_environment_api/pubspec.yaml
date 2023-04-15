@@ -1,0 +1,22 @@
+name: platform_environment_api
+description: Package that provides a way to register your application environment and display the corresponding environment
+version: 0.0.1
+homepage:
+publish_to: none
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  platform_sdk:
+    git:
+      url: https://github.com/aosorio-avilez/platform_sdk.git
+      ref: main
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^4.0.0+1

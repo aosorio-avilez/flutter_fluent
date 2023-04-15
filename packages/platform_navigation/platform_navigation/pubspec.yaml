@@ -1,0 +1,29 @@
+name: platform_navigation
+description: Package that provides a simple way to navigate within your app
+version: 0.0.1
+homepage:
+publish_to: none
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  platform_sdk:
+    git:
+      url: https://github.com/aosorio-avilez/platform_sdk.git
+      ref: main
+  platform_navigation_api:
+    path: ../platform_navigation_api
+  go_router: ^6.5.6
+  equatable: ^2.0.5
+  get_it: ^7.2.0
+  collection: ^1.17.0
+  mocktail: ^0.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^4.0.0+1

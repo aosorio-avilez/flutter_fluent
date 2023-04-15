@@ -1,0 +1,34 @@
+name: flutter_platform
+
+packages:
+  - packages/*
+  - packages/*/*
+
+command:
+  bootstrap:
+    usePubspecOverrides: false
+
+scripts:
+  format:
+    run: |
+      melos exec "dart format --set-exit-if-changed lib test"
+    description: Format dart files in all packages
+  analyze:
+    run: |
+      melos exec "flutter analyze --fatal-infos lib"
+    description: Analyze dart files in all packages
+  test:
+    run: |
+      melos exec --dir-exists="test" "flutter test --coverage --no-pub --test-randomize-ordering-seed random"
+    description: Run tests in all packages
+  coverage:
+    run: >
+      coverde rm MELOS_ROOT_PATH/coverage/filtered.lcov.info &&
+      melos exec --file-exists=coverage/lcov.info -- coverde filter --input ./coverage/lcov.info --output MELOS_ROOT_PATH/coverage/filtered.lcov.info --filters \.g\.dart
+    description: Merge all packages coverage tracefiles ignoring data related to generated files.
+  show-coverage:
+    run: >
+      genhtml coverage/filtered.lcov.info -o coverage/html &&
+      open coverage/html/index.html
+    description: Merge all packages coverage tracefiles ignoring data related to generated files.
+

@@ -1,0 +1,30 @@
+name: platform_logger
+description: Package that allows printing messages in console.
+version: 0.0.1
+homepage:
+publish_to: none
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  platform_sdk:
+    git:
+      url: https://github.com/aosorio-avilez/platform_sdk.git
+      ref: main
+  platform_logger_api:
+    git:
+      url: https://github.com/aosorio-avilez/platform_logger.git
+      ref: main
+      path: platform_logger_api
+  loggy: ^2.0.3
+  flutter_loggy: ^2.0.2
+  mocktail: ^0.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^4.0.0+1
