@@ -13,13 +13,14 @@ dependencies:
     sdk: flutter
   platform_sdk:
     git:
-      url: https://github.com/aosorio-avilez/platform_sdk.git
+      url: https://github.com/aosorio-avilez/flutter_platform.git
       ref: main
+      path: packages/platform_sdk
   platform_logger_api:
     git:
-      url: https://github.com/aosorio-avilez/platform_logger.git
+      url: https://github.com/aosorio-avilez/flutter_platform.git
       ref: main
-      path: platform_logger_api
+      path: packages/platform_logger/platform_logger_api
   loggy: ^2.0.3
   flutter_loggy: ^2.0.2
   mocktail: ^0.3.0

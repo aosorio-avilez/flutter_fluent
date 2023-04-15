@@ -13,8 +13,9 @@ dependencies:
     sdk: flutter
   platform_sdk:
     git:
-      url: https://github.com/aosorio-avilez/platform_sdk.git
+      url: https://github.com/aosorio-avilez/flutter_platform.git
       ref: main
+      path: packages/platform_sdk
 
 dev_dependencies:
   flutter_test:

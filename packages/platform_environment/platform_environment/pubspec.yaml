@@ -14,13 +14,14 @@ dependencies:
   get_it: ^7.2.0
   platform_sdk:
     git:
-      url: https://github.com/aosorio-avilez/platform_sdk.git
+      url: https://github.com/aosorio-avilez/flutter_platform.git
       ref: main
+      path: packages/platform_sdk
   platform_environment_api:
     git:
-      url: https://github.com/aosorio-avilez/platform_environment.git
+      url: https://github.com/aosorio-avilez/flutter_platform.git
       ref: main
-      path: platform_environment_api
+      path: packages/platform_environment/platform_environment_api
   mocktail: ^0.3.0
 
 dev_dependencies:
