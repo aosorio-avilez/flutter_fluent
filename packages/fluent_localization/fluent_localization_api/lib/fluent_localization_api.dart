@@ -3,4 +3,3 @@
 library fluent_localization_api;
 
 export 'src/localization_api.dart';
-export 'src/localization_extension.dart';
