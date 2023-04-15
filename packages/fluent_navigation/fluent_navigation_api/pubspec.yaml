@@ -1,0 +1,19 @@
+name: fluent_navigation_api
+description: Package that provides access to the navigation api
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^4.0.0+1
+
+flutter:

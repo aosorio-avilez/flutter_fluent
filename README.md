@@ -1,2 +1,2 @@
-## flutter_platform
-Project that contain several packages that helps flutter projects with core features
+## flutter_fluent
+FlutterFluent is a set of Flutter packages that helps Flutter apps to use core services.

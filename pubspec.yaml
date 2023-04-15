@@ -1,4 +1,4 @@
-name: flutter_platform
+name: flutter_fluent
 
 environment:
   sdk: '>=2.19.6 <3.0.0'
