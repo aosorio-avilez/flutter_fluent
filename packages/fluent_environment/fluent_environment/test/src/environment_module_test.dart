@@ -1,6 +1,5 @@
 import 'package:fluent_environment/fluent_environment.dart';
 import 'package:fluent_environment/src/api/environment_api_impl.dart';
-import 'package:fluent_environment_api/fluent_environment_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter_test/flutter_test.dart';
 
