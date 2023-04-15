@@ -5,17 +5,12 @@ import 'package:platform_sdk/platform_sdk.dart';
 class InternalNavigationApiImpl extends InternalNavigationApi {
   @override
   List<Route> getRegisteredRoutes() {
-    return GetIt.instance<List<Route>>();
+    return getApi<List<Route>>();
   }
 
   @override
   Route? getInitialRoute() {
-    var routes = <Route>[];
-
-    if (GetIt.instance.isRegistered<List<Route>>()) {
-      routes = GetIt.instance<List<Route>>();
-    }
-
+    final routes = getRegisteredRoutes();
     return routes.firstWhereOrNull((element) => element.initial);
   }
 }

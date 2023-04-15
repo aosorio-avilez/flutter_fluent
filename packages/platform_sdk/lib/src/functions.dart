@@ -1,4 +1,4 @@
-import 'package:platform_sdk/platform_sdk.dart';
+import 'package:get_it/get_it.dart';
 
 T getApi<T extends Object>() {
   return GetIt.instance<T>();

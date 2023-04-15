@@ -1,3 +1,4 @@
+import 'package:get_it/get_it.dart';
 import 'package:platform_sdk/platform_sdk.dart';
 
 class AppRegistry extends Registry {

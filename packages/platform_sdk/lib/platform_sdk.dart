@@ -1,7 +1,5 @@
-///
+/// Code base to modularize features through a service locator.
 library platform_sdk;
-
-export 'package:get_it/get_it.dart';
 
 export 'src/api/environment.dart';
 export 'src/api/module.dart';
