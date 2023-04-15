@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:fluent_environment_api/fluent_environment_api.dart';
+import 'package:fluent_environment/fluent_environment.dart';
 import 'package:fluent_networking/fluent_networking.dart';
 import 'package:fluent_networking/src/networking_api_impl.dart';
 import 'package:fluent_networking/src/rest_api_impl.dart';
