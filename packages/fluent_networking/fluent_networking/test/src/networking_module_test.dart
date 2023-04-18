@@ -1,24 +1,21 @@
 import 'package:dio/dio.dart';
-import 'package:fluent_environment/fluent_environment.dart';
 import 'package:fluent_networking/fluent_networking.dart';
-import 'package:fluent_networking/src/environment_api_mock.dart';
 import 'package:fluent_networking/src/networking_api_impl.dart';
 import 'package:fluent_networking/src/rest_api_impl.dart';
+import 'package:fluent_networking/src/rest_config.dart';
 import 'package:fluent_networking_api/fluent_networking_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class EnvironmentMock extends Mock implements Environment {}
+class RestConfigMock extends Mock implements RestConfig {}
 
 void main() {
   test('verify networking module', () async {
-    mockApi<EnvironmentApi>(EnvironmentApiMock());
-    mockApi<Environment>(EnvironmentMock());
+    mockApi<RestConfig>(RestConfigMock());
 
-    when(() => getApi<EnvironmentApi>().getEnvironment())
-        .thenReturn(getApi<Environment>());
-    when(() => getApi<Environment>().values).thenReturn({'url': ''});
+    when(() => getApi<RestConfig>().baseUrl).thenReturn('');
+    when(() => getApi<RestConfig>().interceptors).thenReturn([]);
 
     Fluent.build([NetworkingModule()]);
 
