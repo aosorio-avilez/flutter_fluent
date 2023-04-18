@@ -5,20 +5,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 class LocalizationApiImpl extends LocalizationApi {
   @override
-  List<LocalizationsDelegate<dynamic>> getLocalizationDelegates() {
+  List<LocalizationsDelegate<dynamic>> getLocalizationDelegates(
+    List<Locale> locales,
+  ) {
     return [
-      EzLocalizationDelegate(supportedLocales: getSupportedLocales()),
+      EzLocalizationDelegate(supportedLocales: locales),
       GlobalMaterialLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
       GlobalWidgetsLocalizations.delegate,
-    ];
-  }
-
-  @override
-  List<Locale> getSupportedLocales() {
-    return [
-      const Locale('es'),
-      const Locale('en'),
     ];
   }
 
