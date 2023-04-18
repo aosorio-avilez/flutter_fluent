@@ -2,6 +2,5 @@
 library fluent_networking_api;
 
 export 'src/networking_api.dart';
-export 'src/rest_api.dart';
-export 'src/rest_api_error.dart';
-export 'src/rest_api_result.dart';
+export 'src/response_error.dart';
+export 'src/response_result.dart';

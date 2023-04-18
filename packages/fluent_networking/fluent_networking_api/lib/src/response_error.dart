@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class RestApiError extends Equatable {
-  const RestApiError(
+class ResponseError extends Equatable {
+  const ResponseError(
     this.errorCode,
     this.message,
   );

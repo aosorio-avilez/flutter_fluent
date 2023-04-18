@@ -1,7 +1,7 @@
 import 'package:fluent_networking/fluent_networking.dart';
 
-abstract class RestConfig {
-  RestConfig({
+abstract class NetworkingConfig {
+  NetworkingConfig({
     this.baseUrl = '',
     this.interceptors = const [],
   });

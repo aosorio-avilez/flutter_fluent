@@ -1,0 +1,29 @@
+name: fluent_networking_example
+description: Demonstrates how to use the fluent_networking package.
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fluent_sdk:
+    git:
+      url: https://github.com/aosorio-avilez/flutter_fluent.git
+      ref: main
+      path: packages/fluent_sdk
+  fluent_networking:
+    git:
+      url: https://github.com/aosorio-avilez/flutter_fluent.git
+      ref: main
+      path: packages/fluent_networking/fluent_networking
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true

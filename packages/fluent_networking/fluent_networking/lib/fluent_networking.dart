@@ -2,8 +2,9 @@
 library fluent_networking;
 
 export 'package:fluent_networking_api/fluent_networking_api.dart'
-    show NetworkingApi, RestApiResult;
+    show NetworkingApi, ResponseError, ResponseResult;
+
 export 'src/http_method.dart';
+export 'src/networking_config.dart';
+export 'src/networking_interceptor.dart';
 export 'src/networking_module.dart';
-export 'src/rest_api_interceptor.dart';
-export 'src/rest_config.dart';

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'rest_api_result.dart';
+part of 'response_result.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,26 +15,26 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$RestApiResult<T> {
+mixin _$ResponseResult<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(T data) succeeded,
     required TResult Function(Object data) failed,
-    required TResult Function(RestApiError error) error,
+    required TResult Function(ResponseError error) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(T data)? succeeded,
     TResult? Function(Object data)? failed,
-    TResult? Function(RestApiError error)? error,
+    TResult? Function(ResponseError error)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(T data)? succeeded,
     TResult Function(Object data)? failed,
-    TResult Function(RestApiError error)? error,
+    TResult Function(ResponseError error)? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -63,16 +63,16 @@ mixin _$RestApiResult<T> {
 }
 
 /// @nodoc
-abstract class $RestApiResultCopyWith<T, $Res> {
-  factory $RestApiResultCopyWith(
-          RestApiResult<T> value, $Res Function(RestApiResult<T>) then) =
-      _$RestApiResultCopyWithImpl<T, $Res, RestApiResult<T>>;
+abstract class $ResponseResultCopyWith<T, $Res> {
+  factory $ResponseResultCopyWith(
+          ResponseResult<T> value, $Res Function(ResponseResult<T>) then) =
+      _$ResponseResultCopyWithImpl<T, $Res, ResponseResult<T>>;
 }
 
 /// @nodoc
-class _$RestApiResultCopyWithImpl<T, $Res, $Val extends RestApiResult<T>>
-    implements $RestApiResultCopyWith<T, $Res> {
-  _$RestApiResultCopyWithImpl(this._value, this._then);
+class _$ResponseResultCopyWithImpl<T, $Res, $Val extends ResponseResult<T>>
+    implements $ResponseResultCopyWith<T, $Res> {
+  _$ResponseResultCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -91,7 +91,7 @@ abstract class _$$SucceededCopyWith<T, $Res> {
 
 /// @nodoc
 class __$$SucceededCopyWithImpl<T, $Res>
-    extends _$RestApiResultCopyWithImpl<T, $Res, _$Succeeded<T>>
+    extends _$ResponseResultCopyWithImpl<T, $Res, _$Succeeded<T>>
     implements _$$SucceededCopyWith<T, $Res> {
   __$$SucceededCopyWithImpl(
       _$Succeeded<T> _value, $Res Function(_$Succeeded<T>) _then)
@@ -121,7 +121,7 @@ class _$Succeeded<T> implements Succeeded<T> {
 
   @override
   String toString() {
-    return 'RestApiResult<$T>.succeeded(data: $data)';
+    return 'ResponseResult<$T>.succeeded(data: $data)';
   }
 
   @override
@@ -147,7 +147,7 @@ class _$Succeeded<T> implements Succeeded<T> {
   TResult when<TResult extends Object?>({
     required TResult Function(T data) succeeded,
     required TResult Function(Object data) failed,
-    required TResult Function(RestApiError error) error,
+    required TResult Function(ResponseError error) error,
   }) {
     return succeeded(data);
   }
@@ -157,7 +157,7 @@ class _$Succeeded<T> implements Succeeded<T> {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(T data)? succeeded,
     TResult? Function(Object data)? failed,
-    TResult? Function(RestApiError error)? error,
+    TResult? Function(ResponseError error)? error,
   }) {
     return succeeded?.call(data);
   }
@@ -167,7 +167,7 @@ class _$Succeeded<T> implements Succeeded<T> {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(T data)? succeeded,
     TResult Function(Object data)? failed,
-    TResult Function(RestApiError error)? error,
+    TResult Function(ResponseError error)? error,
     required TResult orElse(),
   }) {
     if (succeeded != null) {
@@ -211,7 +211,7 @@ class _$Succeeded<T> implements Succeeded<T> {
   }
 }
 
-abstract class Succeeded<T> implements RestApiResult<T> {
+abstract class Succeeded<T> implements ResponseResult<T> {
   const factory Succeeded(final T data) = _$Succeeded<T>;
 
   T get data;
@@ -231,7 +231,7 @@ abstract class _$$FailedCopyWith<T, $Res> {
 
 /// @nodoc
 class __$$FailedCopyWithImpl<T, $Res>
-    extends _$RestApiResultCopyWithImpl<T, $Res, _$Failed<T>>
+    extends _$ResponseResultCopyWithImpl<T, $Res, _$Failed<T>>
     implements _$$FailedCopyWith<T, $Res> {
   __$$FailedCopyWithImpl(_$Failed<T> _value, $Res Function(_$Failed<T>) _then)
       : super(_value, _then);
@@ -257,7 +257,7 @@ class _$Failed<T> implements Failed<T> {
 
   @override
   String toString() {
-    return 'RestApiResult<$T>.failed(data: $data)';
+    return 'ResponseResult<$T>.failed(data: $data)';
   }
 
   @override
@@ -283,7 +283,7 @@ class _$Failed<T> implements Failed<T> {
   TResult when<TResult extends Object?>({
     required TResult Function(T data) succeeded,
     required TResult Function(Object data) failed,
-    required TResult Function(RestApiError error) error,
+    required TResult Function(ResponseError error) error,
   }) {
     return failed(data);
   }
@@ -293,7 +293,7 @@ class _$Failed<T> implements Failed<T> {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(T data)? succeeded,
     TResult? Function(Object data)? failed,
-    TResult? Function(RestApiError error)? error,
+    TResult? Function(ResponseError error)? error,
   }) {
     return failed?.call(data);
   }
@@ -303,7 +303,7 @@ class _$Failed<T> implements Failed<T> {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(T data)? succeeded,
     TResult Function(Object data)? failed,
-    TResult Function(RestApiError error)? error,
+    TResult Function(ResponseError error)? error,
     required TResult orElse(),
   }) {
     if (failed != null) {
@@ -347,7 +347,7 @@ class _$Failed<T> implements Failed<T> {
   }
 }
 
-abstract class Failed<T> implements RestApiResult<T> {
+abstract class Failed<T> implements ResponseResult<T> {
   const factory Failed(final Object data) = _$Failed<T>;
 
   Object get data;
@@ -361,12 +361,12 @@ abstract class _$$ErrorCopyWith<T, $Res> {
   factory _$$ErrorCopyWith(_$Error<T> value, $Res Function(_$Error<T>) then) =
       __$$ErrorCopyWithImpl<T, $Res>;
   @useResult
-  $Res call({RestApiError error});
+  $Res call({ResponseError error});
 }
 
 /// @nodoc
 class __$$ErrorCopyWithImpl<T, $Res>
-    extends _$RestApiResultCopyWithImpl<T, $Res, _$Error<T>>
+    extends _$ResponseResultCopyWithImpl<T, $Res, _$Error<T>>
     implements _$$ErrorCopyWith<T, $Res> {
   __$$ErrorCopyWithImpl(_$Error<T> _value, $Res Function(_$Error<T>) _then)
       : super(_value, _then);
@@ -380,7 +380,7 @@ class __$$ErrorCopyWithImpl<T, $Res>
       null == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
-              as RestApiError,
+              as ResponseError,
     ));
   }
 }
@@ -391,11 +391,11 @@ class _$Error<T> implements Error<T> {
   const _$Error(this.error);
 
   @override
-  final RestApiError error;
+  final ResponseError error;
 
   @override
   String toString() {
-    return 'RestApiResult<$T>.error(error: $error)';
+    return 'ResponseResult<$T>.error(error: $error)';
   }
 
   @override
@@ -420,7 +420,7 @@ class _$Error<T> implements Error<T> {
   TResult when<TResult extends Object?>({
     required TResult Function(T data) succeeded,
     required TResult Function(Object data) failed,
-    required TResult Function(RestApiError error) error,
+    required TResult Function(ResponseError error) error,
   }) {
     return error(this.error);
   }
@@ -430,7 +430,7 @@ class _$Error<T> implements Error<T> {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(T data)? succeeded,
     TResult? Function(Object data)? failed,
-    TResult? Function(RestApiError error)? error,
+    TResult? Function(ResponseError error)? error,
   }) {
     return error?.call(this.error);
   }
@@ -440,7 +440,7 @@ class _$Error<T> implements Error<T> {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(T data)? succeeded,
     TResult Function(Object data)? failed,
-    TResult Function(RestApiError error)? error,
+    TResult Function(ResponseError error)? error,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -484,10 +484,10 @@ class _$Error<T> implements Error<T> {
   }
 }
 
-abstract class Error<T> implements RestApiResult<T> {
-  const factory Error(final RestApiError error) = _$Error<T>;
+abstract class Error<T> implements ResponseResult<T> {
+  const factory Error(final ResponseError error) = _$Error<T>;
 
-  RestApiError get error;
+  ResponseError get error;
   @JsonKey(ignore: true)
   _$$ErrorCopyWith<T, _$Error<T>> get copyWith =>
       throw _privateConstructorUsedError;

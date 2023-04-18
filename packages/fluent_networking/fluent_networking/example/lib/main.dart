@@ -1,50 +1,22 @@
-## fluent_networking
-Package that provides a simple way to make http requests
+import 'package:fluent_networking/fluent_networking.dart';
+import 'package:fluent_networking_example/app_config.dart';
+import 'package:fluent_sdk/fluent_sdk.dart';
+import 'package:flutter/material.dart';
 
-## Getting Started
+void main() {
+  Fluent.build([
+    NetworkingModule(config: ApiConfig()),
+  ]);
 
-### Add dependencies
-
-```yaml
-fluent_sdk:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: main
-      path: packages/fluent_sdk
-  fluent_networking:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: main
-      path: packages/fluent_networking/fluent_networking
-```
-
-### Create networking config
-
-```dart
-class ApiConfig extends NetworkingConfig {
-  @override
-  String get baseUrl => "https://pokeapi.co/api/v2";
+  runApp(const MainApp());
 }
-```
 
-### Build module
-
-```dart
-Fluent.build([
-    NetworkingModule(),
-]);
-```
-
-### Use it
-```dart
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Get networking api
     final networkingApi = getApi<NetworkingApi>();
-    // Make get request
     final future = networkingApi.get<Map<String, dynamic>>("/pokemon");
 
     return MaterialApp(
@@ -80,8 +52,3 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-```
-
-## Example
-
-<img src="https://raw.githubusercontent.com/aosorio-avilez/flutter_fluent/main/resources/fluent_networking_example.png" width="400" />
