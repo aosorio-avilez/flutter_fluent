@@ -7,13 +7,17 @@ import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter_loggy_dio/flutter_loggy_dio.dart';
 
 class NetworkingModule extends Module {
-  NetworkingModule({super.testMode = false});
+  NetworkingModule({
+    required this.config,
+    super.testMode = false,
+  });
+
+  final RestConfig config;
 
   @override
   void build(Registry registry) {
     registry
       ..registerApi<Dio>((_) {
-        final config = getApi<RestConfig>();
         return Dio(
           BaseOptions(baseUrl: config.baseUrl),
         )..interceptors.addAll([

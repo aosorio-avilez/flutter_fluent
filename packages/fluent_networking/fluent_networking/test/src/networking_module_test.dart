@@ -12,12 +12,11 @@ class RestConfigMock extends Mock implements RestConfig {}
 
 void main() {
   test('verify networking module', () async {
-    mockApi<RestConfig>(RestConfigMock());
+    final config = RestConfigMock();
+    when(() => config.baseUrl).thenReturn('');
+    when(() => config.interceptors).thenReturn([]);
 
-    when(() => getApi<RestConfig>().baseUrl).thenReturn('');
-    when(() => getApi<RestConfig>().interceptors).thenReturn([]);
-
-    Fluent.build([NetworkingModule()]);
+    Fluent.build([NetworkingModule(config: config)]);
 
     expect(getApi<Dio>(), isA<Dio>());
     expect(getApi<RestApi>(), isA<RestApiImpl>());
