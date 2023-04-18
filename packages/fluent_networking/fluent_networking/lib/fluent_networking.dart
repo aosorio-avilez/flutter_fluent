@@ -6,3 +6,4 @@ export 'package:fluent_networking_api/fluent_networking_api.dart'
 export 'src/http_method.dart';
 export 'src/networking_module.dart';
 export 'src/rest_api_interceptor.dart';
+export 'src/rest_config.dart';
