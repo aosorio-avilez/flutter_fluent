@@ -1,6 +1,5 @@
 import 'package:ez_localization/ez_localization.dart';
-import 'package:fluent_localization/src/localization_module.dart';
-import 'package:fluent_localization_api/fluent_localization_api.dart';
+import 'package:fluent_localization/fluent_localization.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

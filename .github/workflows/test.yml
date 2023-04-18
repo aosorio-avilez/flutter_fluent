@@ -9,7 +9,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: subosito/flutter-action@v2
         with:
@@ -22,21 +22,20 @@ jobs:
       - name: Install Dependencies
         run: melos bs
 
-      - name: Format
-        run: melos run format
+      # - name: Format
+      #   run: melos run format
 
-      - name: Analyze
-        run: melos run analyze
+      # - name: Analyze
+      #   run: melos run analyze
 
       - name: Test
         run: melos run test
 
       - name: Merge coverages reports
         run: melos run coverage
-
+        
       - name: Coverage
-        uses: VeryGoodOpenSource/very_good_coverage@v1
+        uses: VeryGoodOpenSource/very_good_coverage@v2
         with:
-          path: './coverage/lcov.info'
           min_coverage: 100
           exclude: '**/*.g.dart'

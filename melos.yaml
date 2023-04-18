@@ -24,11 +24,11 @@ scripts:
   coverage:
     run: >
       coverde rm MELOS_ROOT_PATH/coverage/filtered.lcov.info &&
-      melos exec --file-exists=coverage/lcov.info -- coverde filter --input ./coverage/lcov.info --output MELOS_ROOT_PATH/coverage/filtered.lcov.info --filters \.g\.dart
+      melos exec --file-exists=coverage/lcov.info -- coverde filter --input ./coverage/lcov.info --output MELOS_ROOT_PATH/coverage/lcov.info --filters \.g\.dart
     description: Merge all packages coverage tracefiles ignoring data related to generated files.
   show-coverage:
     run: >
-      genhtml coverage/filtered.lcov.info -o coverage/html &&
+      genhtml coverage/lcov.info -o coverage/html &&
       open coverage/html/index.html
     description: Merge all packages coverage tracefiles ignoring data related to generated files.
 
