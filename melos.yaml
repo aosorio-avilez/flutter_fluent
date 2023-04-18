@@ -31,4 +31,6 @@ scripts:
       genhtml coverage/lcov.info -o coverage/html &&
       open coverage/html/index.html
     description: Merge all packages coverage tracefiles ignoring data related to generated files.
+  build-coverage:
+    run: melos test && melos coverage
 

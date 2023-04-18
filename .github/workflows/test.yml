@@ -22,11 +22,11 @@ jobs:
       - name: Install Dependencies
         run: melos bs
 
-      # - name: Format
-      #   run: melos run format
+      - name: Format
+        run: melos run format
 
-      # - name: Analyze
-      #   run: melos run analyze
+      - name: Analyze
+        run: melos run analyze
 
       - name: Test
         run: melos run test
