@@ -18,7 +18,7 @@ class NavigationModule extends Module {
 
   GoRouter _buildGoRouter() {
     return GoRouter(
-      initialLocation: getApi<InternalNavigationApi>().getInitialRoute()?.name,
+      initialLocation: getApi<InternalNavigationApi>().getInitialRoute()?.path,
       routes:
           getApi<InternalNavigationApi>().getRegisteredRoutes().map((route) {
         return GoRoute(
