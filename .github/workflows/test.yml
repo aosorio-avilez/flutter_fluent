@@ -37,6 +37,6 @@ jobs:
       - name: Coverage
         uses: VeryGoodOpenSource/very_good_coverage@v2
         with:
-          path: '/coverage/lcov.info'
+          path: '/coverage/filtered.lcov.info'
           min_coverage: 100
           exclude: '**/*.g.dart'
