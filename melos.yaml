@@ -10,7 +10,7 @@ ignore:
 
 scripts:
   install:
-    run: melos exec "very_good packages get"
+    run: melos exec "very_good packages get --verbose"
     description: Format dart files in all packages
   format:
     run: melos exec "dart format --set-exit-if-changed lib test"
