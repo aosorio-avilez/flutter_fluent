@@ -9,24 +9,7 @@ permissions: read-all
 
 jobs:
   build:
-    name: coverage
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+    uses: aosorio-avilez/flutter_fluent/.github/workflows/build.yml
 
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
-          cache: true
-
-      - name: Install Tools
-        run: ./.github/workflows/scripts/install-tools.sh
-
-      - name: Install Dependencies
-        run: melos bs
-
-      - name: build coverage
-        run: melos build-coverage
-
-      - name: upload coverage
-        uses: codecov/codecov-action@v3
+  coverage:
+    uses: codecov/codecov-action@v3

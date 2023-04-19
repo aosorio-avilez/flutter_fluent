@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Flutter
 flutter config --no-analytics
-flutter pub global activate melos 2.9.0
-flutter pub global activate coverde
+
+# Melos
+flutter pub global activate melos
+
+# Very Good CLI
+flutter pub global activate very_good_cli
+very_good --analytics false

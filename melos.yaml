@@ -9,28 +9,32 @@ command:
     usePubspecOverrides: false
 
 scripts:
+  install:
+    run: melos exec very_good packages get
+    description: Install dependencies in all packages
   format:
-    run: |
-      melos exec "dart format --set-exit-if-changed lib test"
+    run: melos exec "dart format --set-exit-if-changed lib test"
     description: Format dart files in all packages
   analyze:
-    run: |
-      melos exec "flutter analyze --fatal-infos lib"
+    run: melos exec "flutter analyze --no-pub lib"
     description: Analyze dart files in all packages
   test:
-    run: |
-      melos exec --dir-exists="test" "flutter test --coverage --no-pub --test-randomize-ordering-seed random"
+    run: melos exec "very_good test -j 4 --optimization --min-coverage 100 --coverage --test-randomize-ordering-seed random"
     description: Run tests in all packages
-  coverage:
-    run: >
-      coverde rm MELOS_ROOT_PATH/coverage/filtered.lcov.info &&
-      melos exec --file-exists=coverage/lcov.info -- coverde filter --input ./coverage/lcov.info --output MELOS_ROOT_PATH/coverage/lcov.info --filters \.g\.dart
-    description: Merge all packages coverage tracefiles ignoring data related to generated files.
-  show-coverage:
-    run: >
-      genhtml coverage/lcov.info -o coverage/html &&
-      open coverage/html/index.html
-    description: Merge all packages coverage tracefiles ignoring data related to generated files.
-  build-coverage:
-    run: melos test && melos coverage
+  # coverage:
+  #   run: |
+  #     melos exec "very_good test -j 4 --optimization --coverage --test-randomize-ordering-seed random"
+  #     ./codecov /coverage/lcov.info
+  # coverage:
+  #   run: >
+  #     coverde rm MELOS_ROOT_PATH/coverage/filtered.lcov.info &&
+  #     melos exec --file-exists=coverage/lcov.info -- coverde filter --input ./coverage/lcov.info --output MELOS_ROOT_PATH/coverage/lcov.info --filters \.g\.dart
+  #   description: Merge all packages coverage tracefiles ignoring data related to generated files.
+  # show-coverage:
+  #   run: >
+  #     genhtml coverage/lcov.info -o coverage/html &&
+  #     open coverage/html/index.html
+  #   description: Merge all packages coverage tracefiles ignoring data related to generated files.
+  # build-coverage:
+  #   run: melos test && melos coverage
 
