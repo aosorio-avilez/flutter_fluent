@@ -7,9 +7,9 @@ packages:
 ignore:
   - packages/**/example
 
-command:
-  bootstrap:
-    usePubspecOverrides: false
+# command:
+#   bootstrap:
+#     usePubspecOverrides: false
 
 scripts:
   format:
