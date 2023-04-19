@@ -12,9 +12,6 @@ command:
     usePubspecOverrides: false
 
 scripts:
-  install:
-    run: melos exec very_good packages get
-    description: Install dependencies in all packages
   format:
     run: melos exec "dart format --set-exit-if-changed lib test"
     description: Format dart files in all packages
