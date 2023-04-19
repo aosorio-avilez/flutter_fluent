@@ -4,6 +4,9 @@ packages:
   - packages/*
   - packages/*/*
 
+ignore:
+  - packages/**/example
+
 command:
   bootstrap:
     usePubspecOverrides: false
@@ -16,9 +19,9 @@ scripts:
     run: melos exec "dart format --set-exit-if-changed lib test"
     description: Format dart files in all packages
   analyze:
-    run: melos exec "flutter analyze --no-pub lib"
+    run: melos exec --dir-exists="test" "flutter analyze --no-pub lib test"
     description: Analyze dart files in all packages
   test:
-    run: melos exec "very_good test -j 4 --optimization --min-coverage 100 --coverage --test-randomize-ordering-seed random"
+    run: melos exec --dir-exists="test" "very_good test -j 4 --optimization --min-coverage 100 --coverage --test-randomize-ordering-seed random"
     description: Run tests in all packages
   
