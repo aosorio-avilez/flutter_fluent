@@ -18,16 +18,17 @@ jobs:
           cache: true
           cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
 
+      - name: ⚙️ Install Tools
+        run: ./.github/workflows/scripts/install-tools.sh
+
       - name: 📦 Install Dependencies
-        run: |
-          ./.github/workflows/scripts/install-tools.sh
-          melos run install
+        run: melos install
 
       - name: ✨ Check Formatting
-        run: melos run format
+        run: melos format
 
       - name: 🕵️ Analyze
-        run: melos run analyze
+        run: melos analyze
 
       - name: 🧪 Run Tests
-        run: melos run test
+        run: melos test

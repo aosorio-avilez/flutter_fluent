@@ -21,20 +21,4 @@ scripts:
   test:
     run: melos exec "very_good test -j 4 --optimization --min-coverage 100 --coverage --test-randomize-ordering-seed random"
     description: Run tests in all packages
-  # coverage:
-  #   run: |
-  #     melos exec "very_good test -j 4 --optimization --coverage --test-randomize-ordering-seed random"
-  #     ./codecov /coverage/lcov.info
-  # coverage:
-  #   run: >
-  #     coverde rm MELOS_ROOT_PATH/coverage/filtered.lcov.info &&
-  #     melos exec --file-exists=coverage/lcov.info -- coverde filter --input ./coverage/lcov.info --output MELOS_ROOT_PATH/coverage/lcov.info --filters \.g\.dart
-  #   description: Merge all packages coverage tracefiles ignoring data related to generated files.
-  # show-coverage:
-  #   run: >
-  #     genhtml coverage/lcov.info -o coverage/html &&
-  #     open coverage/html/index.html
-  #   description: Merge all packages coverage tracefiles ignoring data related to generated files.
-  # build-coverage:
-  #   run: melos test && melos coverage
-
+  
