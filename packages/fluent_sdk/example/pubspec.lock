@@ -60,11 +60,9 @@ packages:
   fluent_sdk:
     dependency: "direct main"
     description:
-      path: "packages/fluent_sdk"
-      ref: main
-      resolved-ref: "404430e6627bf6c2309dd4a76129358fa557dc8b"
-      url: "https://github.com/aosorio-avilez/flutter_fluent.git"
-    source: git
+      path: ".."
+      relative: true
+    source: path
     version: "0.0.1"
   flutter:
     dependency: "direct main"
@@ -203,4 +201,3 @@ packages:
     version: "2.1.4"
 sdks:
   dart: ">=2.19.6 <3.0.0"
-  flutter: ">=1.17.0"
