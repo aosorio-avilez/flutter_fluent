@@ -1,4 +1,0 @@
-# melos_managed_dependency_overrides: fluent_sdk
-dependency_overrides:
-  fluent_sdk:
-    path: ..
