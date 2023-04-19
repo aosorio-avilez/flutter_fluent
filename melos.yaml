@@ -7,10 +7,6 @@ packages:
 ignore:
   - packages/**/example
 
-# command:
-#   bootstrap:
-#     usePubspecOverrides: false
-
 scripts:
   format:
     run: melos exec "dart format --set-exit-if-changed lib test"
