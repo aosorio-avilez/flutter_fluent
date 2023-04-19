@@ -1,5 +1,5 @@
 name: fluent_sdk
-description: Code base to modularize features through a service locator.
+description: Package that provide a way to modularize features through a service locator.
 version: 0.0.1
 homepage:
 
