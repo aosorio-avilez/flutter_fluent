@@ -10,7 +10,7 @@ jobs:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/semantic_pull_request.yml@v1
 
   build:
-    uses: aosorio-avilez/flutter_fluent/.github/workflows/build.yml@optimize-workflows
+    uses: aosorio-avilez/flutter_fluent/.github/workflows/build.yaml@optimize-workflows
 
   spell-check:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
