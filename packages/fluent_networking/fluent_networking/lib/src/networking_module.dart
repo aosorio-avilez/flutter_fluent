@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:fluent_networking/fluent_networking.dart';
 import 'package:fluent_networking/src/networking_api_impl.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter_loggy_dio/flutter_loggy_dio.dart';
 
 class NetworkingModule extends Module {

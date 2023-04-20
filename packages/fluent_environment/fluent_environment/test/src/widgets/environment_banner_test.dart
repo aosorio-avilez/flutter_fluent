@@ -2,7 +2,6 @@ import 'package:fluent_environment/src/api/environment_api_mock.dart';
 import 'package:fluent_environment/src/environment_module.dart';
 import 'package:fluent_environment/src/widgets/environment_banner.dart';
 import 'package:fluent_environment_api/fluent_environment_api.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';

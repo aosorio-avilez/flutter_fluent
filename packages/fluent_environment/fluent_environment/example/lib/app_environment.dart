@@ -1,4 +1,4 @@
-import 'package:fluent_sdk/fluent_sdk.dart';
+import 'package:fluent_environment/fluent_environment.dart';
 
 class AppEnvironment extends Environment {
   AppEnvironment({this.type = EnvironmentType.prod});

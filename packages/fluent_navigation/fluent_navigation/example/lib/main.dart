@@ -1,5 +1,4 @@
 import 'package:fluent_navigation_example/example_module.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:fluent_navigation/fluent_navigation.dart';
 

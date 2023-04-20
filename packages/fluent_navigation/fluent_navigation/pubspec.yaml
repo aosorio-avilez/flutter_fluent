@@ -11,15 +11,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluent_sdk:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: main
-      path: packages/fluent_sdk
   fluent_navigation_api:
     git:
       url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: main
+      ref: fluent_navigation-v0.0.1
       path: packages/fluent_navigation/fluent_navigation_api
   go_router: ^6.5.6
   equatable: ^2.0.5

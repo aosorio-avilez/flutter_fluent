@@ -11,16 +11,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  get_it: ^7.2.0
-  fluent_sdk:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: main
-      path: packages/fluent_sdk
   fluent_environment_api:
     git:
       url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: main
+      ref: fluent_environment-v0.0.1
       path: packages/fluent_environment/fluent_environment_api
   mocktail: ^0.3.0
 

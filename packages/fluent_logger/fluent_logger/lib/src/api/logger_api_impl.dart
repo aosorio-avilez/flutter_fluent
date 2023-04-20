@@ -1,5 +1,4 @@
 import 'package:fluent_logger_api/fluent_logger_api.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:loggy/loggy.dart';
 
 class LoggerApiImpl extends LoggerApi {

@@ -13,15 +13,10 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  fluent_sdk:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: main
-      path: packages/fluent_sdk
   fluent_localization_api:
     git:
       url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: main
+      ref: fluent_localization-v0.0.1
       path: packages/fluent_localization/fluent_localization_api
   ez_localization: ^1.1.0
   mocktail: ^0.3.0

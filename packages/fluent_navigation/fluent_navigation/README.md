@@ -6,15 +6,10 @@ Package that provides a simple way to navigate within your app
 ### Add dependencies
 
 ```yaml
-fluent_sdk:
+fluent_navigation:
     git:
       url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: main
-      path: packages/fluent_sdk
-  fluent_navigation:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: main
+      ref: fluent_navigation-v0.0.1
       path: packages/fluent_navigation/fluent_navigation
 ```
 

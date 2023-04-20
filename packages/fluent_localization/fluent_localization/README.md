@@ -6,15 +6,10 @@ Package that allows you to translate the app texts
 ### Add dependencies
 
 ```yaml
-fluent_sdk:
+fluent_localization:
     git:
       url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: main
-      path: packages/fluent_sdk
-  fluent_localization:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: main
+      ref: fluent_localization-v0.0.1
       path: packages/fluent_localization/fluent_localization
 ```
 
