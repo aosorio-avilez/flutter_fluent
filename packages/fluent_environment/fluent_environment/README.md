@@ -9,12 +9,12 @@ Package that provides a way to register your environment and display it
 fluent_sdk:
     git:
         url: https://github.com/aosorio-avilez/flutter_fluent.git
-        ref: main
+        ref: fluent_sdk-v0.0.1
         path: packages/fluent_sdk
 fluent_environment:
     git:	
         url: https://github.com/aosorio-avilez/flutter_fluent.git
-        ref: main
+        ref: fluent_environment-v0.0.1
         path: packages/fluent_environment/fluent_environment
 ```
 
