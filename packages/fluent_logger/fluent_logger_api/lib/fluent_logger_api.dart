@@ -1,5 +1,2 @@
-/// Library that allow you to access to
-/// the logger api to printing messages in console
-library fluent_logger_api;
-
+export 'package:fluent_sdk/fluent_sdk.dart';
 export 'src/logger_api.dart';

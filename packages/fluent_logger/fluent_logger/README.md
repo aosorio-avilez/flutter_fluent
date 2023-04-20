@@ -6,12 +6,7 @@ Package that allows printing messages in console
 ### Add dependencies
 
 ```yaml
-fluent_sdk:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: fluent_sdk-v0.0.1
-      path: packages/fluent_sdk
-  fluent_logger:
+fluent_logger:
     git:
       url: https://github.com/aosorio-avilez/flutter_fluent.git
       ref: fluent_logger-v0.0.1

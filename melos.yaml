@@ -4,10 +4,6 @@ packages:
   - packages/*
   - packages/**
 
-ignore:
-  - packages/*/example
-  - packages/**/example
-
 scripts:
   format:
     run: melos exec "dart format --set-exit-if-changed lib test"

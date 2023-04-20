@@ -1,4 +1,2 @@
-/// Library that provides access to the navigation api
-library fluent_navigation_api;
-
+export 'package:fluent_sdk/fluent_sdk.dart';
 export 'src/navigation_api.dart';

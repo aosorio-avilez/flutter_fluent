@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
+
 import 'package:fluent_networking/src/networking_api_impl.dart';
-import 'package:fluent_networking_api/fluent_networking_api.dart' as api;
-import 'package:fluent_sdk/fluent_sdk.dart';
+import 'package:fluent_networking_api/fluent_networking_api.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -24,7 +24,7 @@ void main() {
 
       final result = await networkingApi.get<void>('/');
 
-      expect(result, isA<api.Succeeded<void>>());
+      expect(result, isA<Succeeded<void>>());
     });
 
     test('return failed', () async {
@@ -41,7 +41,7 @@ void main() {
 
       final result = await networkingApi.get<Map<String, dynamic>>('/');
 
-      expect(result, isA<api.Failed<void>>());
+      expect(result, isA<Failed<void>>());
     });
 
     test('return error', () async {
@@ -54,7 +54,7 @@ void main() {
 
       final result = await networkingApi.get<void>('/');
 
-      expect(result, isA<api.Error<void>>());
+      expect(result, isA<Error<void>>());
     });
   });
 
@@ -72,7 +72,7 @@ void main() {
 
       final result = await networkingApi.post<void>('/');
 
-      expect(result, isA<api.Succeeded<void>>());
+      expect(result, isA<Succeeded<void>>());
     });
 
     test('return failed', () async {
@@ -89,7 +89,7 @@ void main() {
 
       final result = await networkingApi.post<Map<String, dynamic>>('/');
 
-      expect(result, isA<api.Failed<void>>());
+      expect(result, isA<Failed<void>>());
     });
 
     test('return error', () async {
@@ -102,7 +102,7 @@ void main() {
 
       final result = await networkingApi.post<void>('/');
 
-      expect(result, isA<api.Error<void>>());
+      expect(result, isA<Error<void>>());
     });
   });
 
@@ -120,7 +120,7 @@ void main() {
 
       final result = await networkingApi.patch<void>('/');
 
-      expect(result, isA<api.Succeeded<void>>());
+      expect(result, isA<Succeeded<void>>());
     });
 
     test('return failed', () async {
@@ -137,7 +137,7 @@ void main() {
 
       final result = await networkingApi.patch<Map<String, dynamic>>('/');
 
-      expect(result, isA<api.Failed<void>>());
+      expect(result, isA<Failed<void>>());
     });
 
     test('return error', () async {
@@ -150,7 +150,7 @@ void main() {
 
       final result = await networkingApi.patch<void>('/');
 
-      expect(result, isA<api.Error<void>>());
+      expect(result, isA<Error<void>>());
     });
   });
 
@@ -168,7 +168,7 @@ void main() {
 
       final result = await networkingApi.put<void>('/');
 
-      expect(result, isA<api.Succeeded<void>>());
+      expect(result, isA<Succeeded<void>>());
     });
 
     test('return failed', () async {
@@ -185,7 +185,7 @@ void main() {
 
       final result = await networkingApi.put<Map<String, dynamic>>('/');
 
-      expect(result, isA<api.Failed<void>>());
+      expect(result, isA<Failed<void>>());
     });
 
     test('return error', () async {
@@ -198,7 +198,7 @@ void main() {
 
       final result = await networkingApi.put<void>('/');
 
-      expect(result, isA<api.Error<void>>());
+      expect(result, isA<Error<void>>());
     });
   });
 
@@ -216,7 +216,7 @@ void main() {
 
       final result = await networkingApi.delete<void>('/');
 
-      expect(result, isA<api.Succeeded<void>>());
+      expect(result, isA<Succeeded<void>>());
     });
 
     test('return failed', () async {
@@ -233,7 +233,7 @@ void main() {
 
       final result = await networkingApi.delete<Map<String, dynamic>>('/');
 
-      expect(result, isA<api.Failed<void>>());
+      expect(result, isA<Failed<void>>());
     });
 
     test('return error', () async {
@@ -246,7 +246,7 @@ void main() {
 
       final result = await networkingApi.delete<void>('/');
 
-      expect(result, isA<api.Error<void>>());
+      expect(result, isA<Error<void>>());
     });
   });
 }

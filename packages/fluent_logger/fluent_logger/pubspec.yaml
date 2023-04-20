@@ -11,11 +11,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluent_sdk:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: fluent_sdk-v0.0.1
-      path: packages/fluent_sdk
   fluent_logger_api:
     git:
       url: https://github.com/aosorio-avilez/flutter_fluent.git

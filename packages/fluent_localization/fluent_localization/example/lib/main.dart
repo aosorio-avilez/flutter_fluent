@@ -1,5 +1,4 @@
 import 'package:fluent_localization/fluent_localization.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/material.dart';
 
 void main() {

@@ -1,6 +1,5 @@
 import 'package:fluent_networking/fluent_networking.dart';
 import 'package:fluent_networking_example/app_config.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/material.dart';
 
 void main() {

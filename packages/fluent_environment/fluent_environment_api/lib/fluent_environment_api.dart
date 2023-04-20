@@ -1,4 +1,2 @@
-/// Library that provides access to the fluent environment api
-library fluent_environment_api;
-
+export 'package:fluent_sdk/fluent_sdk.dart';
 export 'src/environment_api.dart';

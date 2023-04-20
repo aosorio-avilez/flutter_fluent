@@ -1,5 +1,2 @@
-/// Library that allows printing messages in console
-library fluent_logger;
-
-export 'package:fluent_logger_api/fluent_logger_api.dart' show LoggerApi;
+export 'package:fluent_logger_api/fluent_logger_api.dart';
 export 'src/logger_module.dart';

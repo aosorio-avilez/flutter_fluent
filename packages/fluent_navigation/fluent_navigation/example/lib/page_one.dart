@@ -1,5 +1,4 @@
 import 'package:fluent_navigation/fluent_navigation.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/material.dart';
 
 class PageOne extends StatelessWidget {

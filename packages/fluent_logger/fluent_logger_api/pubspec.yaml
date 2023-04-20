@@ -1,11 +1,20 @@
 name: fluent_logger_api
 description: Package that allow you to access to the logger api to printing messages in console
 version: 0.0.1
-homepage:
+publish_to: none
 
 environment:
   sdk: '>=2.19.6 <3.0.0'
   flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fluent_sdk:
+    git:
+      url: https://github.com/aosorio-avilez/flutter_fluent.git
+      ref: fluent_sdk-v0.0.1
+      path: packages/fluent_sdk
 
 dev_dependencies:
   flutter_test:

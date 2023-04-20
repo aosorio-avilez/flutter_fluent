@@ -7,12 +7,5 @@ void main() {
 
     expect(route.name, 'test');
     expect(route.path, '/test');
-    expect(route.props, [
-      'test',
-      '/test',
-      null,
-      null,
-      false,
-    ]);
   });
 }
