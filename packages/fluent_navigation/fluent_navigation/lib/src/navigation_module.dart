@@ -5,7 +5,12 @@ import 'package:fluent_navigation_api/fluent_navigation_api.dart';
 import 'package:go_router/go_router.dart';
 
 class NavigationModule extends Module {
-  NavigationModule({super.testMode = false});
+  NavigationModule({
+    this.redirect,
+    super.testMode = false,
+  });
+
+  final String? Function(String? location)? redirect;
 
   @override
   void build(Registry registry) {
@@ -33,6 +38,7 @@ class NavigationModule extends Module {
           },
         );
       }).toList(),
+      redirect: (context, state) => redirect?.call(state.location),
     );
   }
 }

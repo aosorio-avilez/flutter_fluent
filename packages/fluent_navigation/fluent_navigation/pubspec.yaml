@@ -1,6 +1,6 @@
 name: fluent_navigation
 description: Package that provides a simple way to navigate within your app
-version: 0.0.1
+version: 0.0.2
 homepage:
 publish_to: none
 

@@ -1,6 +1,6 @@
+import 'package:fluent_navigation/fluent_navigation.dart';
 import 'package:fluent_navigation_example/page_one.dart';
 import 'package:fluent_navigation_example/page_two.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
 
 class ExampleModule extends Module {
   ExampleModule({super.testMode = false});
