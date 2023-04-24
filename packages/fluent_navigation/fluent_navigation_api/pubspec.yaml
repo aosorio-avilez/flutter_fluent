@@ -1,7 +1,7 @@
 name: fluent_navigation_api
 description: Package that provides access to the navigation api
 version: 0.0.1
-publish_to: none
+repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_navigation/fluent_navigation_api
 
 environment:
   sdk: '>=2.19.6 <3.0.0'
@@ -10,15 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluent_sdk:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: fluent_sdk-v0.0.1
-      path: packages/fluent_sdk
+  fluent_sdk: ^0.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   very_good_analysis: ^4.0.0+1
-
-flutter:

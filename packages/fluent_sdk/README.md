@@ -6,11 +6,7 @@ Package that provide a way to modularize features through a service locator.
 ### Add dependencies
 
 ```yaml
-fluent_sdk:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: fluent_sdk-v0.0.1
-      path: packages/fluent_sdk
+fluent_sdk: ^0.0.2
 ```
 
 ### Create a interface/implementation to access the feature functionalities
@@ -41,7 +37,6 @@ class HomeApiImpl extends HomeApi {
 
 ```dart
 class HomeModule extends Module {
-  HomeModule({super.testMode = false});
 
   @override
   void build(Registry registry) {

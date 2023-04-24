@@ -6,11 +6,7 @@ Package that provides a simple way to make http requests
 ### Add dependencies
 
 ```yaml
-fluent_networking:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: fluent_networking-v0.0.1
-      path: packages/fluent_networking/fluent_networking
+fluent_networking: ^0.0.1
 ```
 
 ### Create networking config

@@ -9,11 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluent_navigation:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: fluent_navigation-v0.0.2
-      path: packages/fluent_navigation/fluent_navigation
+  fluent_navigation: ^0.0.1
 
 dev_dependencies:
   flutter_test:
