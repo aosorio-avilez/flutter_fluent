@@ -3,8 +3,6 @@ import 'package:fluent_navigation_example/page_one.dart';
 import 'package:fluent_navigation_example/page_two.dart';
 
 class ExampleModule extends Module {
-  ExampleModule({super.testMode = false});
-
   @override
   void build(Registry registry) {
     registry

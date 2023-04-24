@@ -6,7 +6,9 @@ import 'app_environment.dart';
 void main() {
   Fluent.build([
     EnvironmentModule(
-      AppEnvironment(type: EnvironmentType.dev),
+      environment: AppEnvironment(
+        type: EnvironmentType.dev,
+      ),
     ),
   ]);
 

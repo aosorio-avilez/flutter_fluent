@@ -6,7 +6,6 @@ import 'package:flutter_loggy_dio/flutter_loggy_dio.dart';
 class NetworkingModule extends Module {
   NetworkingModule({
     required this.config,
-    super.testMode = false,
   });
 
   final NetworkingConfig config;
