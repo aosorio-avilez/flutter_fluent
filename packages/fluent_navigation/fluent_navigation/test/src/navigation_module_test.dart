@@ -90,4 +90,48 @@ void main() {
 
     expect(find.byKey(const material.Key('test')), findsOneWidget);
   });
+
+  testWidgets('verify redirect', (tester) async {
+    Fluent.build([
+      NavigationModule(
+        redirect: (location) {
+          if (location == '/') {
+            return '/test';
+          }
+          return null;
+        },
+      )
+    ]);
+    mockApi<List<Route>>(<Route>[
+      const Route(
+        'home',
+        '/',
+        initial: true,
+        page: material.Scaffold(
+          key: material.Key('home'),
+        ),
+      ),
+      Route(
+        'test',
+        '/test',
+        builder: (p0, p1) {
+          return const material.Scaffold(
+            key: material.Key('test'),
+          );
+        },
+      ),
+    ]);
+
+    final config = getApi<NavigationApi>().getConfig();
+
+    await tester.pumpWidget(
+      material.MaterialApp.router(
+        routerConfig: config,
+      ),
+    );
+
+    await tester.pump();
+
+    expect(find.byKey(const material.Key('test')), findsOneWidget);
+  });
 }
