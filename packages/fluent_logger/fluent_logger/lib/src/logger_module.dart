@@ -4,8 +4,6 @@ import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 
 class LoggerModule extends Module {
-  LoggerModule({super.testMode = false});
-
   @override
   void build(Registry registry) {
     registry

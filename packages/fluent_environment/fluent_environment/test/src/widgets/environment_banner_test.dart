@@ -12,7 +12,7 @@ void main() {
   setUpAll(
     () => Fluent.build([
       EnvironmentModule(
-        EnvironmentMock(),
+        environment: EnvironmentMock(),
       )
     ]),
   );

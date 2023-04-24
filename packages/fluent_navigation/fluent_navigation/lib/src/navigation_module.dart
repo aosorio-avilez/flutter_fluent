@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 class NavigationModule extends Module {
   NavigationModule({
     this.redirect,
-    super.testMode = false,
   });
 
   final String? Function(String? location)? redirect;
