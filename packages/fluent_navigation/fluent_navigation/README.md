@@ -6,11 +6,7 @@ Package that provides a simple way to navigate within your app
 ### Add dependencies
 
 ```yaml
-fluent_navigation:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: fluent_navigation-v0.0.1
-      path: packages/fluent_navigation/fluent_navigation
+fluent_navigation: ^0.0.1
 ```
 
 ### Create pages
@@ -57,7 +53,6 @@ class PageTwo extends StatelessWidget {
 
 ```dart
 class ExampleModule extends Module {
-  ExampleModule({super.testMode = false});
 
   @override
   void build(Registry registry) {

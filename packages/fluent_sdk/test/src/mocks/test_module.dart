@@ -4,7 +4,7 @@ import 'test_class.dart';
 
 class TestModule extends Module {
   @override
-  void build(Registry registry, {bool testMode = false}) {
+  void build(Registry registry) {
     registry.registerApi<TestClass>((it) => TestClass());
   }
 }

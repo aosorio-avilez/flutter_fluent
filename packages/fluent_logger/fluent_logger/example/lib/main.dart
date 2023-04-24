@@ -1,4 +1,4 @@
-import 'package:fluent_logger/fluent_logger.dart';
+import 'package:flutter_fluent_logger/flutter_fluent_logger.dart';
 import 'package:flutter/material.dart';
 
 void main() {

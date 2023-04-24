@@ -1,8 +1,7 @@
 name: fluent_environment
 description: Library that provides a way to register your environment and display it.
 version: 0.0.1
-homepage:
-publish_to: none
+repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_environment/fluent_environment
 
 environment:
   sdk: '>=2.19.6 <3.0.0'
@@ -11,11 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluent_environment_api:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: fluent_environment-v0.0.1
-      path: packages/fluent_environment/fluent_environment_api
+  fluent_environment_api: ^0.0.1
   mocktail: ^0.3.0
 
 dev_dependencies:

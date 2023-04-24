@@ -1,8 +1,7 @@
 name: fluent_networking
 description: Package that provides a simple way to make http requests
 version: 0.0.1
-homepage:
-publish_to: none
+repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_networking/fluent_networking
 
 environment:
   sdk: '>=2.19.6 <3.0.0'
@@ -11,11 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluent_networking_api:
-    git:
-      url: https://github.com/aosorio-avilez/flutter_fluent.git
-      ref: fluent_networking_api-v0.0.1
-      path: packages/fluent_networking/fluent_networking_api
+  fluent_networking_api: ^0.0.1
   dio: ^5.1.1
   equatable: ^2.0.5
   freezed_annotation: ^2.2.0
