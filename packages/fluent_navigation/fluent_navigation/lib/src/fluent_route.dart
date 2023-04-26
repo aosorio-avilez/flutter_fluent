@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Definition of a fluent route
 class FluentRoute {
   const FluentRoute(
     this.name,

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+/// Definition of a response error
 class ResponseError extends Equatable {
   const ResponseError(
     this.errorCode,

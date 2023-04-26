@@ -3,11 +3,13 @@ import 'package:fluent_networking/fluent_networking.dart';
 import 'package:fluent_networking/src/networking_api_impl.dart';
 import 'package:flutter_loggy_dio/flutter_loggy_dio.dart';
 
+/// Register and build all the fluent networking dependencies
 class NetworkingModule extends FluentModule {
   NetworkingModule({
     required this.config,
   });
 
+  /// Networking configuration
   final NetworkingConfig config;
 
   @override

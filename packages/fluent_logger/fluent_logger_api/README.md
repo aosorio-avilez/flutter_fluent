@@ -1,2 +1,5 @@
 ## fluent_logger_api
-Package that allow you to access to the logger api to printing messages in console
+
+A common interface for the [`fluent_logger`](https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_logger/fluent_logger) package.
+
+This interface allows platform-specific implementations of the fluent_logger package

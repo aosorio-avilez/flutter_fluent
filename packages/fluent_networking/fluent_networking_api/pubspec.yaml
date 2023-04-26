@@ -1,5 +1,5 @@
 name: fluent_networking_api
-description: Package that provides access to the networking api
+description: A common interface for the fluent_networking package.
 version: 0.0.1
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_networking/fluent_networking_api
 

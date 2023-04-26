@@ -1,5 +1,5 @@
 ## fluent_localization
-Package that allows you to translate the app texts
+Package that allows you to set up and use translations in an easy and quick way
 
 ## Getting Started
 

@@ -4,11 +4,13 @@ import 'package:fluent_navigation/src/api/navigation_api_impl.dart';
 import 'package:fluent_navigation_api/fluent_navigation_api.dart';
 import 'package:go_router/go_router.dart';
 
+/// Register and build all the fluent navigation dependencies
 class NavigationModule extends FluentModule {
   NavigationModule({
     this.redirect,
   });
 
+  /// Callback that allow the app to redirect to a new location.
   final String? Function(String? location)? redirect;
 
   @override

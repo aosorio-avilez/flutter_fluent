@@ -1,5 +1,5 @@
 ## fluent_logger
-Package that allows printing messages in console
+Package that allows you to print different types of messages in console
 
 ## Getting Started
 
