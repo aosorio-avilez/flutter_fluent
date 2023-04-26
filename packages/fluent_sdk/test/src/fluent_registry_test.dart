@@ -28,12 +28,28 @@ void main() {
     expect(GetIt.instance<TestClass>(), isA<TestClass>());
   });
 
-  test('allowReassignment should allow to eeassign objects', () async {
+  test('allowReassignment should allow to reassign objects', () async {
     registry
       ..registerSingleton<TestClass>((it) => TestClass())
       ..allowReassignment(allow: true)
       ..registerSingleton<TestClass>((p0) => TestClass2());
 
     expect(GetIt.instance<TestClass>(), isA<TestClass>());
+  });
+
+  test('isRegistered should return true if instance is already registered',
+      () async {
+    registry.registerSingleton<TestClass>((it) => TestClass());
+
+    final isRegistered = registry.isRegistered<TestClass>();
+
+    expect(isRegistered, isTrue);
+  });
+
+  test('isRegistered should return false if instance is not registered',
+      () async {
+    final isRegistered = registry.isRegistered<TestClass>();
+
+    expect(isRegistered, isFalse);
   });
 }
