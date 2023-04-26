@@ -6,7 +6,7 @@ Package that provides a simple way to make http requests
 ### Add dependencies
 
 ```yaml
-fluent_networking: ^0.0.1
+fluent_networking: ^0.0.2
 ```
 
 ### Create networking config
@@ -34,7 +34,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get networking api
-    final networkingApi = getApi<NetworkingApi>();
+    final networkingApi = Fluent.get<NetworkingApi>();
     // Make get request
     final future = networkingApi.get<Map<String, dynamic>>("/pokemon");
 
