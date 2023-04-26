@@ -1,4 +1,5 @@
 import 'package:fluent_navigation/src/api/internal_navigation_api.dart';
+import 'package:fluent_navigation/src/fluent_route.dart';
 import 'package:fluent_navigation/src/navigation_module.dart';
 import 'package:fluent_navigation_api/fluent_navigation_api.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,8 +8,8 @@ void main() {
   setUpAll(() => Fluent.build([NavigationModule()]));
 
   test('verify getRegisteredRoutes return registered routes', () async {
-    mockApi<List<Route>>([const Route('test', '/path')]);
-    final internalApi = getApi<InternalNavigationApi>();
+    Fluent.mock<List<FluentRoute>>([const FluentRoute('test', '/path')]);
+    final internalApi = Fluent.get<InternalNavigationApi>();
 
     final registeredRoutes = internalApi.getRegisteredRoutes();
 
@@ -16,8 +17,12 @@ void main() {
   });
 
   test('verify getInitialRoute return initial route', () async {
-    mockApi<List<Route>>([const Route('test', '/path', initial: true)]);
-    final internalApi = getApi<InternalNavigationApi>();
+    Fluent.mock<List<FluentRoute>>(
+      [
+        const FluentRoute('test', '/path', initial: true),
+      ],
+    );
+    final internalApi = Fluent.get<InternalNavigationApi>();
 
     final initialRoute = internalApi.getInitialRoute();
 

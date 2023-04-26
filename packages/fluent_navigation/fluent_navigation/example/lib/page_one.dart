@@ -12,7 +12,7 @@ class PageOne extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () {
             // Push to registered route two
-            getApi<NavigationApi>().pushTo("two");
+            Fluent.get<NavigationApi>().pushTo("two");
           },
           child: const Text("Navigate to second page"),
         ),

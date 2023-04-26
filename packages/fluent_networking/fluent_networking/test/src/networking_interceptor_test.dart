@@ -10,7 +10,7 @@ void main() {
     final handler = MockRequestHandler();
     final options = RequestOptions(path: 'http://path.com');
 
-    RestApiInterceptor().onRequest(options, handler);
+    NetworkingInterceptor().onRequest(options, handler);
 
     verify(() => handler.next(options)).called(1);
   });

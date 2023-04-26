@@ -1,5 +1,5 @@
 name: fluent_localization
-description: Package that allows you to translate the app texts
+description: Package that allows you to set up and use translations in an easy and quick way
 version: 0.0.1
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_localization/fluent_localization
 

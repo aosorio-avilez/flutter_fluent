@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class EnvironmentApiImpl extends EnvironmentApi {
   @override
   Environment getEnvironment() {
-    return getApi<Environment>();
+    return Fluent.get<Environment>();
   }
 
   @override

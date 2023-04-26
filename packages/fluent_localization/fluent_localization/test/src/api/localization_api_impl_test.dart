@@ -12,7 +12,7 @@ void main() {
   );
 
   test('verify getLocalizationDelegates', () async {
-    final api = getApi<LocalizationApi>();
+    final api = Fluent.get<LocalizationApi>();
 
     final delegates = api.getLocalizationDelegates([
       const Locale('es'),
@@ -32,7 +32,7 @@ void main() {
       const Locale('en'),
     ];
     final delegates =
-        getApi<LocalizationApi>().getLocalizationDelegates(locales);
+        Fluent.get<LocalizationApi>().getLocalizationDelegates(locales);
 
     await tester.pumpWidget(
       MaterialApp(

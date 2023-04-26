@@ -10,7 +10,7 @@ class NavigationApiImpl extends NavigationApi {
     Map<String, dynamic> queryParams = const <String, dynamic>{},
     Object? extra,
   }) {
-    getApi<GoRouter>().goNamed(
+    Fluent.get<GoRouter>().goNamed(
       routeName,
       extra: extra,
       params: params,
@@ -25,7 +25,7 @@ class NavigationApiImpl extends NavigationApi {
     Map<String, dynamic> queryParams = const <String, dynamic>{},
     Object? extra,
   }) {
-    return getApi<GoRouter>().pushNamed<T>(
+    return Fluent.get<GoRouter>().pushNamed<T>(
       routeName,
       extra: extra,
       params: params,
@@ -35,6 +35,6 @@ class NavigationApiImpl extends NavigationApi {
 
   @override
   RouterConfig<Object> getConfig() {
-    return getApi<GoRouter>();
+    return Fluent.get<GoRouter>();
   }
 }

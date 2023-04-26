@@ -18,12 +18,13 @@ void main() {
   );
 
   testWidgets('verify environment banner', (tester) async {
-    mockApi<EnvironmentApi>(EnvironmentApiMock());
-    mockApi<Environment>(EnvironmentMock());
-    final environment = getApi<Environment>();
-    final api = getApi<EnvironmentApi>();
+    Fluent.mock<EnvironmentApi>(EnvironmentApiMock());
+    Fluent.mock<Environment>(EnvironmentMock());
+    final environment = Fluent.get<Environment>();
+    final api = Fluent.get<EnvironmentApi>();
 
-    when(() => environment.type).thenReturn(EnvironmentType.dev);
+    when(() => environment.name).thenReturn('Development');
+    when(() => environment.color).thenReturn(Colors.blue);
     when(api.getEnvironment).thenReturn(environment);
 
     await tester.pumpWidget(

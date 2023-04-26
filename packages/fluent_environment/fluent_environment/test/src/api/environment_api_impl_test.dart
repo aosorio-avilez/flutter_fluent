@@ -15,7 +15,7 @@ void main() {
   );
 
   test('verify getEnvironment should return environment', () async {
-    final api = getApi<EnvironmentApi>();
+    final api = Fluent.get<EnvironmentApi>();
 
     final environment = api.getEnvironment();
 
@@ -23,7 +23,7 @@ void main() {
   });
 
   test('verify buildEnvironmentBanner should return environment', () async {
-    final api = getApi<EnvironmentApi>();
+    final api = Fluent.get<EnvironmentApi>();
 
     final banner = api.buildEnvironmentBanner(child: const Scaffold());
 

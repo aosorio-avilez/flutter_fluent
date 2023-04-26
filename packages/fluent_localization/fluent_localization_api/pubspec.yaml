@@ -1,5 +1,5 @@
 name: fluent_localization_api
-description: Package that allows you to access to the interface to translate your app texts
+description: A common interface for the fluent_localization package.
 version: 0.0.1
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_localization/fluent_localization_api
 

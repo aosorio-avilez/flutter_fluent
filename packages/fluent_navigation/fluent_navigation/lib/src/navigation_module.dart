@@ -4,26 +4,32 @@ import 'package:fluent_navigation/src/api/navigation_api_impl.dart';
 import 'package:fluent_navigation_api/fluent_navigation_api.dart';
 import 'package:go_router/go_router.dart';
 
-class NavigationModule extends Module {
+/// Register and build all the fluent navigation dependencies
+class NavigationModule extends FluentModule {
   NavigationModule({
     this.redirect,
   });
 
+  /// Callback that allow the app to redirect to a new location.
   final String? Function(String? location)? redirect;
 
   @override
   void build(Registry registry) {
     registry
-      ..registerApi<GoRouter>((it) => _buildGoRouter(), lazy: true)
-      ..registerApi<InternalNavigationApi>((it) => InternalNavigationApiImpl())
-      ..registerApi<NavigationApi>((it) => NavigationApiImpl());
+      ..registerLazySingleton<GoRouter>((it) => _buildGoRouter())
+      ..registerSingleton<InternalNavigationApi>(
+        (it) => InternalNavigationApiImpl(),
+      )
+      ..registerSingleton<NavigationApi>((it) => NavigationApiImpl());
   }
 
   GoRouter _buildGoRouter() {
     return GoRouter(
-      initialLocation: getApi<InternalNavigationApi>().getInitialRoute()?.path,
-      routes:
-          getApi<InternalNavigationApi>().getRegisteredRoutes().map((route) {
+      initialLocation:
+          Fluent.get<InternalNavigationApi>().getInitialRoute()?.path,
+      routes: Fluent.get<InternalNavigationApi>()
+          .getRegisteredRoutes()
+          .map((route) {
         return GoRoute(
           name: route.name,
           path: route.path,

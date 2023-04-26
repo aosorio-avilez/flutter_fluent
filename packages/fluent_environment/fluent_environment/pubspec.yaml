@@ -1,5 +1,5 @@
 name: fluent_environment
-description: Library that provides a way to register your environment and display it.
+description: Package that provides a way to register your environment globally and display it.
 version: 0.0.1
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_environment/fluent_environment
 

@@ -2,7 +2,8 @@ import 'package:fluent_localization_api/fluent_localization_api.dart';
 import 'package:flutter/material.dart';
 
 extension LocalizationExtension on BuildContext {
+  /// Translate an element through the BuildContext
   String tl(String key) {
-    return getApi<LocalizationApi>().translate(this, key);
+    return Fluent.get<LocalizationApi>().translate(this, key);
   }
 }

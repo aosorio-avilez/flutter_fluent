@@ -1,15 +1,22 @@
 import 'package:fluent_localization/fluent_localization.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  Fluent.build([
+void main() async {
+  await Fluent.build([
     LocalizationModule(),
   ]);
-  runApp(const MainApp());
+  runApp(MainApp(
+    localizationApi: Fluent.get(),
+  ));
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  const MainApp({
+    super.key,
+    required this.localizationApi,
+  });
+
+  final LocalizationApi localizationApi;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +27,7 @@ class MainApp extends StatelessWidget {
     ];
     // Get localization delegates
     final localizationDelegates =
-        getApi<LocalizationApi>().getLocalizationDelegates(locales);
+        localizationApi.getLocalizationDelegates(locales);
 
     return MaterialApp(
       localizationsDelegates: localizationDelegates,

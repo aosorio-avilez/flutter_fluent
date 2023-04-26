@@ -7,9 +7,9 @@ import 'widgets/environment_banner_test.dart';
 void main() {
   test('environment module should register environment api implementation',
       () async {
-    Fluent.build([EnvironmentModule(environment: EnvironmentMock())]);
+    await Fluent.build([EnvironmentModule(environment: EnvironmentMock())]);
 
-    final api = getApi<EnvironmentApi>();
+    final api = Fluent.get<EnvironmentApi>();
 
     expect(api, isA<EnvironmentApiImpl>());
   });

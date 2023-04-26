@@ -1,18 +1,19 @@
 import 'package:fluent_navigation/src/api/internal_navigation_api.dart';
+import 'package:fluent_navigation/src/fluent_route.dart';
 import 'package:fluent_navigation/src/navigation_module.dart';
 import 'package:fluent_navigation_api/fluent_navigation_api.dart';
-import 'package:flutter/material.dart' as material;
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
   test('verify navigation module', () async {
-    Fluent.build([NavigationModule()]);
-    mockApi<List<Route>>(<Route>[]);
+    await Fluent.build([NavigationModule()]);
+    Fluent.mock<List<FluentRoute>>(<FluentRoute>[]);
 
-    final api = getApi<NavigationApi>();
-    final internalApi = getApi<InternalNavigationApi>();
-    final router = getApi<GoRouter>();
+    final api = Fluent.get<NavigationApi>();
+    final internalApi = Fluent.get<InternalNavigationApi>();
+    final router = Fluent.get<GoRouter>();
 
     expect(api, isA<NavigationApi>());
     expect(internalApi, isA<InternalNavigationApi>());
@@ -20,79 +21,79 @@ void main() {
   });
 
   testWidgets('verify navigate between routes', (tester) async {
-    Fluent.build([NavigationModule()]);
-    mockApi<List<Route>>(<Route>[
-      const Route(
+    await Fluent.build([NavigationModule()]);
+    Fluent.mock<List<FluentRoute>>(<FluentRoute>[
+      const FluentRoute(
         'home',
         '/',
         initial: true,
-        page: material.Scaffold(
-          key: material.Key('home'),
+        page: Scaffold(
+          key: Key('home'),
         ),
       ),
-      const Route(
+      const FluentRoute(
         'test',
         '/test',
-        page: material.Scaffold(
-          key: material.Key('test'),
+        page: Scaffold(
+          key: Key('test'),
         ),
       ),
     ]);
 
-    final config = getApi<NavigationApi>().getConfig();
+    final config = Fluent.get<NavigationApi>().getConfig();
 
     await tester.pumpWidget(
-      material.MaterialApp.router(
+      MaterialApp.router(
         routerConfig: config,
       ),
     );
 
-    getApi<NavigationApi>().navigateTo('test');
+    Fluent.get<NavigationApi>().navigateTo('test');
 
     await tester.pump();
 
-    expect(find.byKey(const material.Key('test')), findsOneWidget);
+    expect(find.byKey(const Key('test')), findsOneWidget);
   });
 
   testWidgets('verify navigate between routes with builder', (tester) async {
-    Fluent.build([NavigationModule()]);
-    mockApi<List<Route>>(<Route>[
-      const Route(
+    await Fluent.build([NavigationModule()]);
+    Fluent.mock<List<FluentRoute>>(<FluentRoute>[
+      const FluentRoute(
         'home',
         '/',
         initial: true,
-        page: material.Scaffold(
-          key: material.Key('home'),
+        page: Scaffold(
+          key: Key('home'),
         ),
       ),
-      Route(
+      FluentRoute(
         'test',
         '/test',
         builder: (p0, p1) {
-          return const material.Scaffold(
-            key: material.Key('test'),
+          return const Scaffold(
+            key: Key('test'),
           );
         },
       ),
     ]);
 
-    final config = getApi<NavigationApi>().getConfig();
+    final config = Fluent.get<NavigationApi>().getConfig();
 
     await tester.pumpWidget(
-      material.MaterialApp.router(
+      MaterialApp.router(
         routerConfig: config,
       ),
     );
 
-    getApi<NavigationApi>().navigateTo('test');
+    Fluent.get<NavigationApi>().navigateTo('test');
 
     await tester.pump();
 
-    expect(find.byKey(const material.Key('test')), findsOneWidget);
+    expect(find.byKey(const Key('test')), findsOneWidget);
   });
 
   testWidgets('verify redirect', (tester) async {
-    Fluent.build([
+    await Fluent.build([
       NavigationModule(
         redirect: (location) {
           if (location == '/') {
@@ -102,36 +103,36 @@ void main() {
         },
       )
     ]);
-    mockApi<List<Route>>(<Route>[
-      const Route(
+    Fluent.mock<List<FluentRoute>>(<FluentRoute>[
+      const FluentRoute(
         'home',
         '/',
         initial: true,
-        page: material.Scaffold(
-          key: material.Key('home'),
+        page: Scaffold(
+          key: Key('home'),
         ),
       ),
-      Route(
+      FluentRoute(
         'test',
         '/test',
         builder: (p0, p1) {
-          return const material.Scaffold(
-            key: material.Key('test'),
+          return const Scaffold(
+            key: Key('test'),
           );
         },
       ),
     ]);
 
-    final config = getApi<NavigationApi>().getConfig();
+    final config = Fluent.get<NavigationApi>().getConfig();
 
     await tester.pumpWidget(
-      material.MaterialApp.router(
+      MaterialApp.router(
         routerConfig: config,
       ),
     );
 
     await tester.pump();
 
-    expect(find.byKey(const material.Key('test')), findsOneWidget);
+    expect(find.byKey(const Key('test')), findsOneWidget);
   });
 }

@@ -1,7 +1,10 @@
-import 'package:fluent_navigation_api/fluent_navigation_api.dart';
+import 'package:fluent_navigation/src/fluent_route.dart';
 
+/// Interface defined to use the fluent navigation functionalities
 abstract class InternalNavigationApi {
-  List<Route> getRegisteredRoutes();
+  /// Get all registered routes
+  List<FluentRoute> getRegisteredRoutes();
 
-  Route? getInitialRoute();
+  /// Get the initial route if exists or null if not
+  FluentRoute? getInitialRoute();
 }

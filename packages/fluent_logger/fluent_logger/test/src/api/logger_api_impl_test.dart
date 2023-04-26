@@ -7,40 +7,40 @@ import 'package:mocktail/mocktail.dart';
 
 void main() {
   setUpAll(
-    () {
-      Fluent.build([LoggerModule()]);
-      mockApi<Loggy>(LoggyMock());
+    () async {
+      await Fluent.build([LoggerModule()]);
+      Fluent.mock<Loggy>(LoggyMock());
     },
   );
 
   test('verify logDebug', () async {
-    final loggy = getApi<Loggy>();
+    final loggy = Fluent.get<Loggy>();
 
-    getApi<LoggerApi>().logDebug('debug message');
+    Fluent.get<LoggerApi>().logDebug('debug message');
 
     verify(() => loggy.log(LogLevel.debug, 'debug message')).called(1);
   });
 
   test('verify logError', () async {
-    final loggy = getApi<Loggy>();
+    final loggy = Fluent.get<Loggy>();
 
-    getApi<LoggerApi>().logError('error message');
+    Fluent.get<LoggerApi>().logError('error message');
 
     verify(() => loggy.log(LogLevel.error, 'error message')).called(1);
   });
 
   test('verify logInfo', () async {
-    final loggy = getApi<Loggy>();
+    final loggy = Fluent.get<Loggy>();
 
-    getApi<LoggerApi>().logInfo('info message');
+    Fluent.get<LoggerApi>().logInfo('info message');
 
     verify(() => loggy.log(LogLevel.info, 'info message')).called(1);
   });
 
   test('verify logWarning', () async {
-    final loggy = getApi<Loggy>();
+    final loggy = Fluent.get<Loggy>();
 
-    getApi<LoggerApi>().logWarning('warning message');
+    Fluent.get<LoggerApi>().logWarning('warning message');
 
     verify(() => loggy.log(LogLevel.warning, 'warning message')).called(1);
   });
