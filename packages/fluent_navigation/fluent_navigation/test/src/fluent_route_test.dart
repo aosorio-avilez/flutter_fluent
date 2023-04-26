@@ -1,4 +1,4 @@
-import 'package:fluent_sdk/fluent_sdk.dart';
+import 'package:fluent_navigation/src/fluent_route.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

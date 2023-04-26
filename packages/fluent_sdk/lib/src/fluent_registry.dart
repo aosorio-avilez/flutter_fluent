@@ -35,20 +35,23 @@ class FluentRegistry extends Registry {
     );
   }
 
-  @override
-  void registerRoute(FluentRoute route) {
-    var routes = <FluentRoute>[];
-    if (GetIt.instance.isRegistered<List<FluentRoute>>()) {
-      routes = GetIt.instance<List<FluentRoute>>();
-    }
-    routes.add(route);
-    allowReassignment(allow: true);
-    GetIt.instance.registerSingleton<List<FluentRoute>>(routes);
-    allowReassignment(allow: false);
-  }
+  // @override
+  // void registerRoute(FluentRoute route) {
+  //   var routes = <FluentRoute>[];
+  //   if (GetIt.instance.isRegistered<List<FluentRoute>>()) {
+  //     routes = GetIt.instance<List<FluentRoute>>();
+  //   }
+  //   routes.add(route);
+  //   allowReassignment(allow: true);
+  //   GetIt.instance.registerSingleton<List<FluentRoute>>(routes);
+  //   allowReassignment(allow: false);
+  // }
 
   @override
   void allowReassignment({required bool allow}) {
     GetIt.instance.allowReassignment = allow;
   }
+
+  @override
+  bool isRegistered<T extends Object>() => GetIt.instance.isRegistered<T>();
 }

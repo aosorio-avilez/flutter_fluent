@@ -1,4 +1,5 @@
 import 'package:fluent_navigation/src/api/internal_navigation_api.dart';
+import 'package:fluent_navigation/src/fluent_route.dart';
 import 'package:fluent_navigation/src/navigation_module.dart';
 import 'package:fluent_navigation_api/fluent_navigation_api.dart';
 import 'package:flutter_test/flutter_test.dart';

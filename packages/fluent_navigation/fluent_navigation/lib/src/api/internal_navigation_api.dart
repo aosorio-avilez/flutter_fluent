@@ -1,4 +1,4 @@
-import 'package:fluent_navigation/fluent_navigation.dart';
+import 'package:fluent_navigation/src/fluent_route.dart';
 
 abstract class InternalNavigationApi {
   List<FluentRoute> getRegisteredRoutes();

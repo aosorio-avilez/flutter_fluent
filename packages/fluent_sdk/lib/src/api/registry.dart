@@ -1,4 +1,3 @@
-import 'package:fluent_sdk/src/fluent_route.dart';
 import 'package:get_it/get_it.dart';
 
 abstract class Registry {
@@ -19,5 +18,7 @@ abstract class Registry {
     String? instanceName,
   });
 
-  void registerRoute(FluentRoute route);
+  bool isRegistered<T extends Object>();
+
+  // void registerRoute(FluentRoute route);
 }

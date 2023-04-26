@@ -1,7 +1,8 @@
 import 'package:fluent_navigation/src/api/internal_navigation_api.dart';
+import 'package:fluent_navigation/src/fluent_route.dart';
 import 'package:fluent_navigation/src/navigation_module.dart';
 import 'package:fluent_navigation_api/fluent_navigation_api.dart';
-import 'package:flutter/material.dart' as material;
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -26,15 +27,15 @@ void main() {
         'home',
         '/',
         initial: true,
-        page: material.Scaffold(
-          key: material.Key('home'),
+        page: Scaffold(
+          key: Key('home'),
         ),
       ),
       const FluentRoute(
         'test',
         '/test',
-        page: material.Scaffold(
-          key: material.Key('test'),
+        page: Scaffold(
+          key: Key('test'),
         ),
       ),
     ]);
@@ -42,7 +43,7 @@ void main() {
     final config = Fluent.get<NavigationApi>().getConfig();
 
     await tester.pumpWidget(
-      material.MaterialApp.router(
+      MaterialApp.router(
         routerConfig: config,
       ),
     );
@@ -51,7 +52,7 @@ void main() {
 
     await tester.pump();
 
-    expect(find.byKey(const material.Key('test')), findsOneWidget);
+    expect(find.byKey(const Key('test')), findsOneWidget);
   });
 
   testWidgets('verify navigate between routes with builder', (tester) async {
@@ -61,16 +62,16 @@ void main() {
         'home',
         '/',
         initial: true,
-        page: material.Scaffold(
-          key: material.Key('home'),
+        page: Scaffold(
+          key: Key('home'),
         ),
       ),
       FluentRoute(
         'test',
         '/test',
         builder: (p0, p1) {
-          return const material.Scaffold(
-            key: material.Key('test'),
+          return const Scaffold(
+            key: Key('test'),
           );
         },
       ),
@@ -79,7 +80,7 @@ void main() {
     final config = Fluent.get<NavigationApi>().getConfig();
 
     await tester.pumpWidget(
-      material.MaterialApp.router(
+      MaterialApp.router(
         routerConfig: config,
       ),
     );
@@ -88,7 +89,7 @@ void main() {
 
     await tester.pump();
 
-    expect(find.byKey(const material.Key('test')), findsOneWidget);
+    expect(find.byKey(const Key('test')), findsOneWidget);
   });
 
   testWidgets('verify redirect', (tester) async {
@@ -107,16 +108,16 @@ void main() {
         'home',
         '/',
         initial: true,
-        page: material.Scaffold(
-          key: material.Key('home'),
+        page: Scaffold(
+          key: Key('home'),
         ),
       ),
       FluentRoute(
         'test',
         '/test',
         builder: (p0, p1) {
-          return const material.Scaffold(
-            key: material.Key('test'),
+          return const Scaffold(
+            key: Key('test'),
           );
         },
       ),
@@ -125,13 +126,13 @@ void main() {
     final config = Fluent.get<NavigationApi>().getConfig();
 
     await tester.pumpWidget(
-      material.MaterialApp.router(
+      MaterialApp.router(
         routerConfig: config,
       ),
     );
 
     await tester.pump();
 
-    expect(find.byKey(const material.Key('test')), findsOneWidget);
+    expect(find.byKey(const Key('test')), findsOneWidget);
   });
 }
