@@ -6,7 +6,7 @@ Package that provide a way to modularize features through a service locator.
 ### Add dependencies
 
 ```yaml
-fluent_sdk: ^0.0.2
+fluent_sdk: ^0.1.1
 ```
 
 ### Create a interface/implementation to access the feature functionalities
@@ -41,7 +41,7 @@ class HomeModule extends Module {
   @override
   void build(Registry registry) {
     // Register home api to access globally to it
-    registry.registerApi<HomeApi>((it) => HomeApiImpl());
+    registry.registerSingleton<HomeApi>((it) => HomeApiImpl());
   }
 }
 ```
@@ -62,7 +62,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Access to home api and get home page
-    final homePage = getApi<HomeApi>().getHomePage();
+    final homePage = Fluent.get<HomeApi>().getHomePage();
 
     return MaterialApp(
       home: Scaffold(

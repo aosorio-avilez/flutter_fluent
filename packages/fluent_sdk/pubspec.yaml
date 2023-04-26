@@ -1,6 +1,6 @@
 name: fluent_sdk
 description: Package that provide a way to modularize features through a service locator.
-version: 0.0.2
+version: 0.1.1
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_sdk
 
 environment:
@@ -8,8 +8,6 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
   get_it: ^7.2.0
 
 dev_dependencies:
