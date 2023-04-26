@@ -8,7 +8,7 @@ import 'mocks/test_class_2.dart';
 void main() {
   final registry = FluentRegistry();
 
-  tearDown(() => GetIt.instance.reset());
+  setUp(() => GetIt.instance.reset());
 
   test('registerLazySingleton should register lazy object', () async {
     registry.registerLazySingleton<TestClass>((_) => TestClass());
