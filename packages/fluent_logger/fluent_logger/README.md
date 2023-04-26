@@ -6,7 +6,7 @@ Package that allows you to print different types of messages in console
 ### Add dependencies
 
 ```yaml
-flutter_fluent_logger: ^0.0.1
+flutter_fluent_logger: ^0.0.2
 ```
 
 ### Build module
@@ -25,7 +25,7 @@ class App extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
         // Print debug message in console
-        getApi<LoggerApi>().logDebug("Hello from Fluent Logger");
+        Fluent.get<LoggerApi>().logDebug("Hello from Fluent Logger");
         
         return MaterialApp(
             title: 'Fluent Logger Demo',
