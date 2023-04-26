@@ -15,7 +15,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Print debug message in console
-    getApi<LoggerApi>().logDebug("Hello from Fluent Logger");
+    Fluent.get<LoggerApi>().logDebug("Hello from Fluent Logger");
 
     return const MaterialApp(
       title: 'Fluent Logger Demo',

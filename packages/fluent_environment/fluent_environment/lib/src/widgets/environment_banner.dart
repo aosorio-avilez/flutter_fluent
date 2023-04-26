@@ -11,13 +11,13 @@ class EnvironmentBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final environment = getApi<EnvironmentApi>().getEnvironment();
+    final environment = Fluent.get<EnvironmentApi>().getEnvironment();
 
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Banner(
-        color: environment.type.color,
-        message: environment.type.description,
+        color: environment.color,
+        message: environment.name,
         location: BannerLocation.bottomEnd,
         textStyle: const TextStyle(
           fontSize: 12.0 * 0.85,

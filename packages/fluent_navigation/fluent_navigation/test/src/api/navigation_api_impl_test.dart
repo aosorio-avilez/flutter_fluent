@@ -9,29 +9,29 @@ void main() {
   setUpAll(() => Fluent.build([NavigationModule()]));
 
   test('verify navigateTo', () async {
-    mockApi<GoRouter>(GoRouterMock());
-    final router = getApi<GoRouter>();
+    Fluent.mock<GoRouter>(GoRouterMock());
+    final router = Fluent.get<GoRouter>();
     // when(() => router.goNamed(any())).thenReturn(null);
 
-    getApi<NavigationApi>().navigateTo('/');
+    Fluent.get<NavigationApi>().navigateTo('/');
 
     verify(() => router.goNamed(any())).called(1);
   });
 
   test('verify pushTo', () async {
-    mockApi<GoRouter>(GoRouterMock());
-    final router = getApi<GoRouter>();
+    Fluent.mock<GoRouter>(GoRouterMock());
+    final router = Fluent.get<GoRouter>();
     when(() => router.pushNamed<void>(any())).thenAnswer((_) => Future.value());
 
-    await getApi<NavigationApi>().pushTo<void>('/');
+    await Fluent.get<NavigationApi>().pushTo<void>('/');
 
     verify(() => router.pushNamed<void>(any())).called(1);
   });
 
   test('verify getConfig', () async {
-    mockApi<GoRouter>(GoRouterMock());
+    Fluent.mock<GoRouter>(GoRouterMock());
 
-    final config = getApi<NavigationApi>().getConfig();
+    final config = Fluent.get<NavigationApi>().getConfig();
 
     expect(config, isA<GoRouter>());
   });

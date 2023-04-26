@@ -1,5 +1,5 @@
 import 'package:fluent_sdk/src/api/registry.dart';
 
-abstract class Module {
+abstract class FluentModule {
   void build(Registry registry);
 }

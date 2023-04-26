@@ -12,9 +12,9 @@ void main() {
     when(() => config.baseUrl).thenReturn('');
     when(() => config.interceptors).thenReturn([]);
 
-    Fluent.build([NetworkingModule(config: config)]);
+    await Fluent.build([NetworkingModule(config: config)]);
 
-    expect(getApi<Dio>(), isA<Dio>());
-    expect(getApi<NetworkingApi>(), isA<NetworkingApiImpl>());
+    expect(Fluent.get<Dio>(), isA<Dio>());
+    expect(Fluent.get<NetworkingApi>(), isA<NetworkingApiImpl>());
   });
 }

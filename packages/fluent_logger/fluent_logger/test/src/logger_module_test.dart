@@ -6,10 +6,10 @@ import 'package:loggy/loggy.dart';
 
 void main() {
   test('verify logger module', () async {
-    Fluent.build([LoggerModule()]);
+    await Fluent.build([LoggerModule()]);
 
-    final loggy = getApi<Loggy>();
-    final loggerApi = getApi<LoggerApi>();
+    final loggy = Fluent.get<Loggy>();
+    final loggerApi = Fluent.get<LoggerApi>();
 
     expect(loggy, isA<Loggy>());
     expect(loggerApi, isA<LoggerApiImpl>());

@@ -15,7 +15,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final networkingApi = getApi<NetworkingApi>();
+    final networkingApi = Fluent.get<NetworkingApi>();
     final future = networkingApi.get<Map<String, dynamic>>("/pokemon");
 
     return MaterialApp(

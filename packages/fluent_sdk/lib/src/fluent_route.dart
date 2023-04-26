@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Route {
-  const Route(
+class FluentRoute {
+  const FluentRoute(
     this.name,
     this.path, {
     this.page,

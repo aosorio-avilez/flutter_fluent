@@ -16,7 +16,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final config = getApi<NavigationApi>().getConfig();
+    final config = Fluent.get<NavigationApi>().getConfig();
 
     return MaterialApp.router(
       title: "Fluent Navigation Demo",

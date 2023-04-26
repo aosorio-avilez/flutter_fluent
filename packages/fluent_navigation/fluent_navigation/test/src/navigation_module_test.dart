@@ -7,12 +7,12 @@ import 'package:go_router/go_router.dart';
 
 void main() {
   test('verify navigation module', () async {
-    Fluent.build([NavigationModule()]);
-    mockApi<List<Route>>(<Route>[]);
+    await Fluent.build([NavigationModule()]);
+    Fluent.mock<List<FluentRoute>>(<FluentRoute>[]);
 
-    final api = getApi<NavigationApi>();
-    final internalApi = getApi<InternalNavigationApi>();
-    final router = getApi<GoRouter>();
+    final api = Fluent.get<NavigationApi>();
+    final internalApi = Fluent.get<InternalNavigationApi>();
+    final router = Fluent.get<GoRouter>();
 
     expect(api, isA<NavigationApi>());
     expect(internalApi, isA<InternalNavigationApi>());
@@ -20,9 +20,9 @@ void main() {
   });
 
   testWidgets('verify navigate between routes', (tester) async {
-    Fluent.build([NavigationModule()]);
-    mockApi<List<Route>>(<Route>[
-      const Route(
+    await Fluent.build([NavigationModule()]);
+    Fluent.mock<List<FluentRoute>>(<FluentRoute>[
+      const FluentRoute(
         'home',
         '/',
         initial: true,
@@ -30,7 +30,7 @@ void main() {
           key: material.Key('home'),
         ),
       ),
-      const Route(
+      const FluentRoute(
         'test',
         '/test',
         page: material.Scaffold(
@@ -39,7 +39,7 @@ void main() {
       ),
     ]);
 
-    final config = getApi<NavigationApi>().getConfig();
+    final config = Fluent.get<NavigationApi>().getConfig();
 
     await tester.pumpWidget(
       material.MaterialApp.router(
@@ -47,7 +47,7 @@ void main() {
       ),
     );
 
-    getApi<NavigationApi>().navigateTo('test');
+    Fluent.get<NavigationApi>().navigateTo('test');
 
     await tester.pump();
 
@@ -55,9 +55,9 @@ void main() {
   });
 
   testWidgets('verify navigate between routes with builder', (tester) async {
-    Fluent.build([NavigationModule()]);
-    mockApi<List<Route>>(<Route>[
-      const Route(
+    await Fluent.build([NavigationModule()]);
+    Fluent.mock<List<FluentRoute>>(<FluentRoute>[
+      const FluentRoute(
         'home',
         '/',
         initial: true,
@@ -65,7 +65,7 @@ void main() {
           key: material.Key('home'),
         ),
       ),
-      Route(
+      FluentRoute(
         'test',
         '/test',
         builder: (p0, p1) {
@@ -76,7 +76,7 @@ void main() {
       ),
     ]);
 
-    final config = getApi<NavigationApi>().getConfig();
+    final config = Fluent.get<NavigationApi>().getConfig();
 
     await tester.pumpWidget(
       material.MaterialApp.router(
@@ -84,7 +84,7 @@ void main() {
       ),
     );
 
-    getApi<NavigationApi>().navigateTo('test');
+    Fluent.get<NavigationApi>().navigateTo('test');
 
     await tester.pump();
 
@@ -92,7 +92,7 @@ void main() {
   });
 
   testWidgets('verify redirect', (tester) async {
-    Fluent.build([
+    await Fluent.build([
       NavigationModule(
         redirect: (location) {
           if (location == '/') {
@@ -102,8 +102,8 @@ void main() {
         },
       )
     ]);
-    mockApi<List<Route>>(<Route>[
-      const Route(
+    Fluent.mock<List<FluentRoute>>(<FluentRoute>[
+      const FluentRoute(
         'home',
         '/',
         initial: true,
@@ -111,7 +111,7 @@ void main() {
           key: material.Key('home'),
         ),
       ),
-      Route(
+      FluentRoute(
         'test',
         '/test',
         builder: (p0, p1) {
@@ -122,7 +122,7 @@ void main() {
       ),
     ]);
 
-    final config = getApi<NavigationApi>().getConfig();
+    final config = Fluent.get<NavigationApi>().getConfig();
 
     await tester.pumpWidget(
       material.MaterialApp.router(

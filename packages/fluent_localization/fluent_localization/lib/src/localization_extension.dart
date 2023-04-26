@@ -3,6 +3,6 @@ import 'package:flutter/material.dart';
 
 extension LocalizationExtension on BuildContext {
   String tl(String key) {
-    return getApi<LocalizationApi>().translate(this, key);
+    return Fluent.get<LocalizationApi>().translate(this, key);
   }
 }

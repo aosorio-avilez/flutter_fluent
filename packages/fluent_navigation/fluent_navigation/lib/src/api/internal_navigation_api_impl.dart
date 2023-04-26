@@ -4,12 +4,12 @@ import 'package:fluent_navigation_api/fluent_navigation_api.dart';
 
 class InternalNavigationApiImpl extends InternalNavigationApi {
   @override
-  List<Route> getRegisteredRoutes() {
-    return getApi<List<Route>>();
+  List<FluentRoute> getRegisteredRoutes() {
+    return Fluent.get<List<FluentRoute>>();
   }
 
   @override
-  Route? getInitialRoute() {
+  FluentRoute? getInitialRoute() {
     final routes = getRegisteredRoutes();
     return routes.firstWhereOrNull((element) => element.initial);
   }

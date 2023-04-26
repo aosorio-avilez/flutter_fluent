@@ -6,9 +6,7 @@ import 'app_environment.dart';
 void main() {
   Fluent.build([
     EnvironmentModule(
-      environment: AppEnvironment(
-        type: EnvironmentType.dev,
-      ),
+      environment: AppEnvironment(),
     ),
   ]);
 
@@ -21,16 +19,17 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Return environment banner to display the current environment
-    final environmentBanner = getApi<EnvironmentApi>().buildEnvironmentBanner;
+    final environmentBanner =
+        Fluent.get<EnvironmentApi>().buildEnvironmentBanner;
     // Return the current environment
-    final environment = getApi<EnvironmentApi>().getEnvironment();
+    final environment = Fluent.get<EnvironmentApi>().getEnvironment();
 
     return MaterialApp(
       title: 'Fluent Environment Example',
       builder: (context, child) => environmentBanner(child: child!),
       home: Scaffold(
         body: Center(
-          child: Text("Environment: ${environment.type.description}"),
+          child: Text("Environment: ${environment.name}"),
         ),
       ),
     );

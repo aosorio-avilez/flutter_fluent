@@ -1,10 +1,12 @@
 import 'package:fluent_environment/fluent_environment.dart';
+import 'package:flutter/material.dart';
 
 class AppEnvironment extends Environment {
-  AppEnvironment({this.type = EnvironmentType.prod});
+  @override
+  final String name = "Development";
 
   @override
-  final EnvironmentType type;
+  final Color color = Colors.blue;
 
   @override
   Map<String, String> get values => {

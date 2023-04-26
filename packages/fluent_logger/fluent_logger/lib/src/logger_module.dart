@@ -3,13 +3,13 @@ import 'package:flutter_fluent_logger/src/api/logger_api_impl.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 
-class LoggerModule extends Module {
+class LoggerModule extends FluentModule {
   @override
   void build(Registry registry) {
     registry
-      ..registerApi<Loggy>(
+      ..registerSingleton<Loggy>(
         (it) => Loggy('loggy')..printer = const PrettyDeveloperPrinter(),
       )
-      ..registerApi<LoggerApi>((it) => LoggerApiImpl());
+      ..registerSingleton<LoggerApi>((it) => LoggerApiImpl());
   }
 }

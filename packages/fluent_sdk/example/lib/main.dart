@@ -17,7 +17,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get home page from home module
-    final homePage = getApi<HomeApi>().getHomePage();
+    final homePage = Fluent.get<HomeApi>().getHomePage();
 
     return MaterialApp(
       home: Scaffold(

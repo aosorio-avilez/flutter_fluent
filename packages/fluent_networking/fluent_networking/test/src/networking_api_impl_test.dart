@@ -8,11 +8,11 @@ import 'package:mocktail/mocktail.dart';
 class DioMock extends Mock implements Dio {}
 
 void main() {
-  setUpAll(() => mockApi<Dio>(DioMock()));
+  setUpAll(() => Fluent.mock<Dio>(DioMock()));
 
   group('verify get request', () {
     test('return succeed', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.get<void>(any())).thenAnswer(
         (_) async => Response(
           requestOptions: RequestOptions(path: '/'),
@@ -28,7 +28,7 @@ void main() {
     });
 
     test('return failed', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.get<Map<String, dynamic>>(any())).thenAnswer(
         (_) async => Response(
           requestOptions: RequestOptions(path: '/'),
@@ -45,7 +45,7 @@ void main() {
     });
 
     test('return error', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.get<void>(any())).thenThrow(
         DioError(requestOptions: RequestOptions(path: '/')),
       );
@@ -60,7 +60,7 @@ void main() {
 
   group('verify post request', () {
     test('return succeed', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.post<void>(any())).thenAnswer(
         (_) async => Response(
           requestOptions: RequestOptions(path: '/'),
@@ -76,7 +76,7 @@ void main() {
     });
 
     test('return failed', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.post<Map<String, dynamic>>(any())).thenAnswer(
         (_) async => Response(
           requestOptions: RequestOptions(path: '/'),
@@ -93,7 +93,7 @@ void main() {
     });
 
     test('return error', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.post<void>(any())).thenThrow(
         DioError(requestOptions: RequestOptions(path: '/')),
       );
@@ -108,7 +108,7 @@ void main() {
 
   group('verify patch request', () {
     test('return succeed', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.patch<void>(any())).thenAnswer(
         (_) async => Response(
           requestOptions: RequestOptions(path: '/'),
@@ -124,7 +124,7 @@ void main() {
     });
 
     test('return failed', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.patch<Map<String, dynamic>>(any())).thenAnswer(
         (_) async => Response(
           requestOptions: RequestOptions(path: '/'),
@@ -141,7 +141,7 @@ void main() {
     });
 
     test('return error', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.patch<void>(any())).thenThrow(
         DioError(requestOptions: RequestOptions(path: '/')),
       );
@@ -156,7 +156,7 @@ void main() {
 
   group('verify put request', () {
     test('return succeed', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.put<void>(any())).thenAnswer(
         (_) async => Response(
           requestOptions: RequestOptions(path: '/'),
@@ -172,7 +172,7 @@ void main() {
     });
 
     test('return failed', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.put<Map<String, dynamic>>(any())).thenAnswer(
         (_) async => Response(
           requestOptions: RequestOptions(path: '/'),
@@ -189,7 +189,7 @@ void main() {
     });
 
     test('return error', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.put<void>(any())).thenThrow(
         DioError(requestOptions: RequestOptions(path: '/')),
       );
@@ -204,7 +204,7 @@ void main() {
 
   group('verify delete request', () {
     test('return succeed', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.delete<void>(any())).thenAnswer(
         (_) async => Response(
           requestOptions: RequestOptions(path: '/'),
@@ -220,7 +220,7 @@ void main() {
     });
 
     test('return failed', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.delete<Map<String, dynamic>>(any())).thenAnswer(
         (_) async => Response(
           requestOptions: RequestOptions(path: '/'),
@@ -237,7 +237,7 @@ void main() {
     });
 
     test('return error', () async {
-      final dio = getApi<Dio>();
+      final dio = Fluent.get<Dio>();
       when(() => dio.delete<void>(any())).thenThrow(
         DioError(requestOptions: RequestOptions(path: '/')),
       );
