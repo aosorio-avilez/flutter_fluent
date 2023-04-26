@@ -8,8 +8,6 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
   fluent_networking_api: ^0.0.3
   dio: ^5.1.1
   equatable: ^2.0.5
