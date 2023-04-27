@@ -14,3 +14,7 @@
 ## 0.0.3+1
 
 * Removed sdk flutter dependency
+
+## 0.0.4
+
+* Dependency `fluent_sdk` was removed

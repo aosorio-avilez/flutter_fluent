@@ -1,13 +1,12 @@
 name: fluent_networking_api
 description: A common interface for the fluent_networking package.
-version: 0.0.3+1
+version: 0.0.4
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_networking/fluent_networking_api
 
 environment:
   sdk: '>=2.19.6 <3.0.0'
 
 dependencies:
-  fluent_sdk: ^0.1.1
   dio: ^5.1.1
   freezed_annotation: ^2.2.0
   equatable: ^2.0.5

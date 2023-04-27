@@ -10,3 +10,8 @@
 
 * Removed sdk flutter dependency
 * Replace `flutter_test` to `test` dependency
+
+## 0.0.3
+
+* Dependency `fluent_sdk` was added
+* Version of `fluent_networking_api` was updated to v0.0.4
