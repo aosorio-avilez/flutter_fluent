@@ -1,17 +1,20 @@
-import 'package:fluent_navigation/src/api/go_router_mock.dart';
 import 'package:fluent_navigation/src/navigation_module.dart';
 import 'package:fluent_navigation_api/fluent_navigation_api.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../mocks/go_router_mock.dart';
+
 void main() {
-  setUpAll(() => Fluent.build([NavigationModule()]));
+  setUpAll(() async {
+    await Fluent.build([NavigationModule()]);
+    addTearDown(Fluent.reset);
+  });
 
   test('verify navigateTo', () async {
     Fluent.mock<GoRouter>(GoRouterMock());
     final router = Fluent.get<GoRouter>();
-    // when(() => router.goNamed(any())).thenReturn(null);
 
     Fluent.get<NavigationApi>().navigateTo('/');
 

@@ -7,11 +7,14 @@ import '../widgets/environment_banner_test.dart';
 
 void main() {
   setUpAll(
-    () => Fluent.build([
-      EnvironmentModule(
-        environment: EnvironmentMock(),
-      )
-    ]),
+    () async {
+      await Fluent.build([
+        EnvironmentModule(
+          environment: EnvironmentMock(),
+        )
+      ]);
+      addTearDown(Fluent.reset);
+    },
   );
 
   test('verify getEnvironment should return environment', () async {

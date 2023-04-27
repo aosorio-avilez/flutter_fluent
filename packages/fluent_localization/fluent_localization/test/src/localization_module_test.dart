@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test('localization module should register api implementation', () async {
     await Fluent.build([LocalizationModule()]);
+    addTearDown(Fluent.reset);
 
     final api = Fluent.get<LocalizationApi>();
 

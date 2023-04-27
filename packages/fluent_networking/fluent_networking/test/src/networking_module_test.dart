@@ -13,6 +13,7 @@ void main() {
     when(() => config.interceptors).thenReturn([]);
 
     await Fluent.build([NetworkingModule(config: config)]);
+    addTearDown(Fluent.reset);
 
     expect(Fluent.get<Dio>(), isA<Dio>());
     expect(Fluent.get<NetworkingApi>(), isA<NetworkingApiImpl>());

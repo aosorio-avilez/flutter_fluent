@@ -11,12 +11,15 @@ class Fluent {
   static Future<void> build(List<FluentModule> modules) async {
     final getIt = GetIt.instance;
 
-    await getIt.reset();
-
     for (final module in modules) {
       getIt.pushNewScope();
       module.build(_registry);
     }
+  }
+
+  /// Clear all the registered objects
+  static Future<void> reset() async {
+    return GetIt.instance.reset();
   }
 
   /// Get a specific registered object

@@ -1,15 +1,16 @@
 import 'package:fluent_logger_api/fluent_logger_api.dart';
-import 'package:flutter_fluent_logger/src/api/loggy_mock.dart';
 import 'package:flutter_fluent_logger/src/logger_module.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
+import '../../mocks/loggy_mock.dart';
 
 void main() {
   setUpAll(
     () async {
       await Fluent.build([LoggerModule()]);
       Fluent.mock<Loggy>(LoggyMock());
+      addTearDown(Fluent.reset);
     },
   );
 

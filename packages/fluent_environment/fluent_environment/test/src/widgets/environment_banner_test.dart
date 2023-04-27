@@ -1,4 +1,3 @@
-import 'package:fluent_environment/src/api/environment_api_mock.dart';
 import 'package:fluent_environment/src/environment_module.dart';
 import 'package:fluent_environment/src/widgets/environment_banner.dart';
 import 'package:fluent_environment_api/fluent_environment_api.dart';
@@ -6,15 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../mocks/environment_api_mock.dart';
+
 class EnvironmentMock extends Mock implements Environment {}
 
 void main() {
   setUpAll(
-    () => Fluent.build([
-      EnvironmentModule(
-        environment: EnvironmentMock(),
-      )
-    ]),
+    () async {
+      await Fluent.build([
+        EnvironmentModule(
+          environment: EnvironmentMock(),
+        )
+      ]);
+      addTearDown(Fluent.reset);
+    },
   );
 
   testWidgets('verify environment banner', (tester) async {

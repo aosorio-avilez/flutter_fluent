@@ -14,12 +14,12 @@ dependencies:
     sdk: flutter
   fluent_localization_api: ^0.0.2+1
   ez_localization: ^1.1.0
-  mocktail: ^0.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   very_good_analysis: ^4.0.0+1
+  mocktail: ^0.3.0
 
 flutter:
   assets:

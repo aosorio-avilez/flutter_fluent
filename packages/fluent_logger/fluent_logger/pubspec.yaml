@@ -9,9 +9,8 @@ environment:
 dependencies:
   fluent_logger_api: ^0.0.2+1
   loggy: ^2.0.3
-  flutter_loggy: ^2.0.2
-  mocktail: ^0.3.0
 
 dev_dependencies:
   test: ^1.22.0
   very_good_analysis: ^4.0.0+1
+  mocktail: ^0.3.0

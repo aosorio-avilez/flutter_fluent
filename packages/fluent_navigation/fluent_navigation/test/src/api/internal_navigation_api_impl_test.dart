@@ -5,7 +5,10 @@ import 'package:fluent_navigation_api/fluent_navigation_api.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  setUpAll(() => Fluent.build([NavigationModule()]));
+  setUpAll(() async {
+    await Fluent.build([NavigationModule()]);
+    addTearDown(Fluent.reset);
+  });
 
   test('verify getRegisteredRoutes return registered routes', () async {
     Fluent.mock<List<FluentRoute>>([const FluentRoute('test', '/path')]);
