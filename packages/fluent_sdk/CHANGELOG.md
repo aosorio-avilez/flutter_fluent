@@ -21,3 +21,8 @@
 ## 0.1.1
 
 * Removed flutter dependency
+
+## 0.1.1+1
+
+* Removed sdk flutter dependency
+* Replace `flutter_test` to `test` dependency

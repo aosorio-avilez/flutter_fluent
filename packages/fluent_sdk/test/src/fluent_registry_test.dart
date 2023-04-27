@@ -1,6 +1,6 @@
 import 'package:fluent_sdk/src/fluent_registry.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:test/test.dart';
 
 import 'mocks/test_class.dart';
 import 'mocks/test_class_2.dart';
