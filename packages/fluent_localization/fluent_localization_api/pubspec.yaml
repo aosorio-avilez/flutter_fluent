@@ -1,6 +1,6 @@
 name: fluent_localization_api
 description: A common interface for the fluent_localization package.
-version: 0.0.2
+version: 0.0.2+1
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_localization/fluent_localization_api
 
 environment:
@@ -13,6 +13,4 @@ dependencies:
   fluent_sdk: ^0.1.1
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   very_good_analysis: ^4.0.0+1
