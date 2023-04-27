@@ -6,7 +6,7 @@ Package that allows you to set up and use translations in an easy and quick way
 ### Add dependencies
 
 ```yaml
-fluent_localization: ^0.0.2+1
+fluent_localization: ^0.0.3
 ```
 
 ### Add assets folder to Flutter
