@@ -1,5 +1,5 @@
 import 'package:fluent_navigation/src/fluent_route.dart';
-import 'package:fluent_navigation_api/fluent_navigation_api.dart';
+import 'package:fluent_sdk/fluent_sdk.dart';
 
 extension RegistryExtension on Registry {
   /// Function that allows you to register

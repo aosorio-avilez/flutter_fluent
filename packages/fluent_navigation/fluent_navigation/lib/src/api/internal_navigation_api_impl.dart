@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:fluent_navigation/src/api/internal_navigation_api.dart';
 import 'package:fluent_navigation/src/fluent_route.dart';
-import 'package:fluent_navigation_api/fluent_navigation_api.dart';
+import 'package:fluent_sdk/fluent_sdk.dart';
 
 class InternalNavigationApiImpl extends InternalNavigationApi {
   @override
