@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 
 import 'package:fluent_networking/src/networking_api_impl.dart';
 import 'package:fluent_networking_api/fluent_networking_api.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:test/test.dart';
 
 class DioMock extends Mock implements Dio {}
 

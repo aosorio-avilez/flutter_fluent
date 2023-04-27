@@ -6,7 +6,7 @@ Package that allows you to set up and use translations in an easy and quick way
 ### Add dependencies
 
 ```yaml
-fluent_localization: ^0.0.1
+fluent_localization: ^0.0.2+1
 ```
 
 ### Add assets folder to Flutter
@@ -47,7 +47,7 @@ class App extends StatelessWidget {
             Locale("en"),
         ];
         // Get localization delegates
-        final localizationDelegates = getApi<LocalizationApi>().getLocalizationDelegates(locales);
+        final localizationDelegates = Fluent.get<LocalizationApi>().getLocalizationDelegates(locales);
         
         return MaterialApp(
             title: 'Fluent Localization Demo',

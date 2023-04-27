@@ -6,7 +6,7 @@ Package that provides a simple way to navigate within your app
 ### Add dependencies
 
 ```yaml
-fluent_navigation: ^0.0.1
+fluent_navigation: ^0.0.2+1
 ```
 
 ### Create pages
@@ -24,7 +24,7 @@ class PageOne extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () {
             // Push to registered route two
-            getApi<NavigationApi>().pushTo("two");
+            Fluent.get<NavigationApi>().pushTo("two");
           },
           child: const Text("Navigate to second page"),
         ),
@@ -91,7 +91,7 @@ class App extends StatelessWidget {
     @override
     Widget build(BuildContext context) {    
         // Get router config
-        final config = getApi<NavigationApi>().getConfig();
+        final config = Fluent.get<NavigationApi>().getConfig();
         
         return MaterialApp.router(
             title: "Fluent Navigation Demo",

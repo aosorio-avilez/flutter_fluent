@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluent_networking: ^0.0.1
+  fluent_networking: ^0.0.2
 
 dev_dependencies:
   flutter_test:

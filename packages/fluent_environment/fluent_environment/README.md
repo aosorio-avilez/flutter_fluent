@@ -6,17 +6,19 @@ Package that provides a way to register your environment and display it
 ### Add dependencies
 
 ```yaml
-fluent_environment: ^0.0.1
+fluent_environment: ^0.0.2+1
 ```
 
 ### Define environment
 
 ```dart 
 class AppEnvironment extends Environment {
-    AppEnvironment({this.type = EnvironmentType.prod});
     
     @override
-    final EnvironmentType type;
+    final String name = "Development";
+
+    @override
+    final Color color = Colors.blue;
 
     @override
     Map<String, String> get values => {
@@ -30,7 +32,7 @@ class AppEnvironment extends Environment {
 ```dart
 Fluent.build([
     EnvironmentModule(
-        AppEnvironment(type: EnvironmentType.dev),
+        environment: AppEnvironment(),
     ),
 ]);
 ```
@@ -43,9 +45,9 @@ class App extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
         // Return environment banner to display the current environment
-        final environmentBanner = getApi<EnvironmentApi>().buildEnvironmentBanner;
+        final environmentBanner = FLuent.get<EnvironmentApi>().buildEnvironmentBanner;
         // Return the current environment
-        final environment =  getApi<EnvironmentApi>().getEnvironment();
+        final environment =  FLuent.get<EnvironmentApi>().getEnvironment();
         
         return MaterialApp(
             title: 'Fluent Environment Demo',
