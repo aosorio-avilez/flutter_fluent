@@ -1,6 +1,6 @@
 name: fluent_environment_api
 description: A common interface for the fluent_environment package.
-version: 0.0.2+1
+version: 0.0.3
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_environment/fluent_environment_api
 
 environment:
@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluent_sdk: ^0.1.1
 
 dev_dependencies:
   very_good_analysis: ^4.0.0+1
