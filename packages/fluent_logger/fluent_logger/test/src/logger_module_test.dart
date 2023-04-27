@@ -7,6 +7,7 @@ import 'package:test/test.dart';
 void main() {
   test('verify logger module', () async {
     await Fluent.build([LoggerModule()]);
+    addTearDown(Fluent.reset);
 
     final loggy = Fluent.get<Loggy>();
     final loggerApi = Fluent.get<LoggerApi>();

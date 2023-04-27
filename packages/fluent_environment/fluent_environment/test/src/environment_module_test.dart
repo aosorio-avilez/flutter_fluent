@@ -8,6 +8,7 @@ void main() {
   test('environment module should register environment api implementation',
       () async {
     await Fluent.build([EnvironmentModule(environment: EnvironmentMock())]);
+    addTearDown(Fluent.reset);
 
     final api = Fluent.get<EnvironmentApi>();
 

@@ -19,9 +19,9 @@ class TestModule2 extends FluentModule {
 }
 
 void main() {
-  test('registerRoute should register route in list of routes', () async {
-    addTearDown(Fluent.reset);
+  setUp(() => addTearDown(Fluent.reset));
 
+  test('registerRoute should register route in list of routes', () async {
     await Fluent.build([TestModule()]);
 
     expect(Fluent.get<List<FluentRoute>>(), isA<List<FluentRoute>>());

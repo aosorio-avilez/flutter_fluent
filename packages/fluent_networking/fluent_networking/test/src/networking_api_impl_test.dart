@@ -8,7 +8,10 @@ import 'package:test/test.dart';
 class DioMock extends Mock implements Dio {}
 
 void main() {
-  setUpAll(() => Fluent.mock<Dio>(DioMock()));
+  setUpAll(() {
+    Fluent.mock<Dio>(DioMock());
+    addTearDown(Fluent.reset);
+  });
 
   group('verify get request', () {
     test('return succeed', () async {

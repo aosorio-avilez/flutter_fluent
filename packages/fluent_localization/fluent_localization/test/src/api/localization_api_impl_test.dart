@@ -6,9 +6,12 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   setUpAll(
-    () => Fluent.build([
-      LocalizationModule(),
-    ]),
+    () async {
+      await Fluent.build([
+        LocalizationModule(),
+      ]);
+      addTearDown(Fluent.reset);
+    },
   );
 
   test('verify getLocalizationDelegates', () async {

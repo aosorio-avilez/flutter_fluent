@@ -11,9 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
   fluent_environment_api: ^0.0.2+1
-  mocktail: ^0.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   very_good_analysis: ^4.0.0+1
+  mocktail: ^0.3.0
