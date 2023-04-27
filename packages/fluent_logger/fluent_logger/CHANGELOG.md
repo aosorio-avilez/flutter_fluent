@@ -7,3 +7,9 @@
 * Version of `fluent_logger_api` was updated to v0.0.2
 * `flutter` dependency was removed
 * Public APIs was documented
+
+## 0.0.2+1
+
+* Package `fluent_logger_api` was updated to v0.0.2+1
+* Flutter SDK dependency removed
+* Dev dependency `flutter_test` replaced by `test`

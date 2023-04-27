@@ -1,9 +1,9 @@
 import 'package:fluent_logger_api/fluent_logger_api.dart';
 import 'package:flutter_fluent_logger/src/api/loggy_mock.dart';
 import 'package:flutter_fluent_logger/src/logger_module.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:test/test.dart';
 
 void main() {
   setUpAll(
