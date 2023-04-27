@@ -10,3 +10,7 @@
 ## 0.0.3
 
 * Removed flutter dependency
+
+## 0.0.3+1
+
+* Removed sdk flutter dependency

@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:fluent_networking/fluent_networking.dart';
 import 'package:fluent_networking/src/networking_api_impl.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:test/test.dart';
 
 class RestConfigMock extends Mock implements NetworkingConfig {}
 
