@@ -7,7 +7,7 @@ import 'mocks/test_class_2.dart';
 import 'mocks/test_module.dart';
 
 void main() {
-  setUp(() => GetIt.instance.reset());
+  setUp(() => addTearDown(Fluent.reset));
 
   test('verify build modules', () async {
     await Fluent.build([TestModule()]);
@@ -39,6 +39,20 @@ void main() {
       GetIt.instance.registerLazySingleton(TestClass.new);
     } catch (e) {
       expect(e, isA<ArgumentError>());
+    }
+  });
+
+  test('verify reset clear all previous registered objects', () async {
+    Fluent.mock<TestClass>(TestClass2());
+
+    expect(Fluent.get<TestClass>(), isA<TestClass>());
+
+    await Fluent.reset();
+
+    try {
+      Fluent.get<TestClass>();
+    } catch (e) {
+      expect(e, isA<AssertionError>());
     }
   });
 }

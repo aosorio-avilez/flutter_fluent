@@ -11,7 +11,6 @@ void main() {
   test('verify navigateTo', () async {
     Fluent.mock<GoRouter>(GoRouterMock());
     final router = Fluent.get<GoRouter>();
-    // when(() => router.goNamed(any())).thenReturn(null);
 
     Fluent.get<NavigationApi>().navigateTo('/');
 
