@@ -12,3 +12,7 @@
 
 * Dev dependency `flutter_test` was removed
 * SDK dlutter dependency was removed
+
+## 0.0.3
+
+* Dependency `flutter_sdk` was removed

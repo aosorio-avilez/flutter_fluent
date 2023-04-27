@@ -1,4 +1,5 @@
 import 'package:fluent_logger_api/fluent_logger_api.dart';
+import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter_fluent_logger/src/logger_module.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mocktail/mocktail.dart';
