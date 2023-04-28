@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import 'package:fluent_networking/src/networking_api_impl.dart';
 import 'package:fluent_networking_api/fluent_networking_api.dart';
+import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 

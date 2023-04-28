@@ -10,3 +10,7 @@
 ## 0.0.2+1
 
 * `flutter_test` dev dependency removed
+
+## 0.0.3
+
+* Dependency `fluent_sdk` was removed

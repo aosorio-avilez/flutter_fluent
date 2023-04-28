@@ -26,3 +26,8 @@
 
 * Removed sdk flutter dependency
 * Replace `flutter_test` to `test` dependency
+
+## 0.1.2
+
+* `reset` method was added to `Fluent` class to clear all registered objects
+* Avoid clear all registered objects before build modules

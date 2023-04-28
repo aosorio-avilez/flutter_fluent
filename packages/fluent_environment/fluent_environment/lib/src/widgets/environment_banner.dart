@@ -1,4 +1,5 @@
 import 'package:fluent_environment_api/fluent_environment_api.dart';
+import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/material.dart';
 
 /// Widget that use the current environment to display
