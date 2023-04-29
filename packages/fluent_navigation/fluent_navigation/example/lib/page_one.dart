@@ -9,12 +9,27 @@ class PageOne extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text("Page one")),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Push to registered route two
-            Fluent.get<NavigationApi>().pushTo("two");
-          },
-          child: const Text("Navigate to second page"),
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                // Push to registered route two
+                final result = await Fluent.get<NavigationApi>().pushTo("two");
+                if (result != null) {
+                  debugPrint("Result: $result");
+                }
+              },
+              child: const Text("Push to second page"),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to page two
+                Fluent.get<NavigationApi>().navigateTo("two");
+              },
+              child: const Text("Navigate to second page"),
+            ),
+          ],
         ),
       ),
     );

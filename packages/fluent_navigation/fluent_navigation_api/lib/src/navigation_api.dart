@@ -22,6 +22,10 @@ abstract class NavigationApi {
     Object? extra,
   });
 
+  /// Pop the last route off the current screen
+  /// And pass it an optional result.
+  void pop<T>(T? result);
+
   /// Get the router configuration
   RouterConfig<Object> getConfig();
 }
