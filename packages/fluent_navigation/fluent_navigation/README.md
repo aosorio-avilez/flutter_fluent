@@ -6,7 +6,7 @@ Package that provides a simple way to navigate within your app
 ### Add dependencies
 
 ```yaml
-fluent_navigation: ^0.0.3
+fluent_navigation: ^0.0.4
 ```
 
 ### Create pages
@@ -21,12 +21,27 @@ class PageOne extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text("Page one")),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Push to registered route two
-            Fluent.get<NavigationApi>().pushTo("two");
-          },
-          child: const Text("Navigate to second page"),
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                // Push to registered route two
+                final result = await Fluent.get<NavigationApi>().pushTo("two");
+                if (result != null) {
+                  debugPrint("Result: $result");
+                }
+              },
+              child: const Text("Push to second page"),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to page two
+                Fluent.get<NavigationApi>().navigateTo("two");
+              },
+              child: const Text("Navigate to second page"),
+            ),
+          ],
         ),
       ),
     );
@@ -41,8 +56,13 @@ class PageTwo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Page two")),
-      body: const Center(
-        child: Text("Hello from page two"),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Fluent.get<NavigationApi>().pop(true);
+          },
+          child: const Text("Go back to previous page"),
+        ),
       ),
     );
   }

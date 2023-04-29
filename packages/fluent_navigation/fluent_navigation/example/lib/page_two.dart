@@ -1,3 +1,4 @@
+import 'package:fluent_navigation/fluent_navigation.dart';
 import 'package:flutter/material.dart';
 
 class PageTwo extends StatelessWidget {
@@ -7,8 +8,13 @@ class PageTwo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Page two")),
-      body: const Center(
-        child: Text("Hello from page two"),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Fluent.get<NavigationApi>().pop(true);
+          },
+          child: const Text("Go back to previous page"),
+        ),
       ),
     );
   }
