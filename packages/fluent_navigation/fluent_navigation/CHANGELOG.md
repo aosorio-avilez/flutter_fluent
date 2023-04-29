@@ -16,3 +16,7 @@
 
 * Package `fluent_navigation_api` was updated to `v0.0.3`
 * Package `fluent_sdk` was added
+
+## 0.0.4
+
+* `pop` method was added in order to let users go back to previous routes if is possible

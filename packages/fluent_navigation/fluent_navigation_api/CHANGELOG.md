@@ -14,3 +14,7 @@
 ## 0.0.3
 
 * Dependency `fluent_sdk` was removed
+
+## 0.0.4
+
+* `pop` method was added in order to let users go back to previous routes if is possible
