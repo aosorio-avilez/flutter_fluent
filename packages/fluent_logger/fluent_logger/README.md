@@ -6,15 +6,19 @@ Package that allows you to print different types of messages in console
 ### Add dependencies
 
 ```yaml
-flutter_fluent_logger: ^0.0.3
+flutter_fluent_logger: ^0.0.4
 ```
 
 ### Build module
 
 ```dart
-Fluent.build([
+void main() async {
+  await Fluent.build([
     LoggerModule(),
-]);
+  ]);
+
+  runApp(const MainApp());
+}
 ```
 
 ### Use it
