@@ -6,7 +6,7 @@ import 'package:loggy/loggy.dart';
 /// Register and build all the fluent logger dependencies
 class LoggerModule extends FluentModule {
   @override
-  void build(Registry registry) {
+  Future<void> build(Registry registry) async {
     registry
       ..registerSingleton<Loggy>(
         (it) => Loggy('loggy')..printer = const PrettyPrinter(),

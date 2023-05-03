@@ -4,7 +4,7 @@ import 'package:fluient_sdk_example/feature/home/home_api_impl.dart';
 
 class HomeModule extends FluentModule {
   @override
-  void build(Registry registry) {
+  Future<void> build(Registry registry) async {
     // Registry home api
     registry.registerSingleton<HomeApi>((it) => HomeApiImpl());
   }

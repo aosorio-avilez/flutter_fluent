@@ -4,14 +4,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 class TestModule extends FluentModule {
   @override
-  void build(Registry registry) {
+  Future<void> build(Registry registry) async {
     registry.registerRoute(const FluentRoute('home', '/', page: Scaffold()));
   }
 }
 
 class TestModule2 extends FluentModule {
   @override
-  void build(Registry registry) {
+  Future<void> build(Registry registry) async {
     registry
       ..registerRoute(const FluentRoute('home', '/', page: Scaffold()))
       ..registerRoute(const FluentRoute('login', '/login', page: Scaffold()));

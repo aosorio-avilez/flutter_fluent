@@ -15,7 +15,7 @@ class NavigationModule extends FluentModule {
   final String? Function(String? location)? redirect;
 
   @override
-  void build(Registry registry) {
+  Future<void> build(Registry registry) async {
     registry
       ..registerLazySingleton<GoRouter>((it) => _buildGoRouter())
       ..registerSingleton<InternalNavigationApi>(
