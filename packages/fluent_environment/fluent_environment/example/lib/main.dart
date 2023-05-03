@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'app_environment.dart';
 
-void main() {
-  Fluent.build([
+void main() async {
+  await Fluent.build([
     EnvironmentModule(
       environment: AppEnvironment(),
     ),
