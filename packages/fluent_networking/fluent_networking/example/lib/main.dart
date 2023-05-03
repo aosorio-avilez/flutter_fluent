@@ -2,8 +2,8 @@ import 'package:fluent_networking/fluent_networking.dart';
 import 'package:fluent_networking_example/app_config.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  Fluent.build([
+void main() async {
+  await Fluent.build([
     NetworkingModule(config: ApiConfig()),
   ]);
 

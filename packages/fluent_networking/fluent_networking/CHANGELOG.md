@@ -15,3 +15,7 @@
 
 * Dependency `fluent_sdk` was added
 * Version of `fluent_networking_api` was updated to v0.0.4
+
+## 0.0.4
+
+* Version of `fluent_sdk` was updated to v0.2.0

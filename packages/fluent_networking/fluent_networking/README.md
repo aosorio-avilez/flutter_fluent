@@ -6,7 +6,7 @@ Package that provides a simple way to make http requests
 ### Add dependencies
 
 ```yaml
-fluent_networking: ^0.0.3
+fluent_networking: ^0.0.4
 ```
 
 ### Create networking config
@@ -21,9 +21,13 @@ class ApiConfig extends NetworkingConfig {
 ### Build module
 
 ```dart
-Fluent.build([
-    NetworkingModule(),
-]);
+void main() async {
+  await Fluent.build([
+    NetworkingModule(config: ApiConfig()),
+  ]);
+
+  runApp(const MainApp());
+}
 ```
 
 ### Use it
