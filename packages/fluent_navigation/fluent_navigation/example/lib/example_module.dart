@@ -4,7 +4,7 @@ import 'package:fluent_navigation_example/page_two.dart';
 
 class ExampleModule extends FluentModule {
   @override
-  void build(Registry registry) {
+  Future<void> build(Registry registry) async {
     registry
       // Initial route
       ..registerRoute(const FluentRoute(
