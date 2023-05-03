@@ -6,7 +6,7 @@ Package that provides a simple way to navigate within your app
 ### Add dependencies
 
 ```yaml
-fluent_navigation: ^0.0.4
+fluent_navigation: ^0.0.5
 ```
 
 ### Create pages
@@ -72,10 +72,10 @@ class PageTwo extends StatelessWidget {
 ### Create module and register routes
 
 ```dart
-class ExampleModule extends Module {
+class ExampleModule extends FluentModule {
 
   @override
-  void build(Registry registry) {
+  Future<void> build(Registry registry) async {
     registry
         // Initial route
         ..registerRoute(const Route(
@@ -97,10 +97,14 @@ class ExampleModule extends Module {
 ### Build module
 
 ```dart
-Fluent.build([
+void main() async {
+  await Fluent.build([
     NavigationModule(),
     ExampleModule(),
-]);
+  ]);
+
+  runApp(const MainApp());
+}
 ```
 
 ### Use it

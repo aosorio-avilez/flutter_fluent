@@ -20,3 +20,7 @@
 ## 0.0.4
 
 * `pop` method was added in order to let users go back to previous routes if is possible
+
+## 0.0.5
+
+* Package `fluent_sdk` was updated to `v0.2.0`
