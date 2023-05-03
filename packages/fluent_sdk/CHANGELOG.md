@@ -31,3 +31,7 @@
 
 * `reset` method was added to `Fluent` class to clear all registered objects
 * Avoid clear all registered objects before build modules
+
+## 0.2.0
+
+* FluentModule `build` method return type was converted to async

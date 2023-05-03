@@ -12,4 +12,7 @@ class AppEnvironment extends Environment {
   Map<String, String> get values => {
         'url': const String.fromEnvironment('URL'),
       };
+
+  @override
+  EnvironemntType get type => EnvironemntType.dev;
 }

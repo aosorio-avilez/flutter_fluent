@@ -15,3 +15,7 @@
 ## 0.0.3
 
 * Dependency `fluent_sdk` was removed
+
+## 0.0.4
+
+* `type` getter was added to `Environment` interface

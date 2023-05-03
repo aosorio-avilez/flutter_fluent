@@ -18,3 +18,7 @@
 
 * Package `fluent_logger_api` was updated to v0.0.3
 * Package `fluent_sdk` was added
+
+## 0.0.4
+
+* Package `fluent_sdk` was updated to v0.2.0

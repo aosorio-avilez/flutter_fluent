@@ -3,8 +3,8 @@ import 'package:fluient_sdk_example/feature/home/home_api.dart';
 import 'package:fluient_sdk_example/feature/home/home_module.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  Fluent.build([
+void main() async {
+  await Fluent.build([
     HomeModule(),
   ]);
 

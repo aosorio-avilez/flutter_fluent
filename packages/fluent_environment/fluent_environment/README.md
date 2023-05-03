@@ -6,7 +6,7 @@ Package that provides a way to register your environment and display it
 ### Add dependencies
 
 ```yaml
-fluent_environment: ^0.0.3
+fluent_environment: ^0.0.4
 ```
 
 ### Define environment
@@ -24,17 +24,24 @@ class AppEnvironment extends Environment {
     Map<String, String> get values => {
         'url': const String.fromEnvironment('URL'),
     };
+
+    @override
+    EnvironemntType get type => EnvironemntType.dev;
 }
 ```
 
 ### Build module
 
 ```dart
-Fluent.build([
+void main() async {
+  await Fluent.build([
     EnvironmentModule(
-        environment: AppEnvironment(),
+      environment: AppEnvironment(),
     ),
-]);
+  ]);
+
+  runApp(const App());
+}
 ```
 
 ### Use it

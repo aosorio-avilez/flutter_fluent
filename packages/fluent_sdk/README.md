@@ -6,7 +6,7 @@ Package that provide a way to modularize features through a service locator.
 ### Add dependencies
 
 ```yaml
-fluent_sdk: ^0.1.2
+fluent_sdk: ^0.2.0
 ```
 
 ### Create a interface/implementation to access the feature functionalities
@@ -39,7 +39,7 @@ class HomeApiImpl extends HomeApi {
 class HomeModule extends Module {
 
   @override
-  void build(Registry registry) {
+  Future<void> build(Registry registry) async {
     // Register home api to access globally to it
     registry.registerSingleton<HomeApi>((it) => HomeApiImpl());
   }
@@ -49,9 +49,13 @@ class HomeModule extends Module {
 ### Build module
 
 ```dart
-Fluent.build([
+void main() async {
+  await Fluent.build([
     HomeModule(),
-]);
+  ]);
+
+  runApp(const MainApp());
+}
 ```
 
 ### Use it

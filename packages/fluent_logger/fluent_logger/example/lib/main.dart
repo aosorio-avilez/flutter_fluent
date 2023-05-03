@@ -1,8 +1,8 @@
 import 'package:flutter_fluent_logger/flutter_fluent_logger.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  Fluent.build([
+void main() async {
+  await Fluent.build([
     LoggerModule(),
   ]);
 
