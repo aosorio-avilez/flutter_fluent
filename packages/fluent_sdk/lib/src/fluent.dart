@@ -13,7 +13,7 @@ class Fluent {
 
     for (final module in modules) {
       getIt.pushNewScope();
-      module.build(_registry);
+      await module.build(_registry);
     }
   }
 
