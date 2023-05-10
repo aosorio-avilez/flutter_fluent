@@ -6,10 +6,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 class LocalizationApiImpl extends LocalizationApi {
   @override
   List<LocalizationsDelegate<dynamic>> getLocalizationDelegates(
-    List<Locale> locales,
-  ) {
+    List<Locale> locales, {
+    String Function(Locale locale)? pathFunction,
+  }) {
     return [
-      EzLocalizationDelegate(supportedLocales: locales),
+      EzLocalizationDelegate(
+        supportedLocales: locales,
+        getPathFunction: pathFunction ?? EzLocalization.defaultGetPathFunction,
+      ),
       GlobalMaterialLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
       GlobalWidgetsLocalizations.delegate,
@@ -17,7 +21,11 @@ class LocalizationApiImpl extends LocalizationApi {
   }
 
   @override
-  String translate(BuildContext context, String key) {
-    return EzLocalization.of(context)!.get(key);
+  String translate(
+    BuildContext context,
+    String key, {
+    Map<String, String>? args,
+  }) {
+    return context.getString(key, args);
   }
 }

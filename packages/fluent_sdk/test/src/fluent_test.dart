@@ -52,7 +52,7 @@ void main() {
     try {
       Fluent.get<TestClass>();
     } catch (e) {
-      expect(e, isA<AssertionError>());
+      expect(e, isA<StateError>());
     }
   });
 }
