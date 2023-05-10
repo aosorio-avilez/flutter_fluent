@@ -14,6 +14,35 @@ void main() {
     },
   );
 
+  testWidgets('verify translate', (tester) async {
+    final locales = [const Locale('en')];
+    final localizationDelegates =
+        Fluent.get<LocalizationApi>().getLocalizationDelegates(
+      locales,
+      pathFunction: (locale) =>
+          'test/assets/languages/${locale.languageCode}.json',
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        supportedLocales: locales,
+        localizationsDelegates: localizationDelegates,
+        home: Scaffold(
+          body: Builder(
+            builder: (context) {
+              final testContent =
+                  context.tl('test.hello', args: {'name': 'Developer'});
+              return Text(testContent);
+            },
+          ),
+        ),
+      ),
+    );
+
+    await tester.pump();
+
+    expect(find.text('Hello Developer!'), findsOneWidget);
+  });
+
   test('verify getLocalizationDelegates', () async {
     final api = Fluent.get<LocalizationApi>();
 
@@ -29,31 +58,18 @@ void main() {
     expect(delegates[3], isA<LocalizationsDelegate<WidgetsLocalizations>>());
   });
 
-  testWidgets('verify translate', (tester) async {
-    final locales = [
-      const Locale('es'),
-      const Locale('en'),
-    ];
-    final delegates =
-        Fluent.get<LocalizationApi>().getLocalizationDelegates(locales);
-
-    await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: delegates,
-        supportedLocales: locales,
-        home: Scaffold(
-          body: Builder(
-            builder: (context) {
-              final helloText = context.tl('test');
-              return Text(helloText);
-            },
-          ),
-        ),
-      ),
+  test('verify getPathFunction', () async {
+    final api = Fluent.get<LocalizationApi>();
+    const pathLocation = 'assets/languages/es.json';
+    const locale = Locale('es');
+    final delegates = api.getLocalizationDelegates(
+      [locale],
+      pathFunction: (locale) => 'assets/languages/${locale.languageCode}.json',
     );
 
-    await tester.pump();
+    final path =
+        (delegates[0] as EzLocalizationDelegate).getPathFunction(locale);
 
-    expect(find.text('test'), findsOneWidget);
+    expect(path, pathLocation);
   });
 }
