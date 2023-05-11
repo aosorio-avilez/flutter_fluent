@@ -5,7 +5,15 @@ import 'package:flutter_test/flutter_test.dart';
 class TestModule extends FluentModule {
   @override
   Future<void> build(Registry registry) async {
-    registry.registerRoute(const FluentRoute('home', '/', page: Scaffold()));
+    registry.registerRoute(
+      GoRoute(
+        path: '/',
+        name: 'home',
+        builder: (context, state) {
+          return const Scaffold();
+        },
+      ),
+    );
   }
 }
 
@@ -13,8 +21,24 @@ class TestModule2 extends FluentModule {
   @override
   Future<void> build(Registry registry) async {
     registry
-      ..registerRoute(const FluentRoute('home', '/', page: Scaffold()))
-      ..registerRoute(const FluentRoute('login', '/login', page: Scaffold()));
+      ..registerRoute(
+        GoRoute(
+          path: '/',
+          name: 'home',
+          builder: (context, state) {
+            return const Scaffold();
+          },
+        ),
+      )
+      ..registerRoute(
+        GoRoute(
+          name: 'login',
+          path: '/login',
+          builder: (context, state) {
+            return const Scaffold();
+          },
+        ),
+      );
   }
 }
 
@@ -24,7 +48,7 @@ void main() {
   test('registerRoute should register route in list of routes', () async {
     await Fluent.build([TestModule()]);
 
-    expect(Fluent.get<List<FluentRoute>>(), isA<List<FluentRoute>>());
+    expect(Fluent.get<List<GoRoute>>(), isA<List<GoRoute>>());
   });
 
   test(
@@ -32,6 +56,6 @@ void main() {
       () async {
     await Fluent.build([TestModule2()]);
 
-    expect(Fluent.get<List<FluentRoute>>().length, 2);
+    expect(Fluent.get<List<GoRoute>>().length, 2);
   });
 }

@@ -7,17 +7,17 @@ class ExampleModule extends FluentModule {
   Future<void> build(Registry registry) async {
     registry
       // Initial route
-      ..registerRoute(const FluentRoute(
-        "one",
-        "/",
+      ..registerRoute(GoRoute(
+        name: "one",
+        path: "/",
         // initial: true,
-        page: PageOne(),
+        builder: (context, state) => const PageOne(),
       ))
       // Second route
-      ..registerRoute(const FluentRoute(
-        "two",
-        "/two",
-        page: PageTwo(),
+      ..registerRoute(GoRoute(
+        name: "two",
+        path: "/two",
+        builder: (context, state) => const PageTwo(),
       ));
   }
 }

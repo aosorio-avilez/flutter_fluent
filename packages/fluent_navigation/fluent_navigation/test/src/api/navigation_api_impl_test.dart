@@ -1,12 +1,11 @@
 import 'package:fluent_navigation/fluent_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
 
 void main() {
   setUp(() async {
     mockRoutes();
-    await Fluent.build([NavigationModule()]);
+    await Fluent.build([NavigationModule(initialLocation: '/first')]);
     addTearDown(Fluent.reset);
   });
 
@@ -58,57 +57,58 @@ Future<void> pumpAppRouter(WidgetTester tester) async {
 }
 
 void mockRoutes() {
-  Fluent.mock<List<FluentRoute>>([
-    FluentRoute(
-      'first',
-      '/first',
-      initial: true,
-      page: Builder(
-        builder: (context) {
-          return Scaffold(
-            key: const Key('firstPage'),
-            body: Column(
-              children: [
-                ElevatedButton(
-                  key: const Key('navigateButton'),
-                  onPressed: () {
-                    Fluent.get<NavigationApi>().navigateTo('second');
-                  },
-                  child: const Text('Navigate to second page'),
-                ),
-                ElevatedButton(
-                  key: const Key('pushButton'),
-                  onPressed: () async {
-                    final result = await Fluent.get<NavigationApi>()
-                        .pushTo<bool>('second');
+  Fluent.mock<List<GoRoute>>([
+    GoRoute(
+      name: 'first',
+      path: '/first',
+      builder: (context, state) {
+        return Scaffold(
+          key: const Key('firstPage'),
+          body: Column(
+            children: [
+              ElevatedButton(
+                key: const Key('navigateButton'),
+                onPressed: () {
+                  Fluent.get<NavigationApi>().navigateTo('second');
+                },
+                child: const Text('Navigate to second page'),
+              ),
+              ElevatedButton(
+                key: const Key('pushButton'),
+                onPressed: () async {
+                  final result =
+                      await Fluent.get<NavigationApi>().pushTo<bool>('second');
 
-                    if (result ?? false) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Hello from first page')),
-                      );
-                    }
-                  },
-                  child: const Text('Push to second page'),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+                  if (result ?? false) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Hello from first page'),
+                      ),
+                    );
+                  }
+                },
+                child: const Text('Push to second page'),
+              ),
+            ],
+          ),
+        );
+      },
     ),
-    FluentRoute(
-      'second',
-      '/second',
-      page: Scaffold(
-        key: const Key('secondPage'),
-        body: ElevatedButton(
-          key: const Key('popButton'),
-          onPressed: () {
-            Fluent.get<NavigationApi>().pop(true);
-          },
-          child: const Text('Go back to previous route'),
-        ),
-      ),
+    GoRoute(
+      name: 'second',
+      path: '/second',
+      builder: (context, state) {
+        return Scaffold(
+          key: const Key('secondPage'),
+          body: ElevatedButton(
+            key: const Key('popButton'),
+            onPressed: () {
+              Fluent.get<NavigationApi>().pop(true);
+            },
+            child: const Text('Go back to previous route'),
+          ),
+        );
+      },
     ),
   ]);
 }
