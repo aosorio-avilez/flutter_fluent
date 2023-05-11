@@ -14,3 +14,8 @@
 ## 0.0.3
 
 * Dependency `fluent_sdk` was removed
+
+## 0.0.4
+
+* `pathFunction` parameter was added to `getLocalizationDelegates` in order to change the default localization file
+* `args` parameter was added to `translate` in order to enable format arguments
