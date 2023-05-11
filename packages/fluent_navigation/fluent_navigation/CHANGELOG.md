@@ -24,3 +24,8 @@
 ## 0.0.5
 
 * Package `fluent_sdk` was updated to `v0.2.0`
+
+## 0.0.6
+
+* Class `FluentRoute` was removed
+* `registerRoute` now use `GoRoute` instead of `FluentRoute` in order to expose more out-of-the-box functionalities 
