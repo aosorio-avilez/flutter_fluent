@@ -19,3 +19,7 @@
 ## 0.0.4
 
 * Dependency `fluent_sdk` was updated to v0.2.0
+
+## 0.0.5
+
+* Dependency `fluent_localization_api` was updated to v0.0.4
