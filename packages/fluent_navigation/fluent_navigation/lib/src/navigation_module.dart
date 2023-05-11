@@ -9,42 +9,28 @@ import 'package:go_router/go_router.dart';
 class NavigationModule extends FluentModule {
   NavigationModule({
     this.redirect,
+    this.initialLocation,
   });
 
   /// Callback that allow the app to redirect to a new location.
   final String? Function(String? location)? redirect;
+  final String? initialLocation;
 
   @override
   Future<void> build(Registry registry) async {
     registry
-      ..registerLazySingleton<GoRouter>((it) => _buildGoRouter())
+      ..registerLazySingleton<GoRouter>(
+        (it) {
+          return GoRouter(
+            initialLocation: initialLocation,
+            routes: Fluent.get<InternalNavigationApi>().getRegisteredRoutes(),
+            redirect: (context, state) => redirect?.call(state.location),
+          );
+        },
+      )
       ..registerSingleton<InternalNavigationApi>(
         (it) => InternalNavigationApiImpl(),
       )
       ..registerSingleton<NavigationApi>((it) => NavigationApiImpl());
-  }
-
-  GoRouter _buildGoRouter() {
-    return GoRouter(
-      initialLocation:
-          Fluent.get<InternalNavigationApi>().getInitialRoute()?.path,
-      routes: Fluent.get<InternalNavigationApi>()
-          .getRegisteredRoutes()
-          .map((route) {
-        return GoRoute(
-          name: route.name,
-          path: route.path,
-          pageBuilder: (context, state) {
-            return NoTransitionPage(
-              child: route.builder != null
-                  ? route.builder!.call(state.params, state.queryParams)
-                  : route.page!,
-              key: state.pageKey,
-            );
-          },
-        );
-      }).toList(),
-      redirect: (context, state) => redirect?.call(state.location),
-    );
   }
 }

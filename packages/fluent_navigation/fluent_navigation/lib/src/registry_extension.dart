@@ -1,18 +1,18 @@
-import 'package:fluent_navigation/src/fluent_route.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
+import 'package:go_router/go_router.dart';
 
 extension RegistryExtension on Registry {
   /// Function that allows you to register
-  /// A fluent route that will be available
+  /// A route that will be available
   /// to navigate later through the navigation api
-  void registerRoute(FluentRoute route) {
-    var routes = <FluentRoute>[];
-    if (isRegistered<List<FluentRoute>>()) {
-      routes = Fluent.get<List<FluentRoute>>();
+  void registerRoute(GoRoute route) {
+    var routes = <GoRoute>[];
+    if (isRegistered<List<GoRoute>>()) {
+      routes = Fluent.get<List<GoRoute>>();
     }
     routes.add(route);
     allowReassignment(allow: true);
-    registerSingleton<List<FluentRoute>>((it) => routes);
+    registerSingleton<List<GoRoute>>((it) => routes);
     allowReassignment(allow: false);
   }
 }

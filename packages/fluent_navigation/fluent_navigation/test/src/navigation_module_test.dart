@@ -1,5 +1,4 @@
 import 'package:fluent_navigation/src/api/internal_navigation_api.dart';
-import 'package:fluent_navigation/src/fluent_route.dart';
 import 'package:fluent_navigation/src/navigation_module.dart';
 import 'package:fluent_navigation_api/fluent_navigation_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
@@ -12,7 +11,7 @@ void main() {
 
   test('verify navigation module', () async {
     await Fluent.build([NavigationModule()]);
-    Fluent.mock<List<FluentRoute>>(<FluentRoute>[]);
+    Fluent.mock<List<GoRoute>>(<GoRoute>[]);
 
     final api = Fluent.get<NavigationApi>();
     final internalApi = Fluent.get<InternalNavigationApi>();
@@ -24,20 +23,19 @@ void main() {
   });
 
   testWidgets('verify navigate between routes', (tester) async {
-    await Fluent.build([NavigationModule()]);
-    Fluent.mock<List<FluentRoute>>(<FluentRoute>[
-      const FluentRoute(
-        'home',
-        '/',
-        initial: true,
-        page: Scaffold(
+    await Fluent.build([NavigationModule(initialLocation: '/')]);
+    Fluent.mock<List<GoRoute>>(<GoRoute>[
+      GoRoute(
+        name: 'home',
+        path: '/',
+        builder: (context, state) => const Scaffold(
           key: Key('home'),
         ),
       ),
-      const FluentRoute(
-        'test',
-        '/test',
-        page: Scaffold(
+      GoRoute(
+        name: 'test',
+        path: '/test',
+        builder: (context, state) => const Scaffold(
           key: Key('test'),
         ),
       ),
@@ -53,26 +51,25 @@ void main() {
 
     Fluent.get<NavigationApi>().navigateTo('test');
 
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('test')), findsOneWidget);
   });
 
   testWidgets('verify navigate between routes with builder', (tester) async {
     await Fluent.build([NavigationModule()]);
-    Fluent.mock<List<FluentRoute>>(<FluentRoute>[
-      const FluentRoute(
-        'home',
-        '/',
-        initial: true,
-        page: Scaffold(
+    Fluent.mock<List<GoRoute>>(<GoRoute>[
+      GoRoute(
+        name: 'home',
+        path: '/',
+        builder: (context, state) => const Scaffold(
           key: Key('home'),
         ),
       ),
-      FluentRoute(
-        'test',
-        '/test',
-        builder: (p0, p1) {
+      GoRoute(
+        name: 'test',
+        path: '/test',
+        builder: (context, state) {
           return const Scaffold(
             key: Key('test'),
           );
@@ -90,7 +87,7 @@ void main() {
 
     Fluent.get<NavigationApi>().navigateTo('test');
 
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('test')), findsOneWidget);
   });
@@ -106,19 +103,18 @@ void main() {
         },
       )
     ]);
-    Fluent.mock<List<FluentRoute>>(<FluentRoute>[
-      const FluentRoute(
-        'home',
-        '/',
-        initial: true,
-        page: Scaffold(
+    Fluent.mock<List<GoRoute>>(<GoRoute>[
+      GoRoute(
+        name: 'home',
+        path: '/',
+        builder: (context, state) => const Scaffold(
           key: Key('home'),
         ),
       ),
-      FluentRoute(
-        'test',
-        '/test',
-        builder: (p0, p1) {
+      GoRoute(
+        name: 'test',
+        path: '/test',
+        builder: (context, state) {
           return const Scaffold(
             key: Key('test'),
           );
@@ -134,7 +130,7 @@ void main() {
       ),
     );
 
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('test')), findsOneWidget);
   });
