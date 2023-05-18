@@ -37,3 +37,6 @@ jobs:
 
       - name: 🧪 Run Tests
         run: melos test
+      
+      - name: 📊 Check Coverage
+        run: melos coverage

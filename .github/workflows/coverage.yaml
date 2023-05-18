@@ -26,8 +26,8 @@ jobs:
       - name: 📦 Install Dependencies
         run: melos bs
 
-      - name: 🧪 Run Tests with Coverage
-        run: melos coverage
+      - name: 🧪 Run Tests
+        run: melos test
       
       - name: 📊 Upload Code Coverage
         uses: codecov/codecov-action@v3
