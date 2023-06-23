@@ -100,7 +100,7 @@ class NetworkingApiImpl extends NetworkingApi {
     try {
       final response = await onExecute();
       return response.toResult<T>();
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       return exception.response?.toResult<T>() ?? exception.toResult();
     }
   }
@@ -116,7 +116,7 @@ extension ResponseExtension on Response<dynamic> {
   }
 }
 
-extension DioErrorExtension on DioError {
+extension DioErrorExtension on DioException {
   ResponseResult<T> toResult<T>() {
     return ResponseResult.error(
       ResponseError(

@@ -1,6 +1,5 @@
-import 'package:ez_localization/ez_localization.dart';
 import 'package:fluent_localization/fluent_localization.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:fluent_localization/src/fluent_localization_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -16,16 +15,14 @@ void main() {
 
   testWidgets('verify translate', (tester) async {
     final locales = [const Locale('en')];
-    final localizationDelegates =
-        Fluent.get<LocalizationApi>().getLocalizationDelegates(
+    final localizationDelegate = Fluent.get<LocalizationApi>().getDelegate(
       locales,
-      pathFunction: (locale) =>
-          'test/assets/languages/${locale.languageCode}.json',
+      path: 'test/assets/languages',
     );
     await tester.pumpWidget(
       MaterialApp(
         supportedLocales: locales,
-        localizationsDelegates: localizationDelegates,
+        localizationsDelegates: [localizationDelegate],
         home: Scaffold(
           body: Builder(
             builder: (context) {
@@ -46,29 +43,24 @@ void main() {
   test('verify getLocalizationDelegates', () async {
     final api = Fluent.get<LocalizationApi>();
 
-    final delegates = api.getLocalizationDelegates([
+    final delegate = api.getDelegate([
       const Locale('es'),
       const Locale('en'),
     ]);
 
-    expect(delegates.length, 4);
-    expect(delegates[0], isA<EzLocalizationDelegate>());
-    expect(delegates[1], isA<LocalizationsDelegate<MaterialLocalizations>>());
-    expect(delegates[2], isA<LocalizationsDelegate<CupertinoLocalizations>>());
-    expect(delegates[3], isA<LocalizationsDelegate<WidgetsLocalizations>>());
+    expect(delegate, isA<FluentLocalizationDelegate>());
   });
 
-  test('verify getPathFunction', () async {
+  test('verify path', () async {
     final api = Fluent.get<LocalizationApi>();
-    const pathLocation = 'assets/languages/es.json';
+    const pathLocation = 'assets/languages';
     const locale = Locale('es');
-    final delegates = api.getLocalizationDelegates(
+    final delegate = api.getDelegate(
       [locale],
-      pathFunction: (locale) => 'assets/languages/${locale.languageCode}.json',
+      path: 'assets/languages',
     );
 
-    final path =
-        (delegates[0] as EzLocalizationDelegate).getPathFunction(locale);
+    final path = (delegate as FluentLocalizationDelegate).path;
 
     expect(path, pathLocation);
   });
