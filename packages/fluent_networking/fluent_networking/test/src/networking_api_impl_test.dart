@@ -51,7 +51,7 @@ void main() {
     test('return error', () async {
       final dio = Fluent.get<Dio>();
       when(() => dio.get<void>(any())).thenThrow(
-        DioError(requestOptions: RequestOptions(path: '/')),
+        DioException(requestOptions: RequestOptions(path: '/')),
       );
 
       final networkingApi = NetworkingApiImpl(dio);
@@ -99,7 +99,7 @@ void main() {
     test('return error', () async {
       final dio = Fluent.get<Dio>();
       when(() => dio.post<void>(any())).thenThrow(
-        DioError(requestOptions: RequestOptions(path: '/')),
+        DioException(requestOptions: RequestOptions(path: '/')),
       );
 
       final networkingApi = NetworkingApiImpl(dio);
@@ -147,7 +147,7 @@ void main() {
     test('return error', () async {
       final dio = Fluent.get<Dio>();
       when(() => dio.patch<void>(any())).thenThrow(
-        DioError(requestOptions: RequestOptions(path: '/')),
+        DioException(requestOptions: RequestOptions(path: '/')),
       );
 
       final networkingApi = NetworkingApiImpl(dio);
@@ -195,7 +195,7 @@ void main() {
     test('return error', () async {
       final dio = Fluent.get<Dio>();
       when(() => dio.put<void>(any())).thenThrow(
-        DioError(requestOptions: RequestOptions(path: '/')),
+        DioException(requestOptions: RequestOptions(path: '/')),
       );
 
       final networkingApi = NetworkingApiImpl(dio);
@@ -243,7 +243,7 @@ void main() {
     test('return error', () async {
       final dio = Fluent.get<Dio>();
       when(() => dio.delete<void>(any())).thenThrow(
-        DioError(requestOptions: RequestOptions(path: '/')),
+        DioException(requestOptions: RequestOptions(path: '/')),
       );
 
       final networkingApi = NetworkingApiImpl(dio);
