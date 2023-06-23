@@ -12,9 +12,14 @@ dependencies:
     sdk: flutter
   fluent_sdk: ^0.2.0
   fluent_environment_api: ^0.0.4
+  build:
+  source_gen:
+  analyzer: 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   very_good_analysis: ^4.0.0+1
   mocktail: ^0.3.0
+  build_test:
+  build_runner:

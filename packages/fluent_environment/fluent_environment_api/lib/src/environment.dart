@@ -9,5 +9,5 @@ abstract class Environment {
 
   EnvironemntType get type;
 
-  Map<String, String> get values;
+  Map<String, String> get values => {};
 }
