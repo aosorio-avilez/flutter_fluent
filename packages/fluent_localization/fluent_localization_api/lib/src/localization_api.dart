@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 /// Interface defined to use the fluent localization functionalities
 abstract class LocalizationApi {
-  /// Get the neccesary localization delegates for supported locales
+  /// Get the localization delegate for supported locales
   /// on the default location, in order to change the default location
-  /// use the pathFunction to define it.
-  List<LocalizationsDelegate<dynamic>> getLocalizationDelegates(
+  /// use the path attribute to define it.
+  LocalizationsDelegate<dynamic> getDelegate(
     List<Locale> locales, {
-    String Function(Locale locale)? pathFunction,
+    Locale? defaultLocale,
+    String? path,
   });
 
   /// Translate a specific key through the build context

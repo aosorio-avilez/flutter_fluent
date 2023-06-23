@@ -1,23 +1,20 @@
-import 'package:ez_localization/ez_localization.dart';
-import 'package:fluent_localization_api/fluent_localization_api.dart';
+import 'package:fluent_localization/fluent_localization.dart';
+import 'package:fluent_localization/src/fluent_localization.dart';
+import 'package:fluent_localization/src/fluent_localization_delegate.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 class LocalizationApiImpl extends LocalizationApi {
   @override
-  List<LocalizationsDelegate<dynamic>> getLocalizationDelegates(
+  LocalizationsDelegate<dynamic> getDelegate(
     List<Locale> locales, {
-    String Function(Locale locale)? pathFunction,
+    Locale? defaultLocale,
+    String? path,
   }) {
-    return [
-      EzLocalizationDelegate(
-        supportedLocales: locales,
-        getPathFunction: pathFunction ?? EzLocalization.defaultGetPathFunction,
-      ),
-      GlobalMaterialLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-    ];
+    return FluentLocalizationDelegate(
+      supportedLocales: locales,
+      locale: defaultLocale,
+      path: path ?? defaultPath,
+    );
   }
 
   @override
@@ -26,6 +23,6 @@ class LocalizationApiImpl extends LocalizationApi {
     String key, {
     Map<String, String>? args,
   }) {
-    return context.getString(key, args);
+    return FluentLocalization.of(context)!.get(key, args: args);
   }
 }

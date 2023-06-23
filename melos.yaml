@@ -15,6 +15,6 @@ scripts:
     run: melos exec --dir-exists="test" "flutter test -j 4 --coverage --test-randomize-ordering-seed random"
     description: Run tests in all packages
   coverage:
-    run: melos exec --dir-exists="test" "cover check --no-display-files"
+    run: melos exec --dir-exists="test" "cover check --no-display-files --min-coverage 98"
     description: Run code coverage in all packages
   
