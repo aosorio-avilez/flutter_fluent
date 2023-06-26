@@ -23,3 +23,9 @@
 ## 0.0.5
 
 * Dependency `fluent_localization_api` was updated to v0.0.4
+
+## 1.0.0
+
+* `fluent_localization_api` dependency was updated to v1.0.0
+* `ez_localization` dependency was removed
+* `flutter_localizations` dependency was removed
