@@ -39,4 +39,26 @@ void main() {
 
     expect(find.text('Hello Dev!'), findsOneWidget);
   });
+
+  test('verify shouldThrowExceptions should trhow error', () async {
+    const defaultLocale = Locale('en');
+
+    const delegate = FluentLocalizationDelegate(
+      locale: defaultLocale,
+    );
+
+    expect(delegate.load(defaultLocale), throwsA(isA<FlutterError>()));
+  });
+
+  test('verify shouldThrowExceptions should ignore error', () async {
+    const defaultLocale = Locale('en');
+    const delegate = FluentLocalizationDelegate(
+      locale: defaultLocale,
+      shouldThrowExceptions: false,
+    );
+
+    final result = await delegate.load(defaultLocale);
+
+    expect(result, isA<FluentLocalization>());
+  });
 }

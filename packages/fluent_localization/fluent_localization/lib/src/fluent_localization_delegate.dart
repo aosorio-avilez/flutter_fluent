@@ -9,6 +9,7 @@ class FluentLocalizationDelegate
     this.supportedLocales = const [Locale('en')],
     this.path = defaultPath,
     this.locale,
+    this.shouldThrowExceptions = true,
   });
 
   /// Contains all supported locales.
@@ -19,6 +20,9 @@ class FluentLocalizationDelegate
 
   /// Current locale
   final Locale? locale;
+
+  /// Should throw or not exception when try to load asset resource
+  final bool shouldThrowExceptions;
 
   @override
   bool isSupported(Locale locale) {
@@ -37,7 +41,13 @@ class FluentLocalizationDelegate
       path: path,
     );
 
-    await localization.load();
+    try {
+      await localization.load();
+    } catch (e) {
+      if (shouldThrowExceptions) {
+        rethrow;
+      }
+    }
 
     return localization;
   }

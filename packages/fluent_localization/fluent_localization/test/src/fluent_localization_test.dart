@@ -5,22 +5,31 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   setUp(WidgetsFlutterBinding.ensureInitialized);
 
-  test('verify fluent localization load return false', () async {
-    final localization = FluentLocalization();
-
-    final result = await localization.load();
-
-    expect(result, isFalse);
-  });
-
-  test('verify fluent localization load return true', () async {
+  test('verify fluent localization load', () async {
     final localization = FluentLocalization(
       path: 'test/assets/languages',
     );
 
     final result = await localization.load();
 
-    expect(result, isTrue);
+    expect(result, isNotEmpty);
+  });
+
+  test('verify fluent localization load throw FlutterError', () async {
+    final localization = FluentLocalization();
+
+    expect(localization.load(), throwsA(isA<FlutterError>()));
+  });
+
+  test('verify fluent localization load return map of strings', () async {
+    final localization = FluentLocalization(
+      path: 'test/assets/languages',
+    );
+
+    final result = await localization.load();
+
+    expect(result, isA<Map<String, String>>());
+    expect(result, isNotEmpty);
   });
 
   test('verify fluent localization get string with map return localized string',
