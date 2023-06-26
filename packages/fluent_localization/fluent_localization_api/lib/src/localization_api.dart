@@ -9,6 +9,7 @@ abstract class LocalizationApi {
     List<Locale> locales, {
     Locale? defaultLocale,
     String? path,
+    bool shouldThrowExceptions,
   });
 
   /// Translate a specific key through the build context

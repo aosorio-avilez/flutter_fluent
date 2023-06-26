@@ -51,11 +51,10 @@ void main() {
   });
 
   test('verify shouldThrowExceptions should ignore error', () async {
-    FluentLocalizationDelegate.shouldThrowExceptions = false;
-
     const defaultLocale = Locale('en');
     const delegate = FluentLocalizationDelegate(
       locale: defaultLocale,
+      shouldThrowExceptions: false,
     );
 
     final result = await delegate.load(defaultLocale);
