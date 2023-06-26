@@ -25,8 +25,6 @@ class FluentLocalization {
   /// The localized strings.
   final Map<String, String> _strings = HashMap();
 
-  static bool testMode = false;
-
   /// Return the localization instance
   static FluentLocalization? of(BuildContext context) =>
       Localizations.of<FluentLocalization>(context, FluentLocalization);
