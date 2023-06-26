@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -26,24 +25,18 @@ class FluentLocalization {
   /// The localized strings.
   final Map<String, String> _strings = HashMap();
 
+  static bool testMode = false;
+
   /// Return the localization instance
   static FluentLocalization? of(BuildContext context) =>
       Localizations.of<FluentLocalization>(context, FluentLocalization);
 
   /// Loads the localized strings.
-  Future<bool> load() async {
-    try {
-      final filePath = '$path/$locale.json';
-      final data = await rootBundle.loadString(filePath);
-      (json.decode(data) as Map<String, dynamic>).forEach(_addStrings);
-      return true;
-    } catch (exception, stacktrace) {
-      if (kDebugMode) {
-        print(exception);
-        print(stacktrace);
-      }
-    }
-    return false;
+  Future<Map<String, String>> load() async {
+    final filePath = '$path/$locale.json';
+    final data = await rootBundle.loadString(filePath);
+    (json.decode(data) as Map<String, dynamic>).forEach(_addStrings);
+    return _strings;
   }
 
   /// Get the string associated with the specified key.

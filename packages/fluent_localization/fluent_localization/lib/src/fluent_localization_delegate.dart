@@ -20,6 +20,9 @@ class FluentLocalizationDelegate
   /// Current locale
   final Locale? locale;
 
+  /// Silence exceptions or not
+  static bool shouldThrowExceptions = true;
+
   @override
   bool isSupported(Locale locale) {
     for (final supportedLocale in supportedLocales) {
@@ -37,7 +40,13 @@ class FluentLocalizationDelegate
       path: path,
     );
 
-    await localization.load();
+    try {
+      await localization.load();
+    } catch (e) {
+      if (shouldThrowExceptions) {
+        rethrow;
+      }
+    }
 
     return localization;
   }

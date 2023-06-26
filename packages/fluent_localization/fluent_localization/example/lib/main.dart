@@ -1,6 +1,5 @@
 import 'package:fluent_localization/fluent_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   await Fluent.build([
@@ -27,14 +26,10 @@ class MainApp extends StatelessWidget {
       const Locale("en"),
     ];
     // Get localization delegates
-    final localizationDelegate = localizationApi.getDelegate(locales);
+    final localizationDelegates = localizationApi.getDelegates(locales);
 
     return MaterialApp(
-      localizationsDelegates: [
-        localizationDelegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
+      localizationsDelegates: localizationDelegates,
       supportedLocales: locales,
       home: Scaffold(
         body: Builder(

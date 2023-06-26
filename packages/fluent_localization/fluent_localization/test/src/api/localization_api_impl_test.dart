@@ -1,5 +1,4 @@
 import 'package:fluent_localization/fluent_localization.dart';
-import 'package:fluent_localization/src/fluent_localization_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -15,14 +14,15 @@ void main() {
 
   testWidgets('verify translate', (tester) async {
     final locales = [const Locale('en')];
-    final localizationDelegate = Fluent.get<LocalizationApi>().getDelegate(
+    final delegates = Fluent.get<LocalizationApi>().getDelegates(
       locales,
       path: 'test/assets/languages',
     );
+
     await tester.pumpWidget(
       MaterialApp(
         supportedLocales: locales,
-        localizationsDelegates: [localizationDelegate],
+        localizationsDelegates: delegates,
         home: Scaffold(
           body: Builder(
             builder: (context) {
@@ -43,24 +43,24 @@ void main() {
   test('verify getLocalizationDelegates', () async {
     final api = Fluent.get<LocalizationApi>();
 
-    final delegate = api.getDelegate([
+    final delegates = api.getDelegates([
       const Locale('es'),
       const Locale('en'),
     ]);
 
-    expect(delegate, isA<FluentLocalizationDelegate>());
+    expect(delegates.first, isA<FluentLocalizationDelegate>());
   });
 
   test('verify path', () async {
     final api = Fluent.get<LocalizationApi>();
     const pathLocation = 'assets/languages';
     const locale = Locale('es');
-    final delegate = api.getDelegate(
+    final delegates = api.getDelegates(
       [locale],
       path: 'assets/languages',
     );
 
-    final path = (delegate as FluentLocalizationDelegate).path;
+    final path = (delegates.first as FluentLocalizationDelegate).path;
 
     expect(path, pathLocation);
   });
