@@ -9,14 +9,12 @@ class LocalizationApiImpl extends LocalizationApi {
     List<Locale> locales, {
     Locale? defaultLocale,
     String? path,
-    bool shouldThrowExceptions = true,
   }) {
     return [
       FluentLocalizationDelegate(
         supportedLocales: locales,
         locale: defaultLocale,
         path: path ?? defaultPath,
-        shouldThrowExceptions: shouldThrowExceptions,
       ),
       GlobalMaterialLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
