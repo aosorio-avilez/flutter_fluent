@@ -1,0 +1,16 @@
+# Read about `build.yaml` at https://pub.dev/packages/build_config
+builders:
+
+  copyBuilder:
+    import: "package:fluent_localization/builder.dart"
+    builder_factories: ["copyBuilder",]
+    build_extensions: {".txt": [".txt.copy"]}
+    build_to: source
+    auto_apply: root_package
+
+  textBuilder:
+    import: "package:fluent_localization/builder.dart"
+    builder_factories: ["textBuilder"]
+    build_extensions: {"^assets/languages/{{}}.json": ["lib/generated/{{}}.dart"]}
+    auto_apply: root_package
+    build_to: source
