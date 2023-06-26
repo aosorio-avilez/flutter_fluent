@@ -28,3 +28,8 @@
 
 * `getDelegate` API method signature changed to `getDelegates` in order to return all localization delegate needed
 * Added `shouldThrowExceptions` parameter to `getDelegates` API method in order to silence exception when the delegate try to load resources, this is convinience for example when you are execute unit test
+
+## 1.0.2
+
+* Removed `shouldThrowExceptions` parameter to `getDelegates` API method
+

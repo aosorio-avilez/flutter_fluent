@@ -35,3 +35,8 @@
 * `fluent_localization_api` dependency was updated to v1.0.1
 * `flutter_localizations` dependency was added
 * Added `shouldThrowExceptions` parameter to `getDelegates` API method in order to silence exception when the delegate try to load resources, this is convinience for example when you are execute unit test
+
+## 1.0.2
+
+* `fluent_localization_api` dependency was updated to v1.0.2
+* Removed `shouldThrowExceptions` parameter to `getDelegates` API method 
