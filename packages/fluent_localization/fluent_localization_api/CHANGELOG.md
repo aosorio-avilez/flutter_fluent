@@ -19,3 +19,7 @@
 
 * `pathFunction` parameter was added to `getLocalizationDelegates` in order to change the default localization file
 * `args` parameter was added to `translate` in order to enable format arguments
+
+## 1.0.0
+
+* `getLocalizationDelegates` API method signature changed to `getDelegate` in order to return only the localization delegate
