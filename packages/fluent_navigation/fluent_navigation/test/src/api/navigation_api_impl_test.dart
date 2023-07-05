@@ -27,10 +27,10 @@ void main() {
     expect(find.byKey(const Key('secondPage')), findsOneWidget);
   });
 
-  test('verify getConfig', () async {
-    final config = Fluent.get<NavigationApi>().getConfig();
+  test('verify router', () async {
+    final router = Fluent.get<NavigationApi>().router;
 
-    expect(config, isA<GoRouter>());
+    expect(router, isA<GoRouter>());
   });
 
   testWidgets('verify pop', (tester) async {
@@ -47,7 +47,7 @@ void main() {
 }
 
 Future<void> pumpAppRouter(WidgetTester tester) async {
-  final router = Fluent.get<NavigationApi>().getConfig();
+  final router = Fluent.get<NavigationApi>().router;
 
   await tester.pumpWidget(
     MaterialApp.router(
@@ -57,7 +57,7 @@ Future<void> pumpAppRouter(WidgetTester tester) async {
 }
 
 void mockRoutes() {
-  Fluent.mock<List<GoRoute>>([
+  Fluent.mock<FluentRoutes>([
     GoRoute(
       name: 'first',
       path: '/first',

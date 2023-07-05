@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 class InternalNavigationApiImpl extends InternalNavigationApi {
   @override
-  List<GoRoute> getRegisteredRoutes() {
-    return Fluent.get<List<GoRoute>>();
+  List<RouteBase> getRegisteredRoutes() {
+    return Fluent.get<List<RouteBase>>();
   }
 }

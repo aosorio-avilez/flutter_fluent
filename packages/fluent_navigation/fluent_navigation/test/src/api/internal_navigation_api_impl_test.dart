@@ -1,9 +1,7 @@
+import 'package:fluent_navigation/fluent_navigation.dart';
 import 'package:fluent_navigation/src/api/internal_navigation_api.dart';
-import 'package:fluent_navigation/src/navigation_module.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
 
 void main() {
   setUpAll(() async {
@@ -12,7 +10,7 @@ void main() {
   });
 
   test('verify getRegisteredRoutes return registered routes', () async {
-    Fluent.mock<List<GoRoute>>([
+    Fluent.mock<FluentRoutes>([
       GoRoute(
         name: 'test',
         path: '/path',

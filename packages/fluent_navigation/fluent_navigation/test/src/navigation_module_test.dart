@@ -1,17 +1,14 @@
+import 'package:fluent_navigation/fluent_navigation.dart';
 import 'package:fluent_navigation/src/api/internal_navigation_api.dart';
-import 'package:fluent_navigation/src/navigation_module.dart';
-import 'package:fluent_navigation_api/fluent_navigation_api.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
 
 void main() {
   setUp(() => addTearDown(Fluent.reset));
 
   test('verify navigation module', () async {
     await Fluent.build([NavigationModule()]);
-    Fluent.mock<List<GoRoute>>(<GoRoute>[]);
+    Fluent.mock<FluentRoutes>([]);
 
     final api = Fluent.get<NavigationApi>();
     final internalApi = Fluent.get<InternalNavigationApi>();
@@ -24,7 +21,7 @@ void main() {
 
   testWidgets('verify navigate between routes', (tester) async {
     await Fluent.build([NavigationModule(initialLocation: '/')]);
-    Fluent.mock<List<GoRoute>>(<GoRoute>[
+    Fluent.mock<FluentRoutes>([
       GoRoute(
         name: 'home',
         path: '/',
@@ -41,11 +38,11 @@ void main() {
       ),
     ]);
 
-    final config = Fluent.get<NavigationApi>().getConfig();
+    final router = Fluent.get<NavigationApi>().router;
 
     await tester.pumpWidget(
       MaterialApp.router(
-        routerConfig: config,
+        routerConfig: router,
       ),
     );
 
@@ -58,7 +55,7 @@ void main() {
 
   testWidgets('verify navigate between routes with builder', (tester) async {
     await Fluent.build([NavigationModule()]);
-    Fluent.mock<List<GoRoute>>(<GoRoute>[
+    Fluent.mock<FluentRoutes>([
       GoRoute(
         name: 'home',
         path: '/',
@@ -77,11 +74,11 @@ void main() {
       ),
     ]);
 
-    final config = Fluent.get<NavigationApi>().getConfig();
+    final router = Fluent.get<NavigationApi>().router;
 
     await tester.pumpWidget(
       MaterialApp.router(
-        routerConfig: config,
+        routerConfig: router,
       ),
     );
 
@@ -103,7 +100,7 @@ void main() {
         },
       )
     ]);
-    Fluent.mock<List<GoRoute>>(<GoRoute>[
+    Fluent.mock<FluentRoutes>([
       GoRoute(
         name: 'home',
         path: '/',
@@ -122,11 +119,11 @@ void main() {
       ),
     ]);
 
-    final config = Fluent.get<NavigationApi>().getConfig();
+    final router = Fluent.get<NavigationApi>().router;
 
     await tester.pumpWidget(
       MaterialApp.router(
-        routerConfig: config,
+        routerConfig: router,
       ),
     );
 
