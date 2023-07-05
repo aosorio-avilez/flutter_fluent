@@ -12,12 +12,12 @@ final rootNavigatorKey = GlobalKey<NavigatorState>();
 class NavigationModule extends FluentModule {
   NavigationModule({
     this.redirect,
-    this.initialLocation,
+    this.initialLocation = '/',
   });
 
   /// Callback that allow the app to redirect to a new location.
   final String? Function(String? location)? redirect;
-  final String? initialLocation;
+  final String initialLocation;
 
   @override
   Future<void> build(Registry registry) async {
