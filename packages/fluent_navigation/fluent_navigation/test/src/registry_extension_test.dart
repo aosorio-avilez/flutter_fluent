@@ -48,7 +48,7 @@ void main() {
   test('registerRoute should register route in list of routes', () async {
     await Fluent.build([TestModule()]);
 
-    expect(Fluent.get<List<GoRoute>>(), isA<List<GoRoute>>());
+    expect(Fluent.get<FluentRoutes>(), isA<FluentRoutes>());
   });
 
   test(
@@ -56,6 +56,6 @@ void main() {
       () async {
     await Fluent.build([TestModule2()]);
 
-    expect(Fluent.get<List<GoRoute>>().length, 2);
+    expect(Fluent.get<FluentRoutes>().length, 2);
   });
 }

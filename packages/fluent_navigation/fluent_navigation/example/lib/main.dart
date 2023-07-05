@@ -4,7 +4,7 @@ import 'package:fluent_navigation/fluent_navigation.dart';
 
 void main() async {
   await Fluent.build([
-    NavigationModule(),
+    NavigationModule(initialLocation: "/a"),
     ExampleModule(),
   ]);
 
@@ -16,11 +16,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final config = Fluent.get<NavigationApi>().getConfig();
+    final router = Fluent.get<NavigationApi>().router;
 
     return MaterialApp.router(
       title: "Fluent Navigation Demo",
-      routerConfig: config,
+      routerConfig: router,
     );
   }
 }

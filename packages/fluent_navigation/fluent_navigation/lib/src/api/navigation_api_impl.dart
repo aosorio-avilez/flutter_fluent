@@ -14,8 +14,8 @@ class NavigationApiImpl extends NavigationApi {
     Fluent.get<GoRouter>().goNamed(
       routeName,
       extra: extra,
-      params: params,
-      queryParams: queryParams,
+      pathParameters: params,
+      queryParameters: queryParams,
     );
   }
 
@@ -29,18 +29,16 @@ class NavigationApiImpl extends NavigationApi {
     return Fluent.get<GoRouter>().pushNamed<T>(
       routeName,
       extra: extra,
-      params: params,
-      queryParams: queryParams,
+      pathParameters: params,
+      queryParameters: queryParams,
     );
   }
 
   @override
-  RouterConfig<Object> getConfig() {
-    return Fluent.get<GoRouter>();
-  }
+  RouterConfig<Object> get router => Fluent.get<GoRouter>();
 
   @override
-  void pop<T>(T? result) {
+  void pop<T>([T? result]) {
     if (Fluent.get<GoRouter>().canPop()) {
       Fluent.get<GoRouter>().pop(result);
     }
