@@ -30,7 +30,7 @@ void main() {
   test('verify router', () async {
     final router = Fluent.get<NavigationApi>().router;
 
-    expect(router, isA<GoRouter>());
+    expect(router, isA<RouterConfig<Object>>());
   });
 
   testWidgets('verify pop', (tester) async {

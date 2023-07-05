@@ -6,7 +6,7 @@ import 'package:fluent_navigation_example/page_d.dart';
 import 'package:fluent_navigation_example/page_c.dart';
 import 'package:flutter/widgets.dart';
 
-final _shellNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'shellA');
 
 class ExampleModule extends FluentModule {
   @override

@@ -12,11 +12,11 @@ void main() {
 
     final api = Fluent.get<NavigationApi>();
     final internalApi = Fluent.get<InternalNavigationApi>();
-    final router = Fluent.get<GoRouter>();
+    final router = api.router;
 
     expect(api, isA<NavigationApi>());
     expect(internalApi, isA<InternalNavigationApi>());
-    expect(router, isA<GoRouter>());
+    expect(router, isA<RouterConfig<Object>>());
   });
 
   testWidgets('verify navigate between routes', (tester) async {
