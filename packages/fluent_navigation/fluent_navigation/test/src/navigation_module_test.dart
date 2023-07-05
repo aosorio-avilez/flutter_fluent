@@ -20,7 +20,7 @@ void main() {
   });
 
   testWidgets('verify navigate between routes', (tester) async {
-    await Fluent.build([NavigationModule(initialLocation: '/')]);
+    await Fluent.build([NavigationModule()]);
     Fluent.mock<FluentRoutes>([
       GoRoute(
         name: 'home',

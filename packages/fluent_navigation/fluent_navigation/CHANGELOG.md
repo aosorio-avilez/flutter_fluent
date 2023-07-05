@@ -29,3 +29,13 @@
 
 * Class `FluentRoute` was removed
 * `registerRoute` now use `GoRoute` instead of `FluentRoute` in order to expose more out-of-the-box functionalities 
+
+## 1.0.0
+
+* Typedef `FluentRoutes` was added in order to use it instead of `List<RouteBase>`
+* Constant `rootNavigatorKey` was added if you need to use it to define different navigations
+* Extension method `registerRoute` was updated in order to use `RouteBase` instead of `GoRoute` to be able to register `ShellRoute` class for nested navigation
+* Package `fluent_navigation_api` was updated to `v1.0.0`
+* Package `go_router` was updated to `v9.0.0`
+* Package `collection` was updated to `v1.17.1`
+* Package `very_good_analysis` was updated to `v5.0.0+1`

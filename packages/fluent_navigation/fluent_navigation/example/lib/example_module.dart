@@ -46,6 +46,7 @@ class ExampleModule extends FluentModule {
         parentNavigatorKey: rootNavigatorKey,
         name: "c",
         path: "/c",
+        builder: (context, state) => const PageTwo(),
         pageBuilder: (context, state) {
           return const NoTransitionPage(child: PageC());
         },

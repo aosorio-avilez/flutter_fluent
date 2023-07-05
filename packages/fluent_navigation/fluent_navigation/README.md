@@ -6,7 +6,7 @@ Package that provides a simple way to navigate within your app
 ### Add dependencies
 
 ```yaml
-fluent_navigation: ^0.0.5
+fluent_navigation: ^1.0.0
 ```
 
 ### Create pages
@@ -78,17 +78,16 @@ class ExampleModule extends FluentModule {
   Future<void> build(Registry registry) async {
     registry
         // Initial route
-        ..registerRoute(const Route(
-            "one",
-            "/one",
-            initial: true,
-            page: PageOne(),
+        ..registerRoute(GoRoute(
+          name: "one",
+          path: "/one",
+          builder: (context, state) => const PageOne(),
         ))
         // Second route
-        ..registerRoute(const Route(
-            "two",
-            "/two",
-            page: PageTwo(),
+        ..registerRoute(GoRoute(
+          name: "two",
+          path: "/two",
+          builder: (context, state) => const PageTwo(),
         ));
   }
 }
@@ -99,7 +98,7 @@ class ExampleModule extends FluentModule {
 ```dart
 void main() async {
   await Fluent.build([
-    NavigationModule(),
+    NavigationModule(initialLocation: "/one"),
     ExampleModule(),
   ]);
 
@@ -115,11 +114,11 @@ class App extends StatelessWidget {
     @override
     Widget build(BuildContext context) {    
         // Get router config
-        final config = Fluent.get<NavigationApi>().getConfig();
+        final router = Fluent.get<NavigationApi>().router;
         
         return MaterialApp.router(
             title: "Fluent Navigation Demo",
-            routerConfig: config,
+            routerConfig: router,
         );
     }
 }

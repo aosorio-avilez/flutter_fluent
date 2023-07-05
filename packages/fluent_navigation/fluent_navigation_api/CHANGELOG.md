@@ -18,3 +18,8 @@
 ## 0.0.4
 
 * `pop` method was added in order to let users go back to previous routes if is possible
+
+## 1.0.0
+
+* `pop` method signature was changed in order to be able to use it without any parameter
+* `router` method was changed to getter method to more convenient way to access to it
