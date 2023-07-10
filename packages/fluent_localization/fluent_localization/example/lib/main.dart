@@ -34,7 +34,10 @@ class MainApp extends StatelessWidget {
       home: Scaffold(
         body: Builder(
           builder: (context) {
-            final hello = context.tl('hello', args: {"name": "Developer"});
+            final hello = context.tl('hello', args: {
+              "greetings": "Hi",
+              "name": "Developer",
+            });
             return Center(
               child: Text(hello),
             );

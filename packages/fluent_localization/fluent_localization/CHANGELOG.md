@@ -40,3 +40,7 @@
 
 * `fluent_localization_api` dependency was updated to v1.0.2
 * Removed `shouldThrowExceptions` parameter to `getDelegates` API method 
+
+## 1.0.3
+
+* Fixed an issue when try to parse localizable string with more than 1 argument 
