@@ -1,6 +1,7 @@
 {
     "test": {
-        "hello": "Hello {name}!"
+        "hello": "Hello {name}!",
+        "hello_args": "{greetings} {name}"
     },
     "title": "Title"
 }

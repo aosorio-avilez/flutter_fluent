@@ -40,7 +40,16 @@ void main() {
 
     await localization.load();
 
-    expect(localization.get('test.hello', args: {'name': 'Dev'}), 'Hello Dev!');
+    expect(
+      localization.get(
+        'test.test_args',
+        args: {
+          'greetings': 'Hi',
+          'name': 'Dev',
+        },
+      ),
+      'Hi Dev',
+    );
   });
 
   test('verify fluent localization get string return localized string',
