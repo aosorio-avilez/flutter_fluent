@@ -42,7 +42,7 @@ void main() {
 
     expect(
       localization.get(
-        'test.test_args',
+        'test.hello_args',
         args: {
           'greetings': 'Hi',
           'name': 'Dev',
