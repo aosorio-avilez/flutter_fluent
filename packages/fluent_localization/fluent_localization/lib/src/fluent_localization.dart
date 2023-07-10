@@ -69,7 +69,7 @@ class FluentLocalization {
     if (arguments != null) {
       var temp = value;
       arguments.forEach((formatKey, formatValue) {
-        temp = value.replaceAll('{$formatKey}', formatValue);
+        temp = temp.replaceAll('{$formatKey}', formatValue);
       });
       return temp;
     } else {
