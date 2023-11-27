@@ -15,7 +15,11 @@ class EnvironmentBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final environment = Fluent.get<EnvironmentApi>().getEnvironment();
+    final environment = Fluent.get<EnvironmentApi>().environment;
+
+    if (environment.type == EnvironemntType.prod) {
+      return child;
+    }
 
     return Directionality(
       textDirection: TextDirection.ltr,
