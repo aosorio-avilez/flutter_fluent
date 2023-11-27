@@ -98,7 +98,7 @@ void main() {
           }
           return null;
         },
-      )
+      ),
     ]);
     Fluent.mock<FluentRoutes>([
       GoRoute(
