@@ -20,3 +20,8 @@
 
 * Version of `fluent_environment_api` was updated to v0.0.4
 * Version of `fluent_sdk` was updated to v0.2.0
+
+## 0.1.0
+
+* Version of `fluent_environment_api` was updated to v0.1.0
+* Hide `EnvironmentBanner` widget in production is now validate internally
