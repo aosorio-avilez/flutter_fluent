@@ -19,3 +19,8 @@
 ## 0.0.4
 
 * `type` getter was added to `Environment` interface
+
+## 0.1.0
+
+* Method `getEnvironment` replaced by `environment` getter on `EnvironmentApi` interface
+* Method `buildEnvironmentBanner` method removed in favor of export `EnvironmentBanner` widget directly

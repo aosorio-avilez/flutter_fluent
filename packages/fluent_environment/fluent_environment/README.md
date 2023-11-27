@@ -6,7 +6,7 @@ Package that provides a way to register your environment and display it
 ### Add dependencies
 
 ```yaml
-fluent_environment: ^0.0.4
+fluent_environment: ^0.1.0
 ```
 
 ### Define environment
@@ -51,14 +51,13 @@ class App extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
-        // Return environment banner to display the current environment
-        final environmentBanner = FLuent.get<EnvironmentApi>().buildEnvironmentBanner;
         // Return the current environment
-        final environment =  FLuent.get<EnvironmentApi>().getEnvironment();
+        final environment = FLuent.get<EnvironmentApi>().environment;
         
         return MaterialApp(
             title: 'Fluent Environment Demo',
-            builder: (context, child) => environmentBanner(child: child!),
+            // Wrap child widget with environment banner to display the current environment
+            builder: (context, child) => EnvironmentBanner(child: child!),
             home: Scaffold(
                 body: Center(
                     child: Text("Environment: ${environment.type.description}"),
