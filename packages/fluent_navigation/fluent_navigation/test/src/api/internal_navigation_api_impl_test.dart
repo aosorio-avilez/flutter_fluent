@@ -15,7 +15,7 @@ void main() {
         name: 'test',
         path: '/path',
         builder: (context, state) => const Scaffold(),
-      )
+      ),
     ]);
     final internalApi = Fluent.get<InternalNavigationApi>();
 

@@ -19,14 +19,13 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Return environment banner to display the current environment
-    final environmentBanner =
-        Fluent.get<EnvironmentApi>().buildEnvironmentBanner;
+
     // Return the current environment
-    final environment = Fluent.get<EnvironmentApi>().getEnvironment();
+    final environment = Fluent.get<EnvironmentApi>().environment;
 
     return MaterialApp(
       title: 'Fluent Environment Example',
-      builder: (context, child) => environmentBanner(child: child!),
+      builder: (context, child) => EnvironmentBanner(child: child!),
       home: Scaffold(
         body: Center(
           child: Text("Environment: ${environment.name}"),

@@ -18,7 +18,7 @@ class LocalizationApiImpl extends LocalizationApi {
       ),
       GlobalMaterialLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate
+      GlobalWidgetsLocalizations.delegate,
     ];
   }
 
