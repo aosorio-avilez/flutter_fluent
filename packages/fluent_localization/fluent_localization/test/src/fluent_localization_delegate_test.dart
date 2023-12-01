@@ -40,13 +40,30 @@ void main() {
     expect(find.text('Hello Dev!'), findsOneWidget);
   });
 
-  test('verify shouldThrowExceptions should throw error', () async {
+  test(
+      '''verify fluent localization delegate return map of strings when locale does not exists''',
+      () async {
     const defaultLocale = Locale('en');
 
     const delegate = FluentLocalizationDelegate(
       locale: defaultLocale,
     );
 
-    expect(delegate.load(defaultLocale), throwsA(isA<FlutterError>()));
+    final result = await delegate.load(defaultLocale);
+
+    expect(result, isA<FluentLocalization>());
+  });
+
+  test(
+      '''verify fluent localization throws format exception when file is malformed''',
+      () async {
+    const defaultLocale = Locale('es');
+
+    const delegate = FluentLocalizationDelegate(
+      locale: defaultLocale,
+      path: 'test/assets/languages',
+    );
+
+    expect(delegate.load(defaultLocale), throwsA(isA<FormatException>()));
   });
 }

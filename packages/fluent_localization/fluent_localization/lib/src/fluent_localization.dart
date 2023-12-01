@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -32,8 +33,13 @@ class FluentLocalization {
   /// Loads the localized strings.
   Future<Map<String, String>> load() async {
     final filePath = '$path/$locale.json';
-    final data = await rootBundle.loadString(filePath);
-    (json.decode(data) as Map<String, dynamic>).forEach(_addStrings);
+    final fileExists = File(filePath).existsSync();
+
+    if (fileExists) {
+      final data = await rootBundle.loadString(filePath);
+      (json.decode(data) as Map<String, dynamic>).forEach(_addStrings);
+    }
+
     return _strings;
   }
 
