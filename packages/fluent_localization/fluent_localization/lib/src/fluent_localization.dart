@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show ServicesBinding;
 
 /// The default path.
 const String defaultPath = 'assets/languages';
@@ -32,8 +33,14 @@ class FluentLocalization {
   /// Loads the localized strings.
   Future<Map<String, String>> load() async {
     final filePath = '$path/$locale.json';
-    final data = await rootBundle.loadString(filePath);
-    (json.decode(data) as Map<String, dynamic>).forEach(_addStrings);
+
+    final content = await _getFileContent(filePath);
+
+    if (content != null) {
+      final data = _utf8decode(content);
+      (json.decode(data) as Map<String, dynamic>).forEach(_addStrings);
+    }
+
     return _strings;
   }
 
@@ -75,5 +82,19 @@ class FluentLocalization {
     } else {
       return value;
     }
+  }
+
+  /// Gets file path content or null if does not exists
+  Future<ByteData?> _getFileContent(String filePath) async {
+    final encoded =
+        utf8.encoder.convert(Uri(path: Uri.encodeFull(filePath)).path);
+    final asset = await ServicesBinding.instance.defaultBinaryMessenger
+        .send('flutter/assets', encoded.buffer.asByteData());
+    return asset;
+  }
+
+  /// Decode binary data into UTF8 string
+  String _utf8decode(ByteData data) {
+    return utf8.decode(Uint8List.sublistView(data));
   }
 }

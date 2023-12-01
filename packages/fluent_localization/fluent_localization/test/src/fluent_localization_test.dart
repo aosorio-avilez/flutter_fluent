@@ -15,10 +15,16 @@ void main() {
     expect(result, isNotEmpty);
   });
 
-  test('verify fluent localization load throw FlutterError', () async {
-    final localization = FluentLocalization();
+  test(
+      '''verify fluent localization load return empty map of strings when file does not exists''',
+      () async {
+    final localization = FluentLocalization(
+      path: 'path/does/not/exists',
+    );
 
-    expect(localization.load(), throwsA(isA<FlutterError>()));
+    final result = await localization.load();
+
+    expect(result, isEmpty);
   });
 
   test('verify fluent localization load return map of strings', () async {
