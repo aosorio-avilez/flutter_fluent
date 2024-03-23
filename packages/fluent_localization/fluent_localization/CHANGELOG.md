@@ -44,3 +44,7 @@
 ## 1.0.3
 
 * Fixed an issue when try to parse localizable string with more than 1 argument 
+
+## 1.1.0
+
+* The loader no-longer throws an exception when the locale file does not exists
