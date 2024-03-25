@@ -22,3 +22,9 @@
 ## 0.0.4
 
 * Package `fluent_sdk` was updated to v0.2.0
+
+## 0.0.5
+
+* Example android and ios platform updated to latest versions
+* Example web platform enabled
+* Dev dependencies updated
