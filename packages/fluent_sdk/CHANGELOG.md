@@ -35,3 +35,9 @@
 ## 0.2.0
 
 * FluentModule `build` method return type was converted to async
+
+## 0.2.1
+
+* Example android and ios platform updated to latest versions
+* Example web platform enabled
+* Dev dependencies updated

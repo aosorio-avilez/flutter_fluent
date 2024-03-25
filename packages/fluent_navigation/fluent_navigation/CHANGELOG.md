@@ -39,3 +39,12 @@
 * Package `go_router` was updated to `v9.0.0`
 * Package `collection` was updated to `v1.17.1`
 * Package `very_good_analysis` was updated to `v5.0.0+1`
+
+## 1.1.0
+
+* Package `go_router` was updated to `v13.2.1`
+* Package `collection` was updated to `v1.18.0`
+* Package example was updated to latest version
+* Example android and ios platform updated to latest versions
+* Example web platform enabled
+* Dev dependencies updated

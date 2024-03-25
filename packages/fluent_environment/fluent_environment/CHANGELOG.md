@@ -25,3 +25,9 @@
 
 * Version of `fluent_environment_api` was updated to v0.1.0
 * Hide `EnvironmentBanner` widget in production is now validate internally
+
+## 0.1.1
+
+* Example android and ios platform updated to latest versions
+* Example web platform enabled
+* Dev dependencies updated
