@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluent_navigation: ^1.0.0
+  fluent_navigation: ^1.1.0
 
 dev_dependencies:
   flutter_test:
