@@ -51,7 +51,6 @@
 
 ## 1.1.1
 
-
 * Example android and ios platform updated to latest versions
 * Example web platform enabled
 * Dev dependencies updated
