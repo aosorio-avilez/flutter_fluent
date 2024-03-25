@@ -48,3 +48,10 @@
 ## 1.1.0
 
 * The loader no-longer throws an exception when the locale file does not exists
+
+## 1.1.1
+
+
+* Example android and ios platform updated to latest versions
+* Example web platform enabled
+* Dev dependencies updated
