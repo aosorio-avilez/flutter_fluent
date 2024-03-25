@@ -13,14 +13,22 @@ class NavigationModule extends FluentModule {
   NavigationModule({
     this.redirect,
     this.initialLocation = '/',
+    this.optionURLReflectsImperativeAPIs = true,
   });
 
   /// Callback that allow the app to redirect to a new location.
   final String? Function(String? location)? redirect;
+
+  /// The initial location of the app
   final String initialLocation;
+
+  /// Whether or not the url should reflect the imperative APIs.
+  final bool optionURLReflectsImperativeAPIs;
 
   @override
   Future<void> build(Registry registry) async {
+    GoRouter.optionURLReflectsImperativeAPIs = optionURLReflectsImperativeAPIs;
+
     registry
       ..registerLazySingleton<GoRouter>(
         (it) {
@@ -28,7 +36,7 @@ class NavigationModule extends FluentModule {
             initialLocation: initialLocation,
             navigatorKey: rootNavigatorKey,
             routes: Fluent.get<InternalNavigationApi>().getRegisteredRoutes(),
-            redirect: (context, state) => redirect?.call(state.location),
+            redirect: (context, state) => redirect?.call(state.uri.toString()),
           );
         },
       )
