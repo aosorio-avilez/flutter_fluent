@@ -41,3 +41,9 @@
 * Example android and ios platform updated to latest versions
 * Example web platform enabled
 * Dev dependencies updated
+
+## 0.2.2
+
+* Better documentation added
+* Dependencies and sdk constraints updated
+* Fluent build method improved
