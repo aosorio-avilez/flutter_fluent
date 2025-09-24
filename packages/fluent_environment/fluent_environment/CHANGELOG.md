@@ -31,3 +31,7 @@
 * Example android and ios platform updated to latest versions
 * Example web platform enabled
 * Dev dependencies updated
+
+## 0.2.0
+
+* Upgrade package to flutter version v3.35
