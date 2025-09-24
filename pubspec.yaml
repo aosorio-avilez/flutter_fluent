@@ -20,6 +20,10 @@ dev_dependencies:
   melos: ^7.1.1
 
 melos:
+  packages:
+    - packages/**
+    - "!**/example" # <-- Esta línea ignora cualquier carpeta 'example'
+
   scripts:
     format:
       run: melos exec "dart format --set-exit-if-changed lib test"
