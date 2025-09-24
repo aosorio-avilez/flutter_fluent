@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   fluent_sdk:
-  fluent_networking_api: ^0.0.4
+  fluent_networking_api:
   dio: ^5.1.1
   equatable: ^2.0.5
   freezed_annotation: ^3.1.0

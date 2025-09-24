@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   fluent_sdk:
-  fluent_navigation_api: ^1.0.0
+  fluent_navigation_api:
   go_router: ^16.2.4
   collection: ^1.18.0
 
