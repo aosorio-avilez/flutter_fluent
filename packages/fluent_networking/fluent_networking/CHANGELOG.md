@@ -19,3 +19,7 @@
 ## 0.0.4
 
 * Version of `fluent_sdk` was updated to v0.2.0
+
+## 0.1.0
+
+* Upgrade package to flutter version v3.35

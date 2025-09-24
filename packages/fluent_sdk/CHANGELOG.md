@@ -47,3 +47,7 @@
 * Better documentation added
 * Dependencies and sdk constraints updated
 * Fluent build method improved
+
+## 0.3.0
+
+* Upgrade package to flutter version v3.35
