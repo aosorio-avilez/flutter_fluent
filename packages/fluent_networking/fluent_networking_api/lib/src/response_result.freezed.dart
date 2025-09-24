@@ -12,7 +12,8 @@ part of 'response_result.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods',
+);
 
 /// @nodoc
 mixin _$ResponseResult<T> {
@@ -21,52 +22,47 @@ mixin _$ResponseResult<T> {
     required TResult Function(T data) succeeded,
     required TResult Function(Object data) failed,
     required TResult Function(ResponseError error) error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(T data)? succeeded,
     TResult? Function(Object data)? failed,
     TResult? Function(ResponseError error)? error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(T data)? succeeded,
     TResult Function(Object data)? failed,
     TResult Function(ResponseError error)? error,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(Succeeded<T> value) succeeded,
     required TResult Function(Failed<T> value) failed,
     required TResult Function(Error<T> value) error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Succeeded<T> value)? succeeded,
     TResult? Function(Failed<T> value)? failed,
     TResult? Function(Error<T> value)? error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Succeeded<T> value)? succeeded,
     TResult Function(Failed<T> value)? failed,
     TResult Function(Error<T> value)? error,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ResponseResultCopyWith<T, $Res> {
   factory $ResponseResultCopyWith(
-          ResponseResult<T> value, $Res Function(ResponseResult<T>) then) =
-      _$ResponseResultCopyWithImpl<T, $Res, ResponseResult<T>>;
+    ResponseResult<T> value,
+    $Res Function(ResponseResult<T>) then,
+  ) = _$ResponseResultCopyWithImpl<T, $Res, ResponseResult<T>>;
 }
 
 /// @nodoc
@@ -83,8 +79,9 @@ class _$ResponseResultCopyWithImpl<T, $Res, $Val extends ResponseResult<T>>
 /// @nodoc
 abstract class _$$SucceededCopyWith<T, $Res> {
   factory _$$SucceededCopyWith(
-          _$Succeeded<T> value, $Res Function(_$Succeeded<T>) then) =
-      __$$SucceededCopyWithImpl<T, $Res>;
+    _$Succeeded<T> value,
+    $Res Function(_$Succeeded<T>) then,
+  ) = __$$SucceededCopyWithImpl<T, $Res>;
   @useResult
   $Res call({T data});
 }
@@ -94,20 +91,23 @@ class __$$SucceededCopyWithImpl<T, $Res>
     extends _$ResponseResultCopyWithImpl<T, $Res, _$Succeeded<T>>
     implements _$$SucceededCopyWith<T, $Res> {
   __$$SucceededCopyWithImpl(
-      _$Succeeded<T> _value, $Res Function(_$Succeeded<T>) _then)
-      : super(_value, _then);
+    _$Succeeded<T> _value,
+    $Res Function(_$Succeeded<T>) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? data = freezed,
   }) {
-    return _then(_$Succeeded<T>(
-      freezed == data
-          ? _value.data
-          : data // ignore: cast_nullable_to_non_nullable
-              as T,
-    ));
+    return _then(
+      _$Succeeded<T>(
+        freezed == data
+            ? _value.data
+            : data // ignore: cast_nullable_to_non_nullable
+                  as T,
+      ),
+    );
   }
 }
 
@@ -223,8 +223,9 @@ abstract class Succeeded<T> implements ResponseResult<T> {
 /// @nodoc
 abstract class _$$FailedCopyWith<T, $Res> {
   factory _$$FailedCopyWith(
-          _$Failed<T> value, $Res Function(_$Failed<T>) then) =
-      __$$FailedCopyWithImpl<T, $Res>;
+    _$Failed<T> value,
+    $Res Function(_$Failed<T>) then,
+  ) = __$$FailedCopyWithImpl<T, $Res>;
   @useResult
   $Res call({Object data});
 }
@@ -234,16 +235,18 @@ class __$$FailedCopyWithImpl<T, $Res>
     extends _$ResponseResultCopyWithImpl<T, $Res, _$Failed<T>>
     implements _$$FailedCopyWith<T, $Res> {
   __$$FailedCopyWithImpl(_$Failed<T> _value, $Res Function(_$Failed<T>) _then)
-      : super(_value, _then);
+    : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? data = null,
   }) {
-    return _then(_$Failed<T>(
-      null == data ? _value.data : data,
-    ));
+    return _then(
+      _$Failed<T>(
+        null == data ? _value.data : data,
+      ),
+    );
   }
 }
 
@@ -369,19 +372,21 @@ class __$$ErrorCopyWithImpl<T, $Res>
     extends _$ResponseResultCopyWithImpl<T, $Res, _$Error<T>>
     implements _$$ErrorCopyWith<T, $Res> {
   __$$ErrorCopyWithImpl(_$Error<T> _value, $Res Function(_$Error<T>) _then)
-      : super(_value, _then);
+    : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? error = null,
   }) {
-    return _then(_$Error<T>(
-      null == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as ResponseError,
-    ));
+    return _then(
+      _$Error<T>(
+        null == error
+            ? _value.error
+            : error // ignore: cast_nullable_to_non_nullable
+                  as ResponseError,
+      ),
+    );
   }
 }
 

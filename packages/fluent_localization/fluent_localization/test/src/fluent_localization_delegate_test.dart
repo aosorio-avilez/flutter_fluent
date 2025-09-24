@@ -41,29 +41,31 @@ void main() {
   });
 
   test(
-      '''verify fluent localization delegate return map of strings when locale does not exists''',
-      () async {
-    const defaultLocale = Locale('en');
+    '''verify fluent localization delegate return map of strings when locale does not exists''',
+    () async {
+      const defaultLocale = Locale('en');
 
-    const delegate = FluentLocalizationDelegate(
-      locale: defaultLocale,
-    );
+      const delegate = FluentLocalizationDelegate(
+        locale: defaultLocale,
+      );
 
-    final result = await delegate.load(defaultLocale);
+      final result = await delegate.load(defaultLocale);
 
-    expect(result, isA<FluentLocalization>());
-  });
+      expect(result, isA<FluentLocalization>());
+    },
+  );
 
   test(
-      '''verify fluent localization throws format exception when file is malformed''',
-      () async {
-    const defaultLocale = Locale('es');
+    '''verify fluent localization throws format exception when file is malformed''',
+    () async {
+      const defaultLocale = Locale('es');
 
-    const delegate = FluentLocalizationDelegate(
-      locale: defaultLocale,
-      path: 'test/assets/languages',
-    );
+      const delegate = FluentLocalizationDelegate(
+        locale: defaultLocale,
+        path: 'test/assets/languages',
+      );
 
-    expect(delegate.load(defaultLocale), throwsA(isA<FormatException>()));
-  });
+      expect(delegate.load(defaultLocale), throwsA(isA<FormatException>()));
+    },
+  );
 }

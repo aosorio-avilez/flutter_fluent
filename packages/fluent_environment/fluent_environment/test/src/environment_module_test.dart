@@ -5,13 +5,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'widgets/environment_banner_test.dart';
 
 void main() {
-  test('environment module should register environment api implementation',
-      () async {
-    await Fluent.build([EnvironmentModule(environment: EnvironmentMock())]);
-    addTearDown(Fluent.reset);
+  test(
+    'environment module should register environment api implementation',
+    () async {
+      await Fluent.build([EnvironmentModule(environment: EnvironmentMock())]);
+      addTearDown(Fluent.reset);
 
-    final api = Fluent.get<EnvironmentApi>();
+      final api = Fluent.get<EnvironmentApi>();
 
-    expect(api, isA<EnvironmentApiImpl>());
-  });
+      expect(api, isA<EnvironmentApiImpl>());
+    },
+  );
 }

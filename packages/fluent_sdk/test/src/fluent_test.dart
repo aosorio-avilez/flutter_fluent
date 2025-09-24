@@ -29,18 +29,19 @@ void main() {
     expect(Fluent.get<TestClass>(), isA<TestClass2>());
   });
 
-  test('verify cannot register a new instance of the same type after mock it',
-      () async {
-    GetIt.instance.registerLazySingleton(TestClass.new);
-
-    Fluent.mock<TestClass>(TestClass2());
-
-    try {
+  test(
+    'verify cannot register a new instance of the same type after mock it',
+    () async {
       GetIt.instance.registerLazySingleton(TestClass.new);
-    } catch (e) {
-      expect(e, isA<ArgumentError>());
-    }
-  });
+
+      Fluent.mock<TestClass>(TestClass2());
+
+      expect(
+        () => GetIt.instance.registerLazySingleton(TestClass.new),
+        throwsA(isA<ArgumentError>()),
+      );
+    },
+  );
 
   test('verify reset clear all previous registered objects', () async {
     Fluent.mock<TestClass>(TestClass2());
@@ -49,10 +50,6 @@ void main() {
 
     await Fluent.reset();
 
-    try {
-      Fluent.get<TestClass>();
-    } catch (e) {
-      expect(e, isA<StateError>());
-    }
+    expect(() => Fluent.get<TestClass>(), throwsA(isA<StateError>()));
   });
 }

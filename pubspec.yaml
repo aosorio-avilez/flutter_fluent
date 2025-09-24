@@ -1,7 +1,37 @@
 name: flutter_fluent
 
 environment:
-  sdk: "^3.3.0"
+  sdk: '^3.9.2'
+
+workspace:
+  - packages/fluent_environment/fluent_environment
+  - packages/fluent_environment/fluent_environment_api
+  - packages/fluent_localization/fluent_localization
+  - packages/fluent_localization/fluent_localization_api
+  - packages/fluent_logger/fluent_logger
+  - packages/fluent_logger/fluent_logger_api
+  - packages/fluent_navigation/fluent_navigation
+  - packages/fluent_navigation/fluent_navigation_api
+  - packages/fluent_networking/fluent_networking
+  - packages/fluent_networking/fluent_networking_api
+  - packages/fluent_sdk
 
 dev_dependencies:
-  melos: ^6.0.0
+  melos: ^7.1.1
+
+melos:
+  sdkPath: .fvm/flutter_sdk
+
+  scripts:
+    format:
+      run: melos exec "dart format --set-exit-if-changed lib test"
+      description: Format dart files in all packages
+    analyze:
+      run: melos exec --dir-exists="test" "flutter analyze --no-pub lib test"
+      description: Analyze dart files in all packages
+    test:
+      run: melos exec --dir-exists="test" "flutter test -j 4 --coverage --test-randomize-ordering-seed random"
+      description: Run tests in all packages
+    coverage:
+      run: melos exec --dir-exists="test" "cover check --no-display-files --min-coverage 90"
+      description: Run code coverage in all packages

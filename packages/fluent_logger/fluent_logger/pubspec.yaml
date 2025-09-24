@@ -1,17 +1,18 @@
 name: flutter_fluent_logger
 description: Package that allows you to print different types of messages in console
 version: 0.0.5
+resolution: workspace
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_logger/fluent_logger
 
 environment:
-  sdk: '>=2.19.6 <4.0.0'
+  sdk: '^3.9.2'
 
 dependencies:
-  fluent_sdk: ^0.2.0
+  fluent_sdk:
   fluent_logger_api: ^0.0.3
   loggy: ^2.0.3
 
 dev_dependencies:
   test: ^1.25.2
-  very_good_analysis: ^5.1.0
+  very_good_analysis: ^10.0.0
   mocktail: ^1.0.3

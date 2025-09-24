@@ -61,13 +61,10 @@ class Fluent {
   static void mock<T extends Object>(T mock) {
     /// Allows you to register a mock class of a registered object
     _registry
-
       /// Allow the object to be reassigned
       ..allowReassignment(allow: true)
-
       /// Register the mock object
       ..registerSingleton<T>((it) => mock)
-
       /// Disallow the object from being reassigned
       ..allowReassignment(allow: false);
   }

@@ -86,10 +86,13 @@ class FluentLocalization {
 
   /// Gets file path content or null if does not exists
   Future<ByteData?> _getFileContent(String filePath) async {
-    final encoded =
-        utf8.encoder.convert(Uri(path: Uri.encodeFull(filePath)).path);
-    final asset = await ServicesBinding.instance.defaultBinaryMessenger
-        .send('flutter/assets', encoded.buffer.asByteData());
+    final encoded = utf8.encoder.convert(
+      Uri(path: Uri.encodeFull(filePath)).path,
+    );
+    final asset = await ServicesBinding.instance.defaultBinaryMessenger.send(
+      'flutter/assets',
+      encoded.buffer.asByteData(),
+    );
     return asset;
   }
 

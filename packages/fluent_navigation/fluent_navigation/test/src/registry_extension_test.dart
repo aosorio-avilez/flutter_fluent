@@ -52,10 +52,11 @@ void main() {
   });
 
   test(
-      '''registerRoute when previous registered route should add route to current list of routes''',
-      () async {
-    await Fluent.build([TestModule2()]);
+    '''registerRoute when previous registered route should add route to current list of routes''',
+    () async {
+      await Fluent.build([TestModule2()]);
 
-    expect(Fluent.get<FluentRoutes>().length, 2);
-  });
+      expect(Fluent.get<FluentRoutes>().length, 2);
+    },
+  );
 }
