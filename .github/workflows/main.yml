@@ -16,12 +16,10 @@ jobs:
       - name: 📚 Git Checkout
         uses: actions/checkout@v3
 
-      - name: 🐦 Setup Flutter
-        uses: subosito/flutter-action@v2
+      - name: 🐦 Setup FVM
+        uses: leoafarias/fvm-action@v1
         with:
-          channel: "stable"
-          cache: true
-          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
+          version: stable
 
       - name: ⚙️ Install Tools
         run: ./.github/workflows/scripts/install-tools.sh
