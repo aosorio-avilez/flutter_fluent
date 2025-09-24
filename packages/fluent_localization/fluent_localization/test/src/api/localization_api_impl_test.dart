@@ -26,8 +26,10 @@ void main() {
         home: Scaffold(
           body: Builder(
             builder: (context) {
-              final testContent =
-                  context.tl('test.hello', args: {'name': 'Developer'});
+              final testContent = context.tl(
+                'test.hello',
+                args: {'name': 'Developer'},
+              );
               return Text(testContent);
             },
           ),

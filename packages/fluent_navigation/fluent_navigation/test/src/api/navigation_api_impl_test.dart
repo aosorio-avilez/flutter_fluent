@@ -76,8 +76,9 @@ void mockRoutes() {
               ElevatedButton(
                 key: const Key('pushButton'),
                 onPressed: () async {
-                  final result =
-                      await Fluent.get<NavigationApi>().pushTo<bool>('second');
+                  final result = await Fluent.get<NavigationApi>().pushTo<bool>(
+                    'second',
+                  );
 
                   if (result ?? false) {
                     ScaffoldMessenger.of(context).showSnackBar(

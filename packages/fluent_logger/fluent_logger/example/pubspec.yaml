@@ -2,14 +2,15 @@ name: fluent_logger_example
 description: Demonstrates how to use the fluent_logger package.
 publish_to: 'none'
 version: 0.1.0
+resolution: workspace
 
 environment:
-  sdk: '>=2.19.6 <3.0.0'
+  sdk: '^3.9.2'
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_fluent_logger: ^0.0.4
+  flutter_fluent_logger:
 
 dev_dependencies:
   flutter_test:

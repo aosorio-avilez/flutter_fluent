@@ -29,4 +29,8 @@ migrate_working_dir/
 .packages
 build/
 coverage/
-.fvm/flutter_sdk
+
+# FVM Version Cache
+.fvm/
+.fvm/fvm_config.json
+.vscode/settings.json

@@ -2,14 +2,15 @@ name: fluent_environment_example
 description: A new Flutter project.
 publish_to: 'none'
 version: 0.1.0
+resolution: workspace
 
 environment:
-  sdk: '>=2.19.6 <3.0.0'
+  sdk: '^3.9.2'
 
 dependencies:
   flutter:
     sdk: flutter
-  fluent_environment: ^0.1.0
+  fluent_environment:
 
 dev_dependencies:
   flutter_test:

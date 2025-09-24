@@ -12,7 +12,7 @@ class ResponseError extends Equatable {
 
   @override
   List<Object?> get props => [
-        errorCode,
-        message,
-      ];
+    errorCode,
+    message,
+  ];
 }

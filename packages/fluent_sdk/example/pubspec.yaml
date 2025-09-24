@@ -2,14 +2,15 @@ name: fluient_sdk_example
 description: Demonstrates how to use the fluent_sdk package.
 publish_to: 'none'
 version: 0.1.0
+resolution: workspace
 
 environment:
-  sdk: '>=2.19.6 <3.0.0'
+  sdk: '^3.9.2'
 
 dependencies:
   flutter:
     sdk: flutter
-  fluent_sdk: ^0.2.2
+  fluent_sdk:
 
 dev_dependencies:
   flutter_test:
