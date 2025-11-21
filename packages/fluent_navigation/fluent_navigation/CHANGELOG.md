@@ -52,3 +52,11 @@
 ## 1.2.0
 
 * Upgrade package to flutter version v3.35
+
+## 1.2.1
+
+* New method `canPop` was added in order to let users know if they can go back to previous routes
+
+## 1.2.2
+
+* Upgrade interface `fluent_navigation_api` to `v1.0.1`
