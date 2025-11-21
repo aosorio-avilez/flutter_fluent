@@ -23,3 +23,7 @@
 
 * `pop` method signature was changed in order to be able to use it without any parameter
 * `router` method was changed to getter method to more convenient way to access to it
+
+## 1.0.1
+
+* `canPop` method was added in order to let users know if they can go back to previous routes if is possible
