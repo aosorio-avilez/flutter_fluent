@@ -22,6 +22,11 @@ abstract class NavigationApi {
     Object? extra,
   });
 
+  /// Checks if the current route can be popped.
+  ///
+  /// Returns `true` if there is a previous route to pop to, `false` otherwise.
+  bool canPop();
+
   /// Pop the last route off the current screen
   /// And pass it an optional result.
   void pop<T>([T? result]);
