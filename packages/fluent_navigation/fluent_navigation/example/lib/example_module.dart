@@ -12,19 +12,20 @@ class ExampleModule extends FluentModule {
   @override
   Future<void> build(Registry registry) async {
     registry
-      ..registerRoute(ShellRoute(
-        navigatorKey: _shellNavigatorKey,
-        builder: (context, state, child) => AppScaffold(child: child),
-        routes: [
-          GoRoute(
-            parentNavigatorKey: _shellNavigatorKey,
-            name: "a",
-            path: "/a",
-            pageBuilder: (context, state) {
-              return const NoTransitionPage(child: PageOne());
-            },
-          ),
-          GoRoute(
+      ..registerRoute(
+        ShellRoute(
+          navigatorKey: _shellNavigatorKey,
+          builder: (context, state, child) => AppScaffold(child: child),
+          routes: [
+            GoRoute(
+              parentNavigatorKey: _shellNavigatorKey,
+              name: "a",
+              path: "/a",
+              pageBuilder: (context, state) {
+                return const NoTransitionPage(child: PageOne());
+              },
+            ),
+            GoRoute(
               parentNavigatorKey: _shellNavigatorKey,
               name: "b",
               path: "/b",
@@ -38,18 +39,22 @@ class ExampleModule extends FluentModule {
                   pageBuilder: (context, state) {
                     return const NoTransitionPage(child: PageD());
                   },
-                )
-              ]),
-        ],
-      ))
-      ..registerRoute(GoRoute(
-        parentNavigatorKey: rootNavigatorKey,
-        name: "c",
-        path: "/c",
-        builder: (context, state) => const PageTwo(),
-        pageBuilder: (context, state) {
-          return const NoTransitionPage(child: PageC());
-        },
-      ));
+                ),
+              ],
+            ),
+          ],
+        ),
+      )
+      ..registerRoute(
+        GoRoute(
+          parentNavigatorKey: rootNavigatorKey,
+          name: "c",
+          path: "/c",
+          builder: (context, state) => const PageTwo(),
+          pageBuilder: (context, state) {
+            return const NoTransitionPage(child: PageC());
+          },
+        ),
+      );
   }
 }

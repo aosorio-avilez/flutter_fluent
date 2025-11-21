@@ -10,10 +10,7 @@ class PageOne extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "Page A",
-            style: TextStyle(fontSize: 24),
-          ),
+          const Text("Page A", style: TextStyle(fontSize: 24)),
           ElevatedButton(
             onPressed: () => Fluent.get<NavigationApi>().pushTo("c"),
             child: const Text("Go to Page C"),

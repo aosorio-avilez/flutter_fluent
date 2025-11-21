@@ -3,9 +3,7 @@ import 'package:fluent_networking_example/app_config.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
-  await Fluent.build([
-    NetworkingModule(config: ApiConfig()),
-  ]);
+  await Fluent.build([NetworkingModule(config: ApiConfig())]);
 
   runApp(const MainApp());
 }
@@ -20,9 +18,7 @@ class MainApp extends StatelessWidget {
 
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Fluent Networking Demo"),
-        ),
+        appBar: AppBar(title: const Text("Fluent Networking Demo")),
         body: FutureBuilder(
           future: future,
           builder: (context, snapshot) {
@@ -42,9 +38,7 @@ class MainApp extends StatelessWidget {
                   failed: (data) => const Text("Failed error"),
                   error: (error) => Text(error.message ?? ""),
                 ) ??
-                const Center(
-                  child: CircularProgressIndicator(),
-                );
+                const Center(child: CircularProgressIndicator());
           },
         ),
       ),

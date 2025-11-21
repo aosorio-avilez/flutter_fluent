@@ -2,9 +2,7 @@ import 'package:flutter_fluent_logger/flutter_fluent_logger.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
-  await Fluent.build([
-    LoggerModule(),
-  ]);
+  await Fluent.build([LoggerModule()]);
 
   runApp(const MainApp());
 }
@@ -19,11 +17,7 @@ class MainApp extends StatelessWidget {
 
     return const MaterialApp(
       title: 'Fluent Logger Demo',
-      home: Scaffold(
-        body: Center(
-          child: Text("Hello World!"),
-        ),
-      ),
+      home: Scaffold(body: Center(child: Text("Hello World!"))),
     );
   }
 }

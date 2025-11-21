@@ -4,11 +4,7 @@ import 'package:flutter/material.dart';
 import 'app_environment.dart';
 
 void main() async {
-  await Fluent.build([
-    EnvironmentModule(
-      environment: AppEnvironment(),
-    ),
-  ]);
+  await Fluent.build([EnvironmentModule(environment: AppEnvironment())]);
 
   runApp(const MainApp());
 }
@@ -27,9 +23,7 @@ class MainApp extends StatelessWidget {
       title: 'Fluent Environment Example',
       builder: (context, child) => EnvironmentBanner(child: child!),
       home: Scaffold(
-        body: Center(
-          child: Text("Environment: ${environment.name}"),
-        ),
+        body: Center(child: Text("Environment: ${environment.name}")),
       ),
     );
   }

@@ -2,10 +2,7 @@ import 'package:fluent_navigation/fluent_navigation.dart';
 import 'package:flutter/material.dart';
 
 class AppScaffold extends StatefulWidget {
-  const AppScaffold({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
+  const AppScaffold({Key? key, required this.child}) : super(key: key);
 
   final Widget child;
 
