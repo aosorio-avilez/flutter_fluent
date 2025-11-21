@@ -4,9 +4,7 @@ import 'package:fluient_sdk_example/feature/home/home_module.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
-  await Fluent.build([
-    HomeModule(),
-  ]);
+  await Fluent.build([HomeModule()]);
 
   runApp(const MainApp());
 }
@@ -19,10 +17,6 @@ class MainApp extends StatelessWidget {
     // Get home page from home module
     final homePage = Fluent.get<HomeApi>().getHomePage();
 
-    return MaterialApp(
-      home: Scaffold(
-        body: homePage,
-      ),
-    );
+    return MaterialApp(home: Scaffold(body: homePage));
   }
 }

@@ -2,29 +2,19 @@ import 'package:fluent_localization/fluent_localization.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
-  await Fluent.build([
-    LocalizationModule(),
-  ]);
-  runApp(MainApp(
-    localizationApi: Fluent.get(),
-  ));
+  await Fluent.build([LocalizationModule()]);
+  runApp(MainApp(localizationApi: Fluent.get()));
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({
-    super.key,
-    required this.localizationApi,
-  });
+  const MainApp({super.key, required this.localizationApi});
 
   final LocalizationApi localizationApi;
 
   @override
   Widget build(BuildContext context) {
     // Define your supported locales
-    final locales = [
-      const Locale("es"),
-      const Locale("en"),
-    ];
+    final locales = [const Locale("es"), const Locale("en")];
     // Get localization delegates
     final localizationDelegates = localizationApi.getDelegates(locales);
 
@@ -34,13 +24,11 @@ class MainApp extends StatelessWidget {
       home: Scaffold(
         body: Builder(
           builder: (context) {
-            final hello = context.tl('hello', args: {
-              "greetings": "Hi",
-              "name": "Developer",
-            });
-            return Center(
-              child: Text(hello),
+            final hello = context.tl(
+              'hello',
+              args: {"greetings": "Hi", "name": "Developer"},
             );
+            return Center(child: Text(hello));
           },
         ),
       ),

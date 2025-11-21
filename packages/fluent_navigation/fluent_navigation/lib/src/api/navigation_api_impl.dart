@@ -38,6 +38,11 @@ class NavigationApiImpl extends NavigationApi {
   RouterConfig<Object> get router => Fluent.get<GoRouter>();
 
   @override
+  bool canPop() {
+    return Fluent.get<GoRouter>().canPop();
+  }
+
+  @override
   void pop<T>([T? result]) {
     if (Fluent.get<GoRouter>().canPop()) {
       Fluent.get<GoRouter>().pop(result);

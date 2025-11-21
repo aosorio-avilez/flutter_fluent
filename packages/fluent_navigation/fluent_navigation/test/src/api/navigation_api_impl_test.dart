@@ -33,6 +33,40 @@ void main() {
     expect(router, isA<RouterConfig<Object>>());
   });
 
+  testWidgets('verify canPop returns false on initial route (root)', (
+    tester,
+  ) async {
+    await pumpAppRouter(tester);
+
+    final canPop = Fluent.get<NavigationApi>().canPop();
+
+    expect(canPop, isFalse);
+  });
+
+  testWidgets('verify canPop returns true after pushing a route', (
+    tester,
+  ) async {
+    await pumpAppRouter(tester);
+
+    await tester.tap(find.byKey(const Key('pushButton')));
+    await tester.pumpAndSettle();
+
+    final canPop = Fluent.get<NavigationApi>().canPop();
+
+    expect(canPop, isTrue);
+  });
+
+  testWidgets('verify pop is safe at root (does nothing if canPop is false)', (
+    tester,
+  ) async {
+    await pumpAppRouter(tester);
+
+    Fluent.get<NavigationApi>().pop<void>();
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('firstPage')), findsOneWidget);
+  });
+
   testWidgets('verify pop', (tester) async {
     await pumpAppRouter(tester);
 

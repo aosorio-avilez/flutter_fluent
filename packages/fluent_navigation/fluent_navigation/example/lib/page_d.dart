@@ -10,10 +10,7 @@ class PageD extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "Page D",
-            style: TextStyle(fontSize: 24),
-          ),
+          const Text("Page D", style: TextStyle(fontSize: 24)),
           ElevatedButton(
             onPressed: () => Fluent.get<NavigationApi>().pop(),
             child: const Text("Go back"),
