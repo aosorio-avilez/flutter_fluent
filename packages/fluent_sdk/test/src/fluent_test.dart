@@ -6,11 +6,9 @@ import 'mocks/test_class.dart';
 import 'mocks/test_class_2.dart';
 import 'mocks/test_module.dart';
 
-// --- MOCKS PARA PRUEBA SECUENCIAL ---
 class ModuleA extends FluentModule {
   @override
   Future<void> build(Registry registry) async {
-    // Simulamos latencia para asegurar que si fuera paralelo, esto tardaría más
     await Future<void>.delayed(const Duration(milliseconds: 10));
     registry.registerSingleton<String>((_) => 'ModuleA Ready');
   }
@@ -19,18 +17,14 @@ class ModuleA extends FluentModule {
 class ModuleB extends FluentModule {
   @override
   Future<void> build(Registry registry) async {
-    // Verificamos que A ya exista. Si corre en paralelo,
-    // esto fallaría aleatoriamente.
     if (!registry.isRegistered<String>()) {
       throw Exception('Race Condition Detected: ModuleA not ready!');
     }
     registry.registerSingleton<int>((_) => 1);
   }
 }
-// ------------------------------------
 
 void main() {
-  // Buena práctica: Limpiar siempre DESPUÉS de cada test
   tearDown(Fluent.reset);
 
   group('Fluent Orchestrator Tests', () {
@@ -40,8 +34,6 @@ void main() {
     });
 
     test('verify build executes modules sequentially (A -> B)', () async {
-      // Este test es crítico para la estabilidad del sistema.
-      // Garantiza que eliminamos el Future.wait() peligroso.
       await Fluent.build([
         ModuleA(),
         ModuleB(),
@@ -52,7 +44,6 @@ void main() {
     });
 
     test('verify get returns specific instance registered via GetIt', () async {
-      // Probamos interoperabilidad con GetIt directo
       GetIt.instance.registerLazySingleton(TestClass.new);
       expect(Fluent.get<TestClass>(), isA<TestClass>());
     });
@@ -69,14 +60,10 @@ void main() {
     });
 
     test('verify mock locks container after registration (Safety Check)', () {
-      // Arrange
       GetIt.instance.registerLazySingleton<TestClass>(TestClass.new);
 
-      // Act: Hacemos mock
       Fluent.mock<TestClass>(TestClass2());
 
-      // Assert: Intentamos registrar de nuevo manualmente.
-      // Esto DEBE fallar porque allowReassignment debería haber vuelto a false.
       expect(
         () => GetIt.instance.registerLazySingleton(TestClass.new),
         throwsA(isA<ArgumentError>()),

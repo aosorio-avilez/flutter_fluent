@@ -8,10 +8,8 @@ import 'mocks/test_class_2.dart';
 void main() {
   final registry = FluentRegistry();
 
-  // Aseguramos un estado limpio antes de cada prueba
   setUp(() => GetIt.instance.reset());
 
-  // Aseguramos limpieza después (por si acaso)
   tearDown(() => GetIt.instance.reset());
 
   group('FluentRegistry Implementation Tests', () {
@@ -32,7 +30,6 @@ void main() {
       final instance1 = GetIt.instance<TestClass>();
       final instance2 = GetIt.instance<TestClass>();
 
-      // Factory debe crear instancias diferentes cada vez
       expect(identical(instance1, instance2), isFalse);
     });
 
@@ -42,9 +39,6 @@ void main() {
         ..allowReassignment(allow: true)
         ..registerSingleton<TestClass>((p0) => TestClass2());
 
-      // 4. Verificamos que OBTENEMOS la nueva instancia
-      // CORRECCIÓN: Verificamos isA<TestClass2>
-      //para asegurar que el override funcionó
       expect(GetIt.instance<TestClass>(), isA<TestClass2>());
     });
 
