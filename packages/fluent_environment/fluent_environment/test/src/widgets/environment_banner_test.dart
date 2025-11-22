@@ -3,65 +3,75 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../mocks/environment_api_mock.dart';
-
-class EnvironmentMock extends Mock implements Environment {}
+class MockEnvironment extends Mock implements Environment {}
 
 void main() {
-  setUpAll(
-    () async {
-      await Fluent.build([
-        EnvironmentModule(
-          environment: EnvironmentMock(),
-        ),
-      ]);
-      addTearDown(Fluent.reset);
-    },
-  );
+  late MockEnvironment mockEnv;
 
-  testWidgets('verify environment banner', (tester) async {
-    Fluent.mock<EnvironmentApi>(EnvironmentApiMock());
-    Fluent.mock<Environment>(EnvironmentMock());
-    final environment = Fluent.get<Environment>();
-    final api = Fluent.get<EnvironmentApi>();
-
-    when(() => environment.name).thenReturn('Development');
-    when(() => environment.type).thenReturn(EnvironemntType.dev);
-    when(() => environment.color).thenReturn(Colors.blue);
-    when(() => api.environment).thenReturn(environment);
-
-    await tester.pumpWidget(
-      MaterialApp(
-        home: const Scaffold(),
-        builder: (context, child) {
-          return EnvironmentBanner(child: child!);
-        },
-      ),
-    );
-
-    expect(find.byType(EnvironmentBanner), findsOneWidget);
+  setUp(() {
+    mockEnv = MockEnvironment();
   });
 
-  testWidgets('verify production environment banner', (tester) async {
-    Fluent.mock<EnvironmentApi>(EnvironmentApiMock());
-    Fluent.mock<Environment>(EnvironmentMock());
-    final environment = Fluent.get<Environment>();
-    final api = Fluent.get<EnvironmentApi>();
+  testWidgets('should display banner when environment is NOT prod', (
+    tester,
+  ) async {
+    // Arrange
+    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+    when(() => mockEnv.name).thenReturn('DEV');
+    when(() => mockEnv.color).thenReturn(Colors.red);
 
-    when(() => environment.name).thenReturn('Prooduction');
-    when(() => environment.type).thenReturn(EnvironemntType.prod);
-    when(() => environment.color).thenReturn(Colors.blue);
-    when(() => api.environment).thenReturn(environment);
-
+    // Act
     await tester.pumpWidget(
       MaterialApp(
-        home: const Scaffold(),
-        builder: (context, child) {
-          return EnvironmentBanner(child: child!);
-        },
+        debugShowCheckedModeBanner: false, // Importante: Apagado
+        home: Scaffold(
+          body: EnvironmentBanner(
+            environment: mockEnv,
+            child: const Text('Content'),
+          ),
+        ),
       ),
     );
 
-    expect(find.byType(Scaffold), findsOneWidget);
+    // Assert
+    // 1. Verificamos que el Banner existe
+    final bannerFinder = find.byType(Banner);
+    expect(bannerFinder, findsOneWidget);
+
+    // 2. Obtenemos la instancia del widget para inspeccionar sus propiedades
+    final bannerWidget = tester.widget<Banner>(bannerFinder);
+
+    // 3. Verificamos que la propiedad 'message' sea la correcta
+    expect(bannerWidget.message, 'DEV');
+
+    // Opcional: Verificamos el color también para ser exhaustivos
+    expect(bannerWidget.color, Colors.red);
+  });
+
+  testWidgets('should NOT display banner when environment IS prod', (
+    tester,
+  ) async {
+    // Arrange
+    when(() => mockEnv.type).thenReturn(EnvironmentType.prod);
+
+    // Act
+    await tester.pumpWidget(
+      MaterialApp(
+        // CORRECCIÓN CRÍTICA: Apagamos el banner de "DEBUG" aquí también
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: EnvironmentBanner(
+            environment: mockEnv,
+            child: const Text('Content'),
+          ),
+        ),
+      ),
+    );
+
+    // Assert
+    // Como apagamos el de debug y tu widget oculta el suyo en prod,
+    // el resultado total debe ser 0 Banners.
+    expect(find.byType(Banner), findsNothing);
+    expect(find.text('Content'), findsOneWidget);
   });
 }

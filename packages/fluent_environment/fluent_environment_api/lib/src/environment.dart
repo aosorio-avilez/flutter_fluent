@@ -1,13 +1,25 @@
 import 'package:fluent_environment_api/src/environment_type.dart';
 import 'package:flutter/material.dart';
 
-/// Environment base clase
+/// Abstract definition of an Application Environment.
+/// Clients must extend this class to provide specific configuration values.
 abstract class Environment {
+  /// The primary color associated with this environment (e.g., Red for Dev).
   Color get color;
 
+  /// The display name of the environment.
   String get name;
 
-  EnvironemntType get type;
+  /// The classification of the environment.
+  EnvironmentType get type;
 
+  /// A map of configuration values (API Keys, Base URLs, etc.).
   Map<String, String> get values;
+}
+
+/// Convenience extensions to avoid verbose type checks.
+extension EnvironmentExt on Environment {
+  bool get isProduction => type == EnvironmentType.prod;
+  bool get isStaging => type == EnvironmentType.stg;
+  bool get isDevelopment => type == EnvironmentType.dev;
 }

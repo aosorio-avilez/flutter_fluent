@@ -14,5 +14,5 @@ class AppEnvironment extends Environment {
   };
 
   @override
-  EnvironemntType get type => EnvironemntType.dev;
+  EnvironmentType get type => EnvironmentType.dev;
 }
