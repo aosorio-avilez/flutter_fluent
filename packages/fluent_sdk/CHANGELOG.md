@@ -51,3 +51,9 @@
 ## 0.3.0
 
 * Upgrade package to flutter version v3.35
+
+## 0.4.0
+
+* FIX: Fluent.build now executes modules sequentially to prevent race conditions.
+* FIX: Fluent.mock ensures container safety using try/finally.
+* REFACTOR: Hidden default constructor.

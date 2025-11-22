@@ -32,3 +32,7 @@
 ## 0.1.0
 
 * Upgrade package to flutter version v3.35
+
+## 0.2.0
+
+* Upgrade fluent_sdk version to v0.4.0

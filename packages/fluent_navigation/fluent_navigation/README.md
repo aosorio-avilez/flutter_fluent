@@ -6,7 +6,7 @@ Package that provides a simple way to navigate within your app
 ### Add dependencies
 
 ```yaml
-fluent_navigation: ^1.1.0
+fluent_navigation: ^1.3.0
 ```
 
 ### Create pages

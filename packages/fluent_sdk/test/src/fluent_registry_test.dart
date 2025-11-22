@@ -8,52 +8,56 @@ import 'mocks/test_class_2.dart';
 void main() {
   final registry = FluentRegistry();
 
+  // Aseguramos un estado limpio antes de cada prueba
   setUp(() => GetIt.instance.reset());
 
-  test('registerLazySingleton should register lazy object', () async {
-    registry.registerLazySingleton<TestClass>((_) => TestClass());
+  // Aseguramos limpieza después (por si acaso)
+  tearDown(() => GetIt.instance.reset());
 
-    expect(GetIt.instance<TestClass>(), isA<TestClass>());
+  group('FluentRegistry Implementation Tests', () {
+    test('registerLazySingleton should register lazy object', () {
+      registry.registerLazySingleton<TestClass>((_) => TestClass());
+      expect(GetIt.instance.isRegistered<TestClass>(), isTrue);
+      expect(GetIt.instance<TestClass>(), isA<TestClass>());
+    });
+
+    test('registerSingleton should register immediate object', () {
+      registry.registerSingleton<TestClass>((_) => TestClass());
+      expect(GetIt.instance<TestClass>(), isA<TestClass>());
+    });
+
+    test('registerFactory should register factory object', () {
+      registry.registerFactory<TestClass>((it) => TestClass());
+
+      final instance1 = GetIt.instance<TestClass>();
+      final instance2 = GetIt.instance<TestClass>();
+
+      // Factory debe crear instancias diferentes cada vez
+      expect(identical(instance1, instance2), isFalse);
+    });
+
+    test('allowReassignment should enable overriding registrations', () {
+      registry
+        ..registerSingleton<TestClass>((it) => TestClass())
+        ..allowReassignment(allow: true)
+        ..registerSingleton<TestClass>((p0) => TestClass2());
+
+      // 4. Verificamos que OBTENEMOS la nueva instancia
+      // CORRECCIÓN: Verificamos isA<TestClass2>
+      //para asegurar que el override funcionó
+      expect(GetIt.instance<TestClass>(), isA<TestClass2>());
+    });
+
+    test(
+      'isRegistered should return true if instance is already registered',
+      () {
+        registry.registerSingleton<TestClass>((it) => TestClass());
+        expect(registry.isRegistered<TestClass>(), isTrue);
+      },
+    );
+
+    test('isRegistered should return false if instance is not registered', () {
+      expect(registry.isRegistered<TestClass>(), isFalse);
+    });
   });
-
-  test('registerSingleton should register object', () async {
-    registry.registerSingleton<TestClass>((_) => TestClass());
-
-    expect(GetIt.instance<TestClass>(), isA<TestClass>());
-  });
-
-  test('registerFactory should register factory object', () async {
-    registry.registerFactory<TestClass>((it) => TestClass());
-
-    expect(GetIt.instance<TestClass>(), isA<TestClass>());
-  });
-
-  test('allowReassignment should allow to reassign objects', () async {
-    registry
-      ..registerSingleton<TestClass>((it) => TestClass())
-      ..allowReassignment(allow: true)
-      ..registerSingleton<TestClass>((p0) => TestClass2());
-
-    expect(GetIt.instance<TestClass>(), isA<TestClass>());
-  });
-
-  test(
-    'isRegistered should return true if instance is already registered',
-    () async {
-      registry.registerSingleton<TestClass>((it) => TestClass());
-
-      final isRegistered = registry.isRegistered<TestClass>();
-
-      expect(isRegistered, isTrue);
-    },
-  );
-
-  test(
-    'isRegistered should return false if instance is not registered',
-    () async {
-      final isRegistered = registry.isRegistered<TestClass>();
-
-      expect(isRegistered, isFalse);
-    },
-  );
 }
