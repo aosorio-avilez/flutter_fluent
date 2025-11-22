@@ -1,19 +1,22 @@
 import 'package:fluent_logger_api/fluent_logger_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter_fluent_logger/src/api/logger_api_impl.dart';
+import 'package:flutter_fluent_logger/src/logger_config.dart';
 import 'package:flutter_fluent_logger/src/logger_module.dart';
 import 'package:loggy/loggy.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('verify logger module', () async {
-    await Fluent.build([LoggerModule()]);
+  test('verify logger module registration', () async {
+    // Arrange
+    final config = LoggerConfig(enableLog: true);
+
+    // Act
+    await Fluent.build([LoggerModule(config: config)]);
     addTearDown(Fluent.reset);
 
-    final loggy = Fluent.get<Loggy>();
-    final loggerApi = Fluent.get<LoggerApi>();
-
-    expect(loggy, isA<Loggy>());
-    expect(loggerApi, isA<LoggerApiImpl>());
+    // Assert
+    expect(Fluent.get<Loggy>(), isA<Loggy>());
+    expect(Fluent.get<LoggerApi>(), isA<LoggerApiImpl>());
   });
 }

@@ -1,49 +1,39 @@
 import 'package:fluent_logger_api/fluent_logger_api.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
-import 'package:flutter_fluent_logger/src/logger_module.dart';
+import 'package:flutter_fluent_logger/src/api/logger_api_impl.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
-import '../../mocks/loggy_mock.dart';
+
+// Mock directo de la librería externa
+class MockLoggy extends Mock implements Loggy {}
 
 void main() {
-  setUpAll(
-    () async {
-      await Fluent.build([LoggerModule()]);
-      Fluent.mock<Loggy>(LoggyMock());
-      addTearDown(Fluent.reset);
-    },
-  );
+  late MockLoggy mockLoggy;
+  late LoggerApi loggerApi;
 
-  test('verify logDebug', () async {
-    final loggy = Fluent.get<Loggy>();
-
-    Fluent.get<LoggerApi>().logDebug('debug message');
-
-    verify(() => loggy.log(LogLevel.debug, 'debug message')).called(1);
+  setUp(() {
+    mockLoggy = MockLoggy();
+    // Inyección manual para el test. Simple y directo.
+    loggerApi = LoggerApiImpl(mockLoggy);
   });
 
-  test('verify logError', () async {
-    final loggy = Fluent.get<Loggy>();
-
-    Fluent.get<LoggerApi>().logError('error message');
-
-    verify(() => loggy.log(LogLevel.error, 'error message')).called(1);
+  test('verify logDebug delegation', () {
+    loggerApi.logDebug('debug message');
+    verify(() => mockLoggy.log(LogLevel.debug, 'debug message')).called(1);
   });
 
-  test('verify logInfo', () async {
-    final loggy = Fluent.get<Loggy>();
-
-    Fluent.get<LoggerApi>().logInfo('info message');
-
-    verify(() => loggy.log(LogLevel.info, 'info message')).called(1);
+  test('verify logError delegation', () {
+    loggerApi.logError('error message');
+    verify(() => mockLoggy.log(LogLevel.error, 'error message')).called(1);
   });
 
-  test('verify logWarning', () async {
-    final loggy = Fluent.get<Loggy>();
+  test('verify logInfo delegation', () {
+    loggerApi.logInfo('info message');
+    verify(() => mockLoggy.log(LogLevel.info, 'info message')).called(1);
+  });
 
-    Fluent.get<LoggerApi>().logWarning('warning message');
-
-    verify(() => loggy.log(LogLevel.warning, 'warning message')).called(1);
+  test('verify logWarning delegation', () {
+    loggerApi.logWarning('warning message');
+    verify(() => mockLoggy.log(LogLevel.warning, 'warning message')).called(1);
   });
 }

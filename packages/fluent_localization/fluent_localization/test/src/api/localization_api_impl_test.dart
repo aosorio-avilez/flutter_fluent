@@ -3,16 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  setUpAll(
-    () async {
-      await Fluent.build([
-        LocalizationModule(),
-      ]);
-      addTearDown(Fluent.reset);
-    },
-  );
+  // Usamos setUp (se ejecuta antes de CADA test) o setUpAll
+  setUp(() async {
+    await Fluent.build([LocalizationModule()]);
+    addTearDown(Fluent.reset);
+  });
 
-  testWidgets('verify translate', (tester) async {
+  testWidgets('verify translate works via Context Extension', (tester) async {
+    // Configuración simulada
     final locales = [const Locale('en')];
     final delegates = Fluent.get<LocalizationApi>().getDelegates(
       locales,
@@ -23,10 +21,11 @@ void main() {
       MaterialApp(
         supportedLocales: locales,
         localizationsDelegates: delegates,
+        locale: const Locale('en'),
         home: Scaffold(
           body: Builder(
             builder: (context) {
-              final testContent = context.tl(
+              final testContent = context.tr(
                 'test.hello',
                 args: {'name': 'Developer'},
               );
@@ -37,12 +36,13 @@ void main() {
       ),
     );
 
-    await tester.pump();
+    await tester
+        .pumpAndSettle(); // Settle espera a que terminen las animaciones/futuros
 
     expect(find.text('Hello Developer!'), findsOneWidget);
   });
 
-  test('verify getLocalizationDelegates', () async {
+  test('verify getDelegates returns correct configuration', () async {
     final api = Fluent.get<LocalizationApi>();
 
     final delegates = api.getDelegates([
@@ -51,19 +51,20 @@ void main() {
     ]);
 
     expect(delegates.first, isA<FluentLocalizationDelegate>());
+    // Verificamos que incluya los delegados nativos de Flutter también
+    expect(delegates.length, greaterThan(1));
   });
 
-  test('verify path', () async {
+  test('verify path configuration passed to delegate', () async {
     final api = Fluent.get<LocalizationApi>();
-    const pathLocation = 'assets/languages';
-    const locale = Locale('es');
+    const customPath = 'custom/assets/languages';
+
     final delegates = api.getDelegates(
-      [locale],
-      path: 'assets/languages',
+      [const Locale('es')],
+      path: customPath,
     );
 
-    final path = (delegates.first as FluentLocalizationDelegate).path;
-
-    expect(path, pathLocation);
+    final delegate = delegates.first as FluentLocalizationDelegate;
+    expect(delegate.path, customPath);
   });
 }

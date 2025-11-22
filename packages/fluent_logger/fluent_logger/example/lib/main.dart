@@ -1,8 +1,11 @@
-import 'package:flutter_fluent_logger/flutter_fluent_logger.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_fluent_logger/flutter_fluent_logger.dart';
+
+final config = LoggerConfig(enableLog: kDebugMode, globalLogName: 'App');
 
 void main() async {
-  await Fluent.build([LoggerModule()]);
+  await Fluent.build([LoggerModule(config: config)]);
 
   runApp(const MainApp());
 }

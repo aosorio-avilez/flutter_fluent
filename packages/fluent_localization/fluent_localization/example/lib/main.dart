@@ -24,7 +24,7 @@ class MainApp extends StatelessWidget {
       home: Scaffold(
         body: Builder(
           builder: (context) {
-            final hello = context.tl(
+            final hello = context.tr(
               'hello',
               args: {"greetings": "Hi", "name": "Developer"},
             );

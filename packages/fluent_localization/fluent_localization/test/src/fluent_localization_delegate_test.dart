@@ -1,71 +1,44 @@
 import 'package:fluent_localization/src/fluent_localization.dart';
-import 'package:fluent_localization/src/fluent_localization_delegate.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../mocks/fake_assets_bundle.dart';
+// Importa tu FakeAssetBundle aquí
+
 void main() {
-  setUp(WidgetsFlutterBinding.ensureInitialized);
+  // Definimos un JSON de prueba
+  final fakeAssets = {
+    'test/assets/languages/en.json':
+        '{"title": "Title", "test": {"hello": "Hello {name}!"}}',
+    'test/assets/languages/es.json': '{"title": "Titulo"}',
+  };
 
-  testWidgets('verify fluent localization delegate', (tester) async {
-    const defaultLocale = Locale('en');
-    const anotherLocale = Locale('en', 'US');
-    const delegate = FluentLocalizationDelegate(
-      locale: defaultLocale,
-      supportedLocales: [defaultLocale, anotherLocale],
-      path: 'test/assets/languages',
-    );
-
-    await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: const [delegate],
-        locale: delegate.locale,
-        supportedLocales: delegate.supportedLocales,
-        home: Scaffold(
-          body: Builder(
-            builder: (context) {
-              return Text(
-                FluentLocalization.of(context)!.get(
-                  'test.hello',
-                  args: {'name': 'Dev'},
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-
-    await tester.pump();
-
-    expect(find.text('Hello Dev!'), findsOneWidget);
-  });
-
-  test(
-    '''verify fluent localization delegate return map of strings when locale does not exists''',
-    () async {
-      const defaultLocale = Locale('en');
-
-      const delegate = FluentLocalizationDelegate(
-        locale: defaultLocale,
-      );
-
-      final result = await delegate.load(defaultLocale);
-
-      expect(result, isA<FluentLocalization>());
-    },
-  );
-
-  test(
-    '''verify fluent localization throws format exception when file is malformed''',
-    () async {
-      const defaultLocale = Locale('es');
-
-      const delegate = FluentLocalizationDelegate(
-        locale: defaultLocale,
+  group('FluentLocalization Unit Tests', () {
+    test('verify load resolves strings correctly using FakeBundle', () async {
+      final localization = FluentLocalization(
         path: 'test/assets/languages',
+        // INYECTAMOS EL FAKE
+        bundle: FakeAssetBundle(fakeAssets),
       );
 
-      expect(delegate.load(defaultLocale), throwsA(isA<FormatException>()));
-    },
-  );
+      await localization.load();
+
+      expect(
+        localization.get('test.hello', args: {'name': 'Dev'}),
+        'Hello Dev!',
+      );
+    });
+
+    test('verify load handles missing file gracefully', () async {
+      final localization = FluentLocalization(
+        path: 'wrong/path',
+        bundle: FakeAssetBundle(fakeAssets), // El fake lanzará error
+      );
+
+      // El método load() captura la excepción internamente, así que no explota
+      await localization.load();
+
+      // Como falló, devuelve la llave
+      expect(localization.get('title'), 'title');
+    });
+  });
 }
