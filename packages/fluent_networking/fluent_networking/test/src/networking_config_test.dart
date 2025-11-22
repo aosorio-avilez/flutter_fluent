@@ -13,9 +13,11 @@ void main() {
     final config = NetworkingConfig(
       baseUrl: 'https://google.com',
       interceptors: [],
+      enableLog: true,
     );
 
     expect(config.baseUrl, 'https://google.com');
     expect(config.interceptors, isEmpty);
+    expect(config.enableLog, true);
   });
 }

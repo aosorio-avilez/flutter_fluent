@@ -1,128 +1,90 @@
 import 'package:dio/dio.dart';
-import 'package:fluent_networking_api/fluent_networking_api.dart';
+import 'package:fluent_networking/fluent_networking.dart';
 
 class NetworkingApiImpl extends NetworkingApi {
   NetworkingApiImpl(this._httpClient);
 
   final Dio _httpClient;
 
-  /// Make a get http request to the specific [url]
-  /// with optional [options] configuration
-  /// And return a [ResponseResult] response
   @override
-  Future<ResponseResult<T>> get<T>(
-    String url, {
-    Options? options,
-  }) async {
-    return _execute(
-      () => _httpClient.get<T>(
-        url,
-        options: options,
-      ),
-    );
+  Future<ResponseResult<T>> get<T>(String url, {Options? options}) {
+    return _execute(() => _httpClient.get<T>(url, options: options));
   }
 
-  /// Make a post http request to the specific [url]
-  /// with an optional [body] and optional [options] configuration
-  /// And return a [ResponseResult] response
   @override
   Future<ResponseResult<T>> post<T>(
     String url, {
     Object? body,
     Options? options,
-  }) async {
+  }) {
     return _execute(
-      () => _httpClient.post<T>(
-        url,
-        options: options,
-        data: body,
-      ),
+      () => _httpClient.post<T>(url, data: body, options: options),
     );
   }
 
-  // Make a patch http request to the specific [url]
-  /// with an optional [body] and optional [options] configuration
-  /// And return a [ResponseResult] response
-  @override
-  Future<ResponseResult<T>> patch<T>(
-    String url, {
-    Object? body,
-    Options? options,
-  }) async {
-    return _execute(
-      () => _httpClient.patch<T>(
-        url,
-        options: options,
-        data: body,
-      ),
-    );
-  }
-
-  // Make a put http request to the specific [url]
-  /// with an optional [body] and optional [options] configuration
-  /// And return a [ResponseResult] response
   @override
   Future<ResponseResult<T>> put<T>(
     String url, {
     Object? body,
     Options? options,
-  }) async {
+  }) {
     return _execute(
-      () => _httpClient.put<T>(
-        url,
-        options: options,
-        data: body,
-      ),
+      () => _httpClient.put<T>(url, data: body, options: options),
     );
   }
 
-  // Make a delete http request to the specific [url]
-  /// with an optional [body] and optional [options] configuration
-  /// And return a [ResponseResult] response
+  @override
+  Future<ResponseResult<T>> patch<T>(
+    String url, {
+    Object? body,
+    Options? options,
+  }) {
+    return _execute(
+      () => _httpClient.patch<T>(url, data: body, options: options),
+    );
+  }
+
   @override
   Future<ResponseResult<T>> delete<T>(
     String url, {
     Object? body,
     Options? options,
-  }) async {
+  }) {
     return _execute(
-      () => _httpClient.delete<T>(
-        url,
-        options: options,
-        data: body,
-      ),
+      () => _httpClient.delete<T>(url, data: body, options: options),
     );
   }
 
   Future<ResponseResult<T>> _execute<T>(
-    Future<Response<T>> Function() onExecute,
+    Future<Response<T>> Function() call,
   ) async {
     try {
-      final response = await onExecute();
-      return response.toResult<T>();
-    } on DioException catch (exception) {
-      return exception.response?.toResult<T>() ?? exception.toResult();
+      final response = await call();
+      return Success(response.data as T);
+    } on DioException catch (e) {
+      return Failure(_mapDioError(e));
+    } on Object catch (e, s) {
+      return Failure(
+        HttpError(
+          message: 'Unexpected Error: $e',
+          data: s.toString(),
+        ),
+      );
     }
   }
-}
 
-extension ResponseExtension on Response<dynamic> {
-  ResponseResult<T> toResult<T>() {
-    if (statusCode! >= 200 && statusCode! <= 300) {
-      return ResponseResult.succeeded(data as T);
-    } else {
-      return ResponseResult.failed(data as Object);
+  HttpError _mapDioError(DioException e) {
+    var msg = e.message ?? 'Unknown network error';
+    final dynamic errorData = e.response?.data;
+
+    if (errorData is Map && errorData.containsKey('message')) {
+      msg = errorData['message'].toString();
     }
-  }
-}
 
-extension DioErrorExtension on DioException {
-  ResponseResult<T> toResult<T>() {
-    return ResponseResult.error(
-      ResponseError(
-        type.name,
-        message,
-      ),
+    return HttpError(
+      code: e.response?.statusCode,
+      message: msg,
+      data: errorData,
     );
   }
 }

@@ -3,22 +3,40 @@ import 'package:fluent_networking/fluent_networking.dart';
 import 'package:fluent_networking/src/networking_api_impl.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-/// Register and build all the fluent networking dependencies
 class NetworkingModule extends FluentModule {
   NetworkingModule({
     required this.config,
   });
 
-  /// Networking configuration
   final NetworkingConfig config;
 
   @override
   Future<void> build(Registry registry) async {
     registry
       ..registerSingleton<Dio>((_) {
-        return Dio(
-          BaseOptions(baseUrl: config.baseUrl),
-        )..interceptors.addAll([PrettyDioLogger()]);
+        final dio = Dio(
+          BaseOptions(
+            baseUrl: config.baseUrl,
+            connectTimeout: const Duration(seconds: 15),
+            receiveTimeout: const Duration(seconds: 15),
+          ),
+        );
+
+        if (config.interceptors.isNotEmpty) {
+          dio.interceptors.addAll(config.interceptors);
+        }
+
+        if (config.enableLog) {
+          dio.interceptors.add(
+            PrettyDioLogger(
+              requestHeader: true,
+              requestBody: true,
+              compact: false,
+            ),
+          );
+        }
+
+        return dio;
       })
       ..registerSingleton<NetworkingApi>((it) => NetworkingApiImpl(it()));
   }
