@@ -23,3 +23,12 @@
 ## 0.1.0
 
 * Upgrade package to flutter version v3.35
+
+## 0.2.0
+
+> **BREAKING CHANGE:** This version migrates response handling to Sealed Classes.
+
+* **FIX:** Interceptors provided in config are now correctly added to Dio.
+* **REFACTOR:** `NetworkingConfig` now requires `enableLog` boolean instead of auto-detecting debug mode.
+* **FEAT:** Defined `ResponseResult` as a `sealed class` for exhaustiveness checking.
+* **REFACTOR:** Renamed/Removed old result classes (`Succeeded`, `Failed`, `Error`) in favor of `Success` and `Failure`.
