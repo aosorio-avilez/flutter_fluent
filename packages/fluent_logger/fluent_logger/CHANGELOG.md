@@ -36,3 +36,7 @@
 ## 0.2.0
 
 * Upgrade fluent_sdk version to v0.4.0
+
+## 0.2.1
+
+* Add default instantiation of LoggerConfig in the LoggerModule
