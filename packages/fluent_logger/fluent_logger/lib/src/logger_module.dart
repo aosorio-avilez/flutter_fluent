@@ -14,8 +14,8 @@ import 'package:loggy/loggy.dart';
 class LoggerModule extends FluentModule {
   /// {@macro logger_module}
   LoggerModule({
-    required this.config,
-  });
+    LoggerConfig? config,
+  }) : config = config ?? LoggerConfig();
 
   /// The configuration for the logger module.
   final LoggerConfig config;

@@ -19,4 +19,14 @@ void main() {
     expect(Fluent.get<Loggy>(), isA<Loggy>());
     expect(Fluent.get<LoggerApi>(), isA<LoggerApiImpl>());
   });
+
+  test('verify logger module registration without config', () async {
+    // Act
+    await Fluent.build([LoggerModule()]);
+    addTearDown(Fluent.reset);
+
+    // Assert
+    expect(Fluent.get<Loggy>(), isA<Loggy>());
+    expect(Fluent.get<LoggerApi>(), isA<LoggerApiImpl>());
+  });
 }
