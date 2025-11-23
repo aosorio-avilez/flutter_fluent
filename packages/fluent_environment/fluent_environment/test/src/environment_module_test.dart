@@ -1,19 +1,21 @@
 import 'package:fluent_environment/fluent_environment.dart';
 import 'package:fluent_environment/src/api/environment_api_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
-import 'widgets/environment_banner_test.dart';
+class MockEnvironment extends Mock implements Environment {}
 
 void main() {
-  test(
-    'environment module should register environment api implementation',
-    () async {
-      await Fluent.build([EnvironmentModule(environment: EnvironmentMock())]);
-      addTearDown(Fluent.reset);
+  test('environment module should register dependencies correctly', () async {
+    final mockEnv = MockEnvironment();
 
-      final api = Fluent.get<EnvironmentApi>();
+    await Fluent.build([EnvironmentModule(environment: mockEnv)]);
+    addTearDown(Fluent.reset);
 
-      expect(api, isA<EnvironmentApiImpl>());
-    },
-  );
+    expect(Fluent.get<Environment>(), isA<Environment>());
+    expect(Fluent.get<EnvironmentApi>(), isA<EnvironmentApiImpl>());
+
+    // Verificamos que la instancia inyectada sea la misma
+    expect(Fluent.get<EnvironmentApi>().environment, equals(mockEnv));
+  });
 }

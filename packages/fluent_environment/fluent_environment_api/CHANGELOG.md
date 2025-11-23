@@ -24,3 +24,9 @@
 
 * Method `getEnvironment` replaced by `environment` getter on `EnvironmentApi` interface
 * Method `buildEnvironmentBanner` method removed in favor of export `EnvironmentBanner` widget directly
+
+## 0.2.0
+
+* FIX: `EnvironmentType` typo was fixed
+* FEAT: Add convenience extension on `EnvironmentType`
+

@@ -6,7 +6,7 @@ Package that provides a simple way to make http requests
 ### Add dependencies
 
 ```yaml
-fluent_networking: ^0.2.0
+fluent_networking: ^0.3.0
 ```
 
 ### Create networking config

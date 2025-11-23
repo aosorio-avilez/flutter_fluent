@@ -1,52 +1,69 @@
 import 'package:fluent_localization/src/fluent_localization.dart';
 import 'package:flutter/material.dart';
 
-/// The FluentLocalization delegate class.
+/// A [LocalizationsDelegate] for [FluentLocalization].
+///
+/// This delegate is responsible for loading [FluentLocalization] instances
+/// based on the current locale. It allows specifying supported locales,
+/// the path to the localization files, an optional specific locale to load,
+/// and an optional asset bundle.
 class FluentLocalizationDelegate
     extends LocalizationsDelegate<FluentLocalization> {
-  /// Creates a new app localization delegate instance.
+  /// Creates a [FluentLocalizationDelegate].
+  ///
+  /// [supportedLocales] is the list of locales that this delegate can provide
+  /// localizations for. Defaults to `[Locale('en')]`.
+  /// [path] is the path to the localization JSON files.
+  /// Defaults to `defaultPath`.
+  /// [locale] is an optional specific locale to load,
+  /// overriding the system locale.
+  /// [assetBundle] is an optional asset bundle to load localization files from.
   const FluentLocalizationDelegate({
     this.supportedLocales = const [Locale('en')],
     this.path = defaultPath,
     this.locale,
+    this.assetBundle,
   });
 
-  /// Contains all supported locales.
+  /// The list of locales that this delegate can provide localizations for.
   final List<Locale> supportedLocales;
 
-  /// The get path function.
+  /// The path to the localization JSON files.
   final String path;
 
-  /// Current locale
+  /// An optional specific locale to load, overriding the system locale.
   final Locale? locale;
+
+  /// An optional asset bundle to load localization files from.
+  final AssetBundle? assetBundle;
 
   @override
   bool isSupported(Locale locale) {
-    for (final supportedLocale in supportedLocales) {
-      if (supportedLocale.toString() == locale.toString()) {
-        return true;
-      }
-    }
-    return false;
+    return supportedLocales.any(
+      (supported) =>
+          supported.languageCode == locale.languageCode &&
+          (supported.countryCode == null ||
+              supported.countryCode == locale.countryCode),
+    );
   }
 
   @override
   Future<FluentLocalization> load(Locale locale) async {
+    final effectiveLocale = this.locale ?? locale;
+
     final localization = FluentLocalization(
-      locale: this.locale ?? locale,
+      locale: effectiveLocale,
       path: path,
+      bundle: assetBundle,
     );
 
-    try {
-      await localization.load();
-    } catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    }
+    await localization.load();
 
     return localization;
   }
 
   @override
-  bool shouldReload(LocalizationsDelegate<FluentLocalization> old) => false;
+  bool shouldReload(FluentLocalizationDelegate old) {
+    return old.path != path || old.supportedLocales != supportedLocales;
+  }
 }

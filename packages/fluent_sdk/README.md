@@ -6,7 +6,7 @@ Package that provide a way to modularize features through a service locator.
 ### Add dependencies
 
 ```yaml
-fluent_sdk: ^0.2.2
+fluent_sdk: ^0.4.0
 ```
 
 ### Create a interface/implementation to access the feature functionalities

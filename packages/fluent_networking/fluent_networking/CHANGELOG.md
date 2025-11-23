@@ -32,3 +32,7 @@
 * **REFACTOR:** `NetworkingConfig` now requires `enableLog` boolean instead of auto-detecting debug mode.
 * **FEAT:** Defined `ResponseResult` as a `sealed class` for exhaustiveness checking.
 * **REFACTOR:** Renamed/Removed old result classes (`Succeeded`, `Failed`, `Error`) in favor of `Success` and `Failure`.
+
+## 0.3.0
+
+* Upgrade fluent_sdk version to v0.4.0

@@ -60,3 +60,8 @@
 ## 1.2.2
 
 * Upgrade interface `fluent_navigation_api` to `v1.0.1`
+
+## 1.3.0
+
+* Upgrade fluent_sdk version to v0.4.0
+

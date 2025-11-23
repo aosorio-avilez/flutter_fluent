@@ -1,89 +1,97 @@
 import 'package:fluent_localization/src/fluent_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  setUp(WidgetsFlutterBinding.ensureInitialized);
+  // Definimos los "archivos" que existen en nuestra memoria para la prueba
+  final fakeAssets = {
+    'assets/languages/en.json': '''
+      {
+        "title": "Title", 
+        "test": {
+          "hello": "Hello {name}!",
+          "nested": "Nested Value"
+        }
+      }
+    ''',
+    'assets/languages/es.json': '{"title": "Titulo"}',
+  };
 
-  test('verify fluent localization load', () async {
-    final localization = FluentLocalization(
-      path: 'test/assets/languages',
-    );
-
-    final result = await localization.load();
-
-    expect(result, isNotEmpty);
-  });
-
-  test(
-    '''verify fluent localization load return empty map of strings when file does not exists''',
-    () async {
+  group('FluentLocalization Unit Tests', () {
+    test('verify load resolves strings correctly using FakeBundle', () async {
       final localization = FluentLocalization(
-        path: 'path/does/not/exists',
+        // Inyectamos el bundle falso para no depender de Flutter Engine
+        bundle: FakeAssetBundle(fakeAssets),
       );
 
-      final result = await localization.load();
+      await localization.load();
 
-      expect(result, isEmpty);
-    },
-  );
+      // Verificamos traducciones simples y anidadas
+      expect(localization.get('title'), 'Title');
+      expect(localization.get('test.nested'), 'Nested Value');
+    });
 
-  test('verify fluent localization load return map of strings', () async {
-    final localization = FluentLocalization(
-      path: 'test/assets/languages',
-    );
-
-    final result = await localization.load();
-
-    expect(result, isA<Map<String, String>>());
-    expect(result, isNotEmpty);
-  });
-
-  test(
-    'verify fluent localization get string with map return localized string',
-    () async {
+    test('verify get returns formatted string with arguments', () async {
       final localization = FluentLocalization(
-        path: 'test/assets/languages',
+        bundle: FakeAssetBundle(fakeAssets),
       );
 
       await localization.load();
 
       expect(
-        localization.get(
-          'test.hello_args',
-          args: {
-            'greetings': 'Hi',
-            'name': 'Dev',
-          },
-        ),
-        'Hi Dev',
+        localization.get('test.hello', args: {'name': 'Dev'}),
+        'Hello Dev!',
       );
-    },
-  );
+    });
 
-  test(
-    'verify fluent localization get string return localized string',
-    () async {
+    test(
+      'verify load handles missing file gracefully (Safe Fallback)',
+      () async {
+        final localization = FluentLocalization(
+          path: 'wrong/path', // Ruta que no existe en el fake
+          bundle: FakeAssetBundle(fakeAssets),
+        );
+
+        // No debe lanzar excepción, simplemente no carga nada
+        await localization.load();
+
+        // Al no cargar, devuelve la llave misma
+        expect(localization.get('title'), 'title');
+      },
+    );
+
+    test('verify get returns key when translation is missing', () async {
       final localization = FluentLocalization(
-        path: 'test/assets/languages',
+        bundle: FakeAssetBundle(fakeAssets),
       );
 
       await localization.load();
 
-      expect(localization.get('title'), 'Title');
-    },
-  );
+      expect(localization.get('missing.key'), 'missing.key');
+    });
+  });
+}
 
-  test(
-    'verify fluent localization get missing string should return key',
-    () async {
-      final localization = FluentLocalization(
-        path: 'test/assets/languages',
-      );
+// --- UTILITY CLASS ---
 
-      await localization.load();
+/// Un AssetBundle falso que sirve datos desde un Map en memoria.
+/// Esto elimina la necesidad de usar 'testWidgets' o 'BinaryMessenger'.
+class FakeAssetBundle extends AssetBundle {
+  FakeAssetBundle(this.data);
+  final Map<String, String> data;
 
-      expect(localization.get('missing_string'), 'missing_string');
-    },
-  );
+  @override
+  Future<String> loadString(String key, {bool cache = true}) async {
+    if (data.containsKey(key)) {
+      return data[key]!;
+    }
+    // Simulamos el error nativo de Flutter cuando no encuentra un asset
+    throw FlutterError('Unable to load asset: "$key"');
+  }
+
+  @override
+  Future<ByteData> load(String key) async {
+    throw UnimplementedError('Text-only bundle for testing');
+  }
 }

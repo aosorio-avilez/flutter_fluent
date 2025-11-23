@@ -6,7 +6,7 @@ Package that provides a way to register your environment and display it
 ### Add dependencies
 
 ```yaml
-fluent_environment: ^0.1.1
+fluent_environment: ^0.3.0
 ```
 
 ### Define environment

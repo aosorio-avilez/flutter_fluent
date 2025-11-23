@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 
 extension LocalizationExtension on BuildContext {
   /// Translate an element through the BuildContext
-  /// with optional args
-  String tl(String key, {Map<String, String>? args}) {
+  String tr(String key, {Map<String, String>? args}) {
     return Fluent.get<LocalizationApi>().translate(this, key, args: args);
   }
 }

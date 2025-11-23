@@ -1,25 +1,28 @@
 import 'package:fluent_logger_api/fluent_logger_api.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:loggy/loggy.dart';
 
 class LoggerApiImpl extends LoggerApi {
+  LoggerApiImpl(this._loggy);
+
+  final Loggy _loggy;
+
   @override
   void logDebug(dynamic message) {
-    Fluent.get<Loggy>().log(LogLevel.debug, message);
+    _loggy.log(LogLevel.debug, message);
   }
 
   @override
   void logError(dynamic message, {StackTrace? stackTrace}) {
-    Fluent.get<Loggy>().log(LogLevel.error, message, stackTrace);
+    _loggy.log(LogLevel.error, message, stackTrace);
   }
 
   @override
   void logInfo(dynamic message) {
-    Fluent.get<Loggy>().log(LogLevel.info, message);
+    _loggy.log(LogLevel.info, message);
   }
 
   @override
   void logWarning(dynamic message, {StackTrace? stackTrace}) {
-    Fluent.get<Loggy>().log(LogLevel.warning, message, stackTrace);
+    _loggy.log(LogLevel.warning, message, stackTrace);
   }
 }

@@ -28,6 +28,15 @@ class LocalizationApiImpl extends LocalizationApi {
     String key, {
     Map<String, String>? args,
   }) {
-    return FluentLocalization.of(context)!.get(key, args: args);
+    final localization = FluentLocalization.of(context);
+
+    if (localization == null) {
+      debugPrint(
+        '⚠️ LocalizationApi: FluentLocalization not found in context.',
+      );
+      return key;
+    }
+
+    return localization.get(key, args: args);
   }
 }
