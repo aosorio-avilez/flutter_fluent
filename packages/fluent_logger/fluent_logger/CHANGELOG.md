@@ -45,3 +45,4 @@
 
 * BREAKING CHANGE: Updated `fluent_sdk` dependency to `^0.5.0`
 * REFACTOR: Renamed `build` method to `onCreate` in `LoggerModule`
+* CHORE: Recreated example platforms and updated READMEs.

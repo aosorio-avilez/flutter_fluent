@@ -61,4 +61,5 @@
 ## 0.5.0
 
 * BREAKING CHANGE: Renamed `build` method to `onCreate` in `FluentModule` to better reflect lifecycle.
+* CHORE: Recreated example platforms and updated READMEs.
 * FEAT: Added `onStart` and `onStop` lifecycle methods to `FluentModule`.
