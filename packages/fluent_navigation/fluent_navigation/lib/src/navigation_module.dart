@@ -14,6 +14,7 @@ class NavigationModule extends FluentModule {
     this.redirect,
     this.initialLocation = '/',
     this.optionURLReflectsImperativeAPIs = true,
+    this.refreshListenable,
   });
 
   /// Callback that allow the app to redirect to a new location.
@@ -24,6 +25,9 @@ class NavigationModule extends FluentModule {
 
   /// Whether or not the url should reflect the imperative APIs.
   final bool optionURLReflectsImperativeAPIs;
+
+  /// A listenable that triggers a refresh of the route information.
+  final Listenable? refreshListenable;
 
   @override
   Future<void> build(Registry registry) async {
@@ -37,6 +41,7 @@ class NavigationModule extends FluentModule {
             navigatorKey: rootNavigatorKey,
             routes: Fluent.get<InternalNavigationApi>().getRegisteredRoutes(),
             redirect: (context, state) => redirect?.call(state.uri.toString()),
+            refreshListenable: refreshListenable,
           );
         },
       )
