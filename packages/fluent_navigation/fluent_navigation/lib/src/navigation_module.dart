@@ -30,7 +30,7 @@ class NavigationModule extends FluentModule {
   final Listenable? refreshListenable;
 
   @override
-  Future<void> build(Registry registry) async {
+  Future<void> onCreate(Registry registry) async {
     GoRouter.optionURLReflectsImperativeAPIs = optionURLReflectsImperativeAPIs;
 
     registry

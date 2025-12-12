@@ -11,7 +11,7 @@ class NetworkingModule extends FluentModule {
   final NetworkingConfig config;
 
   @override
-  Future<void> build(Registry registry) async {
+  Future<void> onCreate(Registry registry) async {
     registry
       ..registerSingleton<Dio>((_) {
         final dio = Dio(

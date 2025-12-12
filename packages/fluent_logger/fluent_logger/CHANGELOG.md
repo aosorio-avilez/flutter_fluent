@@ -40,3 +40,8 @@
 ## 0.2.1
 
 * Add default instantiation of LoggerConfig in the LoggerModule
+
+## 0.3.0
+
+* BREAKING CHANGE: Updated `fluent_sdk` dependency to `^0.5.0`
+* REFACTOR: Renamed `build` method to `onCreate` in `LoggerModule`

@@ -16,5 +16,17 @@ abstract class FluentModule {
   ///
   /// You can also call [Registry.allowReassignment] to allow objects
   /// to be reassigned.
-  Future<void> build(Registry registry);
+  Future<void> onCreate(Registry registry);
+
+  /// Called after all modules have been built.
+  ///
+  /// Use this method to execute logic that requires other modules to be
+  /// registered, such as initializing services that depend on others.
+  Future<void> onStart() async {}
+
+  /// Called before the registry is reset.
+  ///
+  /// Use this method to dispose of resources, close streams, or perform
+  /// cleanup tasks.
+  Future<void> onStop() async {}
 }

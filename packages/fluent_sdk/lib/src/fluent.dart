@@ -11,6 +11,8 @@ class Fluent {
   // Ocultamos el constructor para evitar instancias
   Fluent._();
 
+  static final List<FluentModule> _modules = [];
+
   static final Registry _registry = FluentRegistry();
 
   /// Builds a list of modules sequentially.
@@ -19,8 +21,12 @@ class Fluent {
   /// exact order they are provided. This is crucial for dependencies
   /// (e.g., NetworkingModule must load before AuthModule).
   static Future<void> build(List<FluentModule> modules) async {
+    _modules.addAll(modules);
     for (final module in modules) {
-      await module.build(_registry);
+      await module.onCreate(_registry);
+    }
+    for (final module in modules) {
+      await module.onStart();
     }
   }
 
@@ -51,6 +57,10 @@ class Fluent {
   ///
   /// Useful for [tearDown] in unit tests.
   static Future<void> reset() async {
+    for (final module in _modules.reversed) {
+      await module.onStop();
+    }
+    _modules.clear();
     return GetIt.instance.reset();
   }
 }

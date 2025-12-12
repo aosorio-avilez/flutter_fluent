@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 class TestModule extends FluentModule {
   @override
-  Future<void> build(Registry registry) async {
+  Future<void> onCreate(Registry registry) async {
     registry.registerRoute(
       GoRoute(
         path: '/',
@@ -19,7 +19,7 @@ class TestModule extends FluentModule {
 
 class TestModule2 extends FluentModule {
   @override
-  Future<void> build(Registry registry) async {
+  Future<void> onCreate(Registry registry) async {
     registry
       ..registerRoute(
         GoRoute(
