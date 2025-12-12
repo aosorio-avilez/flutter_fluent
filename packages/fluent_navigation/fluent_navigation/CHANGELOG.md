@@ -65,3 +65,7 @@
 
 * Upgrade fluent_sdk version to v0.4.0
 
+## 1.3.1
+
+* New parameter `refreshListenable` was added to `NavigationModule` in order to let users listen to `GoRouter` refresh streams
+

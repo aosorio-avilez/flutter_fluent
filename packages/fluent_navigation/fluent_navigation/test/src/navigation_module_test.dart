@@ -131,4 +131,52 @@ void main() {
 
     expect(find.byKey(const Key('test')), findsOneWidget);
   });
+
+  testWidgets('verify refreshListenable', (tester) async {
+    final listenable = ValueNotifier<bool>(false);
+    await Fluent.build([
+      NavigationModule(
+        refreshListenable: listenable,
+        redirect: (location) {
+          if (listenable.value) {
+            return '/test';
+          }
+          return null;
+        },
+      ),
+    ]);
+    Fluent.mock<FluentRoutes>([
+      GoRoute(
+        name: 'home',
+        path: '/',
+        builder: (context, state) => const Scaffold(
+          key: Key('home'),
+        ),
+      ),
+      GoRoute(
+        name: 'test',
+        path: '/test',
+        builder: (context, state) {
+          return const Scaffold(
+            key: Key('test'),
+          );
+        },
+      ),
+    ]);
+
+    final router = Fluent.get<NavigationApi>().router;
+
+    await tester.pumpWidget(
+      MaterialApp.router(
+        routerConfig: router,
+      ),
+    );
+
+    expect(find.byKey(const Key('home')), findsOneWidget);
+
+    listenable.value = true;
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('test')), findsOneWidget);
+  });
 }
