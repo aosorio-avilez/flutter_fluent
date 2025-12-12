@@ -1,6 +1,6 @@
 {
-    "name": "example",
-    "short_name": "example",
+    "name": "fluent_navigation_example",
+    "short_name": "fluent_navigation_example",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

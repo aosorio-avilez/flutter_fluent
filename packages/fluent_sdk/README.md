@@ -36,7 +36,7 @@ class HomeApiImpl extends HomeApi {
 ### Create module
 
 ```dart
-class HomeModule extends Module {
+class HomeModule extends FluentModule {
 
   @override
   Future<void> onCreate(Registry registry) async {

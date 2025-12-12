@@ -6,7 +6,7 @@ Package that provides a way to register your environment and display it
 ### Add dependencies
 
 ```yaml
-fluent_environment: ^0.3.0
+fluent_environment: ^0.4.0
 ```
 
 ### Define environment
@@ -26,7 +26,7 @@ class AppEnvironment extends Environment {
     };
 
     @override
-    EnvironemntType get type => EnvironemntType.dev;
+    EnvironmentType get type => EnvironmentType.dev;
 }
 ```
 
@@ -52,7 +52,7 @@ class App extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
         // Return the current environment
-        final environment = FLuent.get<EnvironmentApi>().environment;
+        final environment = Fluent.get<EnvironmentApi>().environment;
         
         return MaterialApp(
             title: 'Fluent Environment Demo',
