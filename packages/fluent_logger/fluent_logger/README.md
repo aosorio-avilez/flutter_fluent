@@ -6,7 +6,7 @@ Package that allows you to print different types of messages in console
 ### Add dependencies
 
 ```yaml
-flutter_fluent_logger: ^0.2.0
+flutter_fluent_logger: ^0.3.0
 ```
 
 ### Build module

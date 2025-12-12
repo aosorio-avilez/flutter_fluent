@@ -5,7 +5,7 @@ import 'test_class_async.dart';
 
 class TestModule extends FluentModule {
   @override
-  Future<void> build(Registry registry) async {
+  Future<void> onCreate(Registry registry) async {
     final testClassAsync = await TestClassAsync.build();
     registry
       ..registerSingleton<TestClass>((it) => TestClass())

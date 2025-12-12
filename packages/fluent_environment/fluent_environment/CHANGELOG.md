@@ -39,3 +39,9 @@
 ## 0.3.0
 
 * Upgrade fluent_sdk version to v0.4.0
+
+## 0.4.0
+
+* BREAKING CHANGE: Updated `fluent_sdk` dependency to `^0.5.0`
+* REFACTOR: Renamed `build` method to `onCreate` in `EnvironmentModule`
+* CHORE: Recreated example platforms and updated READMEs.

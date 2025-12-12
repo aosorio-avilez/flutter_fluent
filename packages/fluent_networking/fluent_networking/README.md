@@ -6,7 +6,7 @@ Package that provides a simple way to make http requests
 ### Add dependencies
 
 ```yaml
-fluent_networking: ^0.3.0
+fluent_networking: ^0.4.0
 ```
 
 ### Create networking config
@@ -39,7 +39,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final networkingApi = Fluent.get<NetworkingApi>();
 
-    final future = networkingApi.get<Map<String, dynamic>>("/pokemon");
+    final future = networkingApi.get<Map<String, Object>>("/pokemon");
 
     return MaterialApp(
       theme: ThemeData(
@@ -51,7 +51,7 @@ class MainApp extends StatelessWidget {
           title: const Text("Fluent Networking Demo"),
           elevation: 2,
         ),
-        body: FutureBuilder<ResponseResult<Map<String, dynamic>>>(
+        body: FutureBuilder<ResponseResult<Map<String, Object>>>(
           future: future,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {

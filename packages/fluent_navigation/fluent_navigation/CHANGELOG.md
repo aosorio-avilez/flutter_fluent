@@ -69,3 +69,9 @@
 
 * New parameter `refreshListenable` was added to `NavigationModule` in order to let users listen to `GoRouter` refresh streams
 
+## 1.4.0
+
+* BREAKING CHANGE: Updated `fluent_sdk` dependency to `^0.5.0`
+* REFACTOR: Renamed `build` method to `onCreate` in `NavigationModule`
+* CHORE: Recreated example platforms and updated READMEs.
+

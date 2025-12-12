@@ -57,3 +57,9 @@
 * FIX: Fluent.build now executes modules sequentially to prevent race conditions.
 * FIX: Fluent.mock ensures container safety using try/finally.
 * REFACTOR: Hidden default constructor.
+
+## 0.5.0
+
+* BREAKING CHANGE: Renamed `build` method to `onCreate` in `FluentModule` to better reflect lifecycle.
+* CHORE: Recreated example platforms and updated READMEs.
+* FEAT: Added `onStart` and `onStop` lifecycle methods to `FluentModule`.

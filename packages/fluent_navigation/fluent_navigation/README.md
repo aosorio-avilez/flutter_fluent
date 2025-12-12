@@ -6,7 +6,7 @@ Package that provides a simple way to navigate within your app
 ### Add dependencies
 
 ```yaml
-fluent_navigation: ^1.3.0
+fluent_navigation: ^1.4.0
 ```
 
 ### Create pages
@@ -75,7 +75,7 @@ class PageTwo extends StatelessWidget {
 class ExampleModule extends FluentModule {
 
   @override
-  Future<void> build(Registry registry) async {
+  Future<void> onCreate(Registry registry) async {
     registry
         // Initial route
         ..registerRoute(GoRoute(

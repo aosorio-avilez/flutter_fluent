@@ -2,15 +2,15 @@ import 'package:fluent_navigation/fluent_navigation.dart';
 import 'package:fluent_navigation_example/app_scaffold.dart';
 import 'package:fluent_navigation_example/page_a.dart';
 import 'package:fluent_navigation_example/page_b.dart';
-import 'package:fluent_navigation_example/page_d.dart';
 import 'package:fluent_navigation_example/page_c.dart';
+import 'package:fluent_navigation_example/page_d.dart';
 import 'package:flutter/widgets.dart';
 
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 class ExampleModule extends FluentModule {
   @override
-  Future<void> build(Registry registry) async {
+  Future<void> onCreate(Registry registry) async {
     registry
       ..registerRoute(
         ShellRoute(

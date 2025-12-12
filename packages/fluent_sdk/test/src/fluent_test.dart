@@ -8,7 +8,7 @@ import 'mocks/test_module.dart';
 
 class ModuleA extends FluentModule {
   @override
-  Future<void> build(Registry registry) async {
+  Future<void> onCreate(Registry registry) async {
     await Future<void>.delayed(const Duration(milliseconds: 10));
     registry.registerSingleton<String>((_) => 'ModuleA Ready');
   }
@@ -16,7 +16,7 @@ class ModuleA extends FluentModule {
 
 class ModuleB extends FluentModule {
   @override
-  Future<void> build(Registry registry) async {
+  Future<void> onCreate(Registry registry) async {
     if (!registry.isRegistered<String>()) {
       throw Exception('Race Condition Detected: ModuleA not ready!');
     }
