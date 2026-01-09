@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -72,9 +73,11 @@ class FluentLocalization {
         _flattenStrings(jsonMap);
       }
     } on Object catch (e, stack) {
-      debugPrint('❌ FluentLocalization: Failed to load $filePath');
-      debugPrint('Error: $e');
-      debugPrintStack(stackTrace: stack);
+      if (kDebugMode) {
+        debugPrint('❌ FluentLocalization: Failed to load $filePath');
+        debugPrint('Error: $e');
+        debugPrintStack(stackTrace: stack);
+      }
     }
   }
 
