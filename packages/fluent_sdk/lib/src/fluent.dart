@@ -33,6 +33,7 @@ class Fluent {
   /// Retrieves an instance of a registered object [T].
   ///
   /// Throws a [StateError] if the instance is not registered.
+  @pragma('vm:prefer-inline')
   static T get<T extends Object>() {
     return GetIt.instance<T>();
   }
@@ -42,6 +43,7 @@ class Fluent {
   /// Uses a [try/finally] block to guarantee safety: even if registration fails,
   /// [allowReassignment] will be disabled,
   /// preserving the integrity of the container.
+  @pragma('vm:prefer-inline')
   static void mock<T extends Object>(T mock) {
     try {
       _registry

@@ -6,14 +6,17 @@ class FluentRegistry implements Registry {
   final GetIt _getIt = GetIt.instance;
 
   @override
+  @pragma('vm:prefer-inline')
   void allowReassignment({required bool allow}) {
     _getIt.allowReassignment = allow;
   }
 
   @override
+  @pragma('vm:prefer-inline')
   bool isRegistered<T extends Object>() => _getIt.isRegistered<T>();
 
   @override
+  @pragma('vm:prefer-inline')
   void registerFactory<T extends Object>(
     T Function(GetIt i) factoryFunction, {
     String? instanceName,
@@ -25,6 +28,7 @@ class FluentRegistry implements Registry {
   }
 
   @override
+  @pragma('vm:prefer-inline')
   void registerLazySingleton<T extends Object>(
     T Function(GetIt i) factoryFunction, {
     String? instanceName,
@@ -36,6 +40,7 @@ class FluentRegistry implements Registry {
   }
 
   @override
+  @pragma('vm:prefer-inline')
   void registerSingleton<T extends Object>(
     T Function(GetIt i) factoryFunction, {
     String? instanceName,
