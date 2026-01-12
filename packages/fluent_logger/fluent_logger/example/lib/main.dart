@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fluent_logger/flutter_fluent_logger.dart';
 
-final config = LoggerConfig(enableLog: kDebugMode, globalLogName: 'App');
+const config = LoggerConfig(enableLog: kDebugMode, globalLogName: 'App');
 
 void main() async {
-  await Fluent.build([LoggerModule(config: config)]);
+  await Fluent.build([const LoggerModule(config: config)]);
 
   runApp(const MainApp());
 }

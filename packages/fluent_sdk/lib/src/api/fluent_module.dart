@@ -1,6 +1,8 @@
 import 'package:fluent_sdk/fluent_sdk.dart';
 
 abstract class FluentModule {
+  const FluentModule();
+
   /// Builds the module.
   ///
   /// This method is called by [Fluent] to build the module. It takes

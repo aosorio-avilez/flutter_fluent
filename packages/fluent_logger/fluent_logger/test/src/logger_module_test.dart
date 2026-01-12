@@ -9,10 +9,10 @@ import 'package:test/test.dart';
 void main() {
   test('verify logger module registration', () async {
     // Arrange
-    final config = LoggerConfig(enableLog: true);
+    const config = LoggerConfig(enableLog: true);
 
     // Act
-    await Fluent.build([LoggerModule(config: config)]);
+    await Fluent.build([const LoggerModule(config: config)]);
     addTearDown(Fluent.reset);
 
     // Assert
@@ -22,7 +22,7 @@ void main() {
 
   test('verify logger module registration without config', () async {
     // Act
-    await Fluent.build([LoggerModule()]);
+    await Fluent.build([const LoggerModule()]);
     addTearDown(Fluent.reset);
 
     // Assert
