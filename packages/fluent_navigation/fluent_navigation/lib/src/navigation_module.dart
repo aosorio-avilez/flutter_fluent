@@ -10,7 +10,7 @@ final rootNavigatorKey = GlobalKey<NavigatorState>();
 
 /// Register and build all the fluent navigation dependencies
 class NavigationModule extends FluentModule {
-  NavigationModule({
+  const NavigationModule({
     this.redirect,
     this.initialLocation = '/',
     this.optionURLReflectsImperativeAPIs = true,

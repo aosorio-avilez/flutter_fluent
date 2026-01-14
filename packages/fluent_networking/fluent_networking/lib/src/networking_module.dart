@@ -4,7 +4,7 @@ import 'package:fluent_networking/src/networking_api_impl.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class NetworkingModule extends FluentModule {
-  NetworkingModule({
+  const NetworkingModule({
     required this.config,
   });
 

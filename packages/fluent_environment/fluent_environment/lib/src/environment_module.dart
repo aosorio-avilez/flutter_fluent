@@ -4,7 +4,7 @@ import 'package:fluent_sdk/fluent_sdk.dart';
 
 /// Registers the environment dependencies.
 class EnvironmentModule extends FluentModule {
-  EnvironmentModule({
+  const EnvironmentModule({
     required this.environment,
   });
 
