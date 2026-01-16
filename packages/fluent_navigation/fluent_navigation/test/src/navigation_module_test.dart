@@ -7,7 +7,7 @@ void main() {
   setUp(() => addTearDown(Fluent.reset));
 
   test('verify navigation module', () async {
-    await Fluent.build([NavigationModule()]);
+    await Fluent.build([const NavigationModule()]);
     Fluent.mock<FluentRoutes>([]);
 
     final api = Fluent.get<NavigationApi>();
@@ -20,7 +20,7 @@ void main() {
   });
 
   testWidgets('verify navigate between routes', (tester) async {
-    await Fluent.build([NavigationModule()]);
+    await Fluent.build([const NavigationModule()]);
     Fluent.mock<FluentRoutes>([
       GoRoute(
         name: 'home',
@@ -54,7 +54,7 @@ void main() {
   });
 
   testWidgets('verify navigate between routes with builder', (tester) async {
-    await Fluent.build([NavigationModule()]);
+    await Fluent.build([const NavigationModule()]);
     Fluent.mock<FluentRoutes>([
       GoRoute(
         name: 'home',
@@ -178,5 +178,13 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('test')), findsOneWidget);
+  });
+
+  test('NavigationModule can be instantiated as const', () {
+    const module = NavigationModule(
+      initialLocation: '/home',
+      optionURLReflectsImperativeAPIs: false,
+    );
+    expect(module, isA<NavigationModule>());
   });
 }

@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   setUpAll(() async {
-    await Fluent.build([NavigationModule()]);
+    await Fluent.build([const NavigationModule()]);
     addTearDown(Fluent.reset);
   });
 

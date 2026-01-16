@@ -46,7 +46,7 @@ class NavigationModule extends FluentModule {
         },
       )
       ..registerSingleton<InternalNavigationApi>(
-        (it) => InternalNavigationApiImpl(),
+        (it) => const InternalNavigationApiImpl(),
       )
       ..registerSingleton<NavigationApi>((it) => NavigationApiImpl());
   }

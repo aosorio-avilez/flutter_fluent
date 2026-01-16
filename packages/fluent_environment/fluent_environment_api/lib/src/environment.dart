@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 /// Abstract definition of an Application Environment.
 /// Clients must extend this class to provide specific configuration values.
 abstract class Environment {
+  const Environment();
+
   /// The primary color associated with this environment (e.g., Red for Dev).
   Color get color;
 

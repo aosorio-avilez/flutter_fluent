@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   setUp(() async {
     mockRoutes();
-    await Fluent.build([NavigationModule(initialLocation: '/first')]);
+    await Fluent.build([const NavigationModule(initialLocation: '/first')]);
     addTearDown(Fluent.reset);
   });
 
