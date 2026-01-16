@@ -4,6 +4,12 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 class NavigationApiImpl extends NavigationApi {
+  /// Internal reference to the registered [GoRouter].
+  ///
+  /// Lazily initialized on first access to avoid premature instantiation
+  /// if [GoRouter] is registered as a lazy singleton.
+  late final GoRouter _router = Fluent.get<GoRouter>();
+
   @override
   void navigateTo(
     String routeName, {
@@ -11,7 +17,7 @@ class NavigationApiImpl extends NavigationApi {
     Map<String, dynamic> queryParams = const <String, dynamic>{},
     Object? extra,
   }) {
-    Fluent.get<GoRouter>().goNamed(
+    _router.goNamed(
       routeName,
       extra: extra,
       pathParameters: params,
@@ -26,7 +32,7 @@ class NavigationApiImpl extends NavigationApi {
     Map<String, dynamic> queryParams = const <String, dynamic>{},
     Object? extra,
   }) {
-    return Fluent.get<GoRouter>().pushNamed<T>(
+    return _router.pushNamed<T>(
       routeName,
       extra: extra,
       pathParameters: params,
@@ -35,17 +41,17 @@ class NavigationApiImpl extends NavigationApi {
   }
 
   @override
-  RouterConfig<Object> get router => Fluent.get<GoRouter>();
+  RouterConfig<Object> get router => _router;
 
   @override
   bool canPop() {
-    return Fluent.get<GoRouter>().canPop();
+    return _router.canPop();
   }
 
   @override
   void pop<T>([T? result]) {
-    if (Fluent.get<GoRouter>().canPop()) {
-      Fluent.get<GoRouter>().pop(result);
+    if (_router.canPop()) {
+      _router.pop(result);
     }
   }
 }
