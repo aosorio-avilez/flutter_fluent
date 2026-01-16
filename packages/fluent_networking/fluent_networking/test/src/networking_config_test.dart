@@ -3,16 +3,15 @@ import 'package:test/test.dart';
 
 void main() {
   test('verify default networking config instance', () async {
-    final config = NetworkingConfig();
+    const config = NetworkingConfig();
 
     expect(config.baseUrl, isEmpty);
     expect(config.interceptors, isEmpty);
   });
 
   test('verify networking config instance', () async {
-    final config = NetworkingConfig(
+    const config = NetworkingConfig(
       baseUrl: 'https://google.com',
-      interceptors: [],
       enableLog: true,
     );
 

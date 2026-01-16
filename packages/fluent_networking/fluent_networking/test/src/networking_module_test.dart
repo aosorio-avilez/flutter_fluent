@@ -20,4 +20,13 @@ void main() {
     expect(Fluent.get<Dio>(), isA<Dio>());
     expect(Fluent.get<NetworkingApi>(), isA<NetworkingApiImpl>());
   });
+
+  test('NetworkingModule can be instantiated as const', () {
+    const config = NetworkingConfig(
+      baseUrl: 'https://example.com',
+      enableLog: true,
+    );
+    const module = NetworkingModule(config: config);
+    expect(module, isA<NetworkingModule>());
+  });
 }
