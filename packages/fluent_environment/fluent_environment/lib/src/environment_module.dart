@@ -11,7 +11,7 @@ class EnvironmentModule extends FluentModule {
   final Environment environment;
 
   @override
-  Future<void> onCreate(Registry registry) async {
+  void onCreate(Registry registry) {
     registry
       ..registerSingleton<Environment>((_) => environment)
       ..registerSingleton<EnvironmentApi>(

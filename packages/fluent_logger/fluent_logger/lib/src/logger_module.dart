@@ -21,7 +21,7 @@ class LoggerModule extends FluentModule {
   final LoggerConfig config;
 
   @override
-  Future<void> onCreate(Registry registry) async {
+  void onCreate(Registry registry) {
     Loggy.initLoggy(
       logPrinter: config.enableLog
           ? const PrettyPrinter()

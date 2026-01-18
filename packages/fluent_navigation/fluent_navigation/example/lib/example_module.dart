@@ -10,7 +10,7 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 class ExampleModule extends FluentModule {
   @override
-  Future<void> onCreate(Registry registry) async {
+  void onCreate(Registry registry) {
     registry
       ..registerRoute(
         ShellRoute(

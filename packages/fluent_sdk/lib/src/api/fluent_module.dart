@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fluent_sdk/fluent_sdk.dart';
 
 abstract class FluentModule {
@@ -9,7 +11,7 @@ abstract class FluentModule {
   /// a single argument, [registry], which is the [Registry] instance
   /// used to register objects.
   ///
-  /// It returns a [Future] that completes when the module has been
+  /// It returns a [FutureOr] that completes when the module has been
   /// built.
   ///
   /// You should call [Registry.registerFactory], [Registry.registerSingleton],
@@ -18,17 +20,17 @@ abstract class FluentModule {
   ///
   /// You can also call [Registry.allowReassignment] to allow objects
   /// to be reassigned.
-  Future<void> onCreate(Registry registry);
+  FutureOr<void> onCreate(Registry registry);
 
   /// Called after all modules have been built.
   ///
   /// Use this method to execute logic that requires other modules to be
   /// registered, such as initializing services that depend on others.
-  Future<void> onStart() async {}
+  FutureOr<void> onStart() {}
 
   /// Called before the registry is reset.
   ///
   /// Use this method to dispose of resources, close streams, or perform
   /// cleanup tasks.
-  Future<void> onStop() async {}
+  FutureOr<void> onStop() {}
 }
