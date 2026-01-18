@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:fluent_networking/fluent_networking.dart';
 import 'package:fluent_networking/src/networking_api_impl.dart';
+import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class NetworkingModule extends FluentModule {
@@ -26,7 +27,7 @@ class NetworkingModule extends FluentModule {
           dio.interceptors.addAll(config.interceptors);
         }
 
-        if (config.enableLog) {
+        if (config.enableLog && kDebugMode) {
           dio.interceptors.add(
             PrettyDioLogger(
               requestHeader: true,
