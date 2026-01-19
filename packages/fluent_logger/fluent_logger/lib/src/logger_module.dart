@@ -1,11 +1,8 @@
 import 'package:fluent_logger_api/fluent_logger_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter_fluent_logger/src/api/logger_api_impl.dart';
-import 'package:flutter_fluent_logger/src/logger_config.dart'; // Importar config
+import 'package:flutter_fluent_logger/src/logger_config.dart';
 import 'package:loggy/loggy.dart';
-
-const bool _kDebugMode = !bool.fromEnvironment('dart.vm.product') &&
-    !bool.fromEnvironment('dart.vm.profile');
 
 /// {@template logger_module}
 /// A FluentModule that provides logging capabilities using `loggy`.
@@ -26,7 +23,7 @@ class LoggerModule extends FluentModule {
   @override
   void onCreate(Registry registry) {
     Loggy.initLoggy(
-      logPrinter: config.enableLog && _kDebugMode
+      logPrinter: config.enableLog
           ? const PrettyPrinter()
           : const DisabledPrinter(),
     );

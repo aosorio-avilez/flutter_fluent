@@ -3,9 +3,6 @@ import 'package:fluent_networking/fluent_networking.dart';
 import 'package:fluent_networking/src/networking_api_impl.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-const bool _kDebugMode = !bool.fromEnvironment('dart.vm.product') &&
-    !bool.fromEnvironment('dart.vm.profile');
-
 class NetworkingModule extends FluentModule {
   const NetworkingModule({
     required this.config,
@@ -29,7 +26,7 @@ class NetworkingModule extends FluentModule {
           dio.interceptors.addAll(config.interceptors);
         }
 
-        if (config.enableLog && _kDebugMode) {
+        if (config.enableLog) {
           dio.interceptors.add(
             PrettyDioLogger(
               requestHeader: true,
