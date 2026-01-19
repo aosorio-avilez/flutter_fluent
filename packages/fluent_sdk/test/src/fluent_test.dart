@@ -16,7 +16,7 @@ class ModuleA extends FluentModule {
 
 class ModuleB extends FluentModule {
   @override
-  Future<void> onCreate(Registry registry) async {
+  void onCreate(Registry registry) {
     if (!registry.isRegistered<String>()) {
       throw Exception('Race Condition Detected: ModuleA not ready!');
     }
