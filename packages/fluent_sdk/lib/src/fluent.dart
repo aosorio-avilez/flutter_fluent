@@ -23,10 +23,16 @@ class Fluent {
   static Future<void> build(List<FluentModule> modules) async {
     _modules.addAll(modules);
     for (final module in modules) {
-      await module.onCreate(_registry);
+      final result = module.onCreate(_registry);
+      if (result is Future) {
+        await result;
+      }
     }
     for (final module in modules) {
-      await module.onStart();
+      final result = module.onStart();
+      if (result is Future) {
+        await result;
+      }
     }
   }
 
@@ -60,7 +66,10 @@ class Fluent {
   /// Useful for [tearDown] in unit tests.
   static Future<void> reset() async {
     for (final module in _modules.reversed) {
-      await module.onStop();
+      final result = module.onStop();
+      if (result is Future) {
+        await result;
+      }
     }
     _modules.clear();
     return GetIt.instance.reset();
