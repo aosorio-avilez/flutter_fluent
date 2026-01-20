@@ -23,9 +23,10 @@ class LoggerModule extends FluentModule {
   @override
   void onCreate(Registry registry) {
     Loggy.initLoggy(
-      logPrinter: config.enableLog
-          ? const PrettyPrinter()
-          : const DisabledPrinter(),
+      logPrinter:
+          config.enableLog && !const bool.fromEnvironment('dart.vm.product')
+              ? const PrettyPrinter()
+              : const DisabledPrinter(),
     );
 
     registry
