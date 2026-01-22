@@ -29,10 +29,10 @@ class LoggerModule extends FluentModule {
     );
 
     registry
-      ..registerSingleton<Loggy>((_) {
+      ..registerLazySingleton<Loggy>((_) {
         return Loggy(config.globalLogName);
       })
-      ..registerSingleton<LoggerApi>((it) {
+      ..registerLazySingleton<LoggerApi>((it) {
         return LoggerApiImpl(it<Loggy>());
       });
   }
