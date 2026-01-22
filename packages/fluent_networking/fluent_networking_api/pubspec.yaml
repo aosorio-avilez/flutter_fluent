@@ -5,7 +5,7 @@ resolution: workspace
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_networking/fluent_networking_api
 
 environment:
-  sdk: '^3.10.1'
+  sdk: '^3.9.2'
 
 dependencies:
   dio: ^5.9.0

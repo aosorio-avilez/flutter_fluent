@@ -13,7 +13,7 @@ class NetworkingModule extends FluentModule {
   @override
   void onCreate(Registry registry) {
     registry
-      ..registerSingleton<Dio>((_) {
+      ..registerLazySingleton<Dio>((_) {
         final dio = Dio(
           BaseOptions(
             baseUrl: config.baseUrl,
@@ -38,6 +38,6 @@ class NetworkingModule extends FluentModule {
 
         return dio;
       })
-      ..registerSingleton<NetworkingApi>((it) => NetworkingApiImpl(it()));
+      ..registerLazySingleton<NetworkingApi>((it) => NetworkingApiImpl(it()));
   }
 }
