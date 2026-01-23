@@ -39,3 +39,6 @@ melos:
     coverage:
       run: melos exec --dir-exists="test" "cover check --no-display-files --min-coverage 90"
       description: Run code coverage in all packages
+    scan:
+      run: dart tool/sentinel_scan.dart
+      description: Run infrastructure security scan
