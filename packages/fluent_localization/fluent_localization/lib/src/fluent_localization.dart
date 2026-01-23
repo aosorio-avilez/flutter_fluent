@@ -67,11 +67,8 @@ class FluentLocalization {
 
       if (content.isEmpty) return;
 
-      final dynamic jsonMap = json.decode(content);
-
-      if (jsonMap is Map<String, dynamic>) {
-        _flattenStrings(jsonMap);
-      }
+      final strings = await compute(_parseJson, content);
+      _strings.addAll(strings);
     } on Object catch (e, stack) {
       if (kDebugMode) {
         debugPrint('❌ FluentLocalization: Failed to load $filePath');
@@ -88,6 +85,7 @@ class FluentLocalization {
   ///
   /// If the [key] is not found, a debug warning will be printed, and the
   /// [key] itself will be returned.
+  @pragma('vm:prefer-inline')
   String get(String key, {Map<String, String>? args}) {
     final value = _strings[key];
 
@@ -108,22 +106,6 @@ class FluentLocalization {
     return value;
   }
 
-  /// Recursively flattens a nested JSON map into a single-level map
-  /// with dot-separated keys.
-  ///
-  /// For example, `{'a': {'b': 'value'}}` becomes `{'a.b': 'value'}`.
-  void _flattenStrings(Map<String, dynamic> data, [String prefix = '']) {
-    data.forEach((key, value) {
-      final newKey = prefix.isEmpty ? key : '$prefix.$key';
-
-      if (value is Map<String, dynamic>) {
-        _flattenStrings(value, newKey);
-      } else if (value != null) {
-        _strings[newKey] = value.toString();
-      }
-    });
-  }
-
   /// Replaces placeholders in a string with provided arguments.
   ///
   /// Placeholders are identified by curly braces, e.g., `{argName}`.
@@ -134,4 +116,32 @@ class FluentLocalization {
     }
     return formatted;
   }
+}
+
+/// Parses the JSON content and flattens it into a map.
+Map<String, String> _parseJson(String content) {
+  final dynamic jsonMap = json.decode(content);
+  final result = <String, String>{};
+
+  if (jsonMap is Map<String, dynamic>) {
+    _flattenStringsRecursive(jsonMap, result);
+  }
+  return result;
+}
+
+/// Recursively flattens a nested JSON map into a single-level map.
+void _flattenStringsRecursive(
+  Map<String, dynamic> data,
+  Map<String, String> result, [
+  String prefix = '',
+]) {
+  data.forEach((key, value) {
+    final newKey = prefix.isEmpty ? key : '$prefix.$key';
+
+    if (value is Map<String, dynamic>) {
+      _flattenStringsRecursive(value, result, newKey);
+    } else if (value != null) {
+      result[newKey] = value.toString();
+    }
+  });
 }
