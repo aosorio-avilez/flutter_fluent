@@ -4,6 +4,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(() {
+    FluentLocalization.parser = (content) async => parseJson(content);
+  });
   // Definimos los "archivos" que existen en nuestra memoria para la prueba
   final fakeAssets = {
     'assets/languages/en.json': '''
@@ -21,13 +25,11 @@ void main() {
   group('FluentLocalization Unit Tests', () {
     test('verify load resolves strings correctly using FakeBundle', () async {
       final localization = FluentLocalization(
-        // Inyectamos el bundle falso para no depender de Flutter Engine
         bundle: FakeAssetBundle(fakeAssets),
       );
 
       await localization.load();
 
-      // Verificamos traducciones simples y anidadas
       expect(localization.get('title'), 'Title');
       expect(localization.get('test.nested'), 'Nested Value');
     });
@@ -49,14 +51,12 @@ void main() {
       'verify load handles missing file gracefully (Safe Fallback)',
       () async {
         final localization = FluentLocalization(
-          path: 'wrong/path', // Ruta que no existe en el fake
+          path: 'wrong/path',
           bundle: FakeAssetBundle(fakeAssets),
         );
 
-        // No debe lanzar excepción, simplemente no carga nada
         await localization.load();
 
-        // Al no cargar, devuelve la llave misma
         expect(localization.get('title'), 'title');
       },
     );

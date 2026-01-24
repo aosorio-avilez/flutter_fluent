@@ -5,6 +5,11 @@ import '../mocks/fake_assets_bundle.dart';
 // Importa tu FakeAssetBundle aquí
 
 void main() {
+  setUpAll(() {
+    FluentLocalization.parser = (content) async =>
+        parseJson(content); // Changed parseJson to jsonDecode
+  });
+
   // Definimos un JSON de prueba
   final fakeAssets = {
     'test/assets/languages/en.json':
@@ -16,7 +21,6 @@ void main() {
     test('verify load resolves strings correctly using FakeBundle', () async {
       final localization = FluentLocalization(
         path: 'test/assets/languages',
-        // INYECTAMOS EL FAKE
         bundle: FakeAssetBundle(fakeAssets),
       );
 
@@ -31,13 +35,11 @@ void main() {
     test('verify load handles missing file gracefully', () async {
       final localization = FluentLocalization(
         path: 'wrong/path',
-        bundle: FakeAssetBundle(fakeAssets), // El fake lanzará error
+        bundle: FakeAssetBundle(fakeAssets),
       );
 
-      // El método load() captura la excepción internamente, así que no explota
       await localization.load();
 
-      // Como falló, devuelve la llave
       expect(localization.get('title'), 'title');
     });
   });

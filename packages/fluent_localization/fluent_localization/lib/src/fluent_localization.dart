@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+
+/// A function type that parses JSON content.
+typedef JsonParser = Future<Map<String, String>> Function(String content);
 
 /// The default path where JSON localization files are expected to be found.
 ///
@@ -30,6 +34,18 @@ class FluentLocalization {
     this.path = defaultPath,
     AssetBundle? bundle,
   }) : _bundle = bundle ?? rootBundle;
+
+  /// Gets the current [JsonParser].
+  static JsonParser? get parser => _parserOverride;
+
+  /// Sets a custom [JsonParser] to be used for parsing localization files.
+  ///
+  /// This is primarily intended for use in unit tests to provide a
+  /// synchronous parser and avoid isolate-related issues.
+  @visibleForTesting
+  static set parser(JsonParser? parser) => _parserOverride = parser;
+
+  static JsonParser? _parserOverride;
 
   /// The locale for which the localization strings are loaded.
   final Locale locale;
@@ -67,7 +83,14 @@ class FluentLocalization {
 
       if (content.isEmpty) return;
 
-      final strings = await compute(_parseJson, content);
+      final Map<String, String> strings;
+
+      if (_parserOverride != null) {
+        strings = await _parserOverride!(content);
+      } else {
+        strings = await Isolate.run(() => parseJson(content));
+      }
+
       _strings.addAll(strings);
     } on Object catch (e, stack) {
       if (kDebugMode) {
@@ -119,18 +142,18 @@ class FluentLocalization {
 }
 
 /// Parses the JSON content and flattens it into a map.
-Map<String, String> _parseJson(String content) {
+Map<String, String> parseJson(String content) {
   final dynamic jsonMap = json.decode(content);
   final result = <String, String>{};
 
   if (jsonMap is Map<String, dynamic>) {
-    _flattenStringsRecursive(jsonMap, result);
+    flattenStringsRecursive(jsonMap, result);
   }
   return result;
 }
 
 /// Recursively flattens a nested JSON map into a single-level map.
-void _flattenStringsRecursive(
+void flattenStringsRecursive(
   Map<String, dynamic> data,
   Map<String, String> result, [
   String prefix = '',
@@ -139,7 +162,7 @@ void _flattenStringsRecursive(
     final newKey = prefix.isEmpty ? key : '$prefix.$key';
 
     if (value is Map<String, dynamic>) {
-      _flattenStringsRecursive(value, result, newKey);
+      flattenStringsRecursive(value, result, newKey);
     } else if (value != null) {
       result[newKey] = value.toString();
     }

@@ -1,9 +1,13 @@
 import 'package:fluent_localization/fluent_localization.dart';
+import 'package:fluent_localization/src/fluent_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  // Usamos setUp (se ejecuta antes de CADA test) o setUpAll
+  setUpAll(() {
+    FluentLocalization.parser = (content) async => parseJson(content);
+  });
+
   setUp(() async {
     await Fluent.build([LocalizationModule()]);
     addTearDown(Fluent.reset);
@@ -36,8 +40,7 @@ void main() {
       ),
     );
 
-    await tester
-        .pumpAndSettle(); // Settle espera a que terminen las animaciones/futuros
+    await tester.pumpAndSettle();
 
     expect(find.text('Hello Developer!'), findsOneWidget);
   });
