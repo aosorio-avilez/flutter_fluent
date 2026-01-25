@@ -6,6 +6,7 @@ import 'package:fluent_sdk/fluent_sdk.dart';
 class LocalizationModule extends FluentModule {
   @override
   void onCreate(Registry registry) {
-    registry.registerSingleton<LocalizationApi>((it) => LocalizationApiImpl());
+    registry
+        .registerLazySingleton<LocalizationApi>((it) => LocalizationApiImpl());
   }
 }

@@ -26,7 +26,8 @@ class NetworkingModule extends FluentModule {
           dio.interceptors.addAll(config.interceptors);
         }
 
-        if (config.enableLog) {
+        if (config.enableLog &&
+            !const bool.fromEnvironment('dart.vm.product')) {
           dio.interceptors.add(
             PrettyDioLogger(
               requestHeader: true,

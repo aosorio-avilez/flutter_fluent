@@ -5,3 +5,7 @@
 ## 2026-01-22 - [Global Configuration Safety]
 **Learning:** Deferring initialization of global configuration (like `Loggy.initLoggy`) to a lazy singleton factory can cause race conditions where the configuration is not applied before the first usage, leading to incorrect behavior (e.g., logs leaking to console).
 **Action:** Keep global configuration in `onCreate` or ensure it is initialized before any usage.
+
+## 2026-01-22 - [Tree-Shaking & Production Safety]
+**Learning:** Simply checking `if (config.enableLog)` allows debug-only packages (like `pretty_dio_logger`) to be included in the release bundle.
+**Action:** Guard debug tool instantiation with `!const bool.fromEnvironment('dart.vm.product')` to allow the compiler to tree-shake the dependency entirely in production builds.
