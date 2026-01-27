@@ -5,6 +5,7 @@ export 'package:go_router/go_router.dart'
         CustomTransitionPage,
         GoRoute,
         GoRouterState,
+        NoTransitionPage,
         RouteBase,
         ShellRoute;
 
