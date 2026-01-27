@@ -13,8 +13,8 @@ class EnvironmentModule extends FluentModule {
   @override
   void onCreate(Registry registry) {
     registry
-      ..registerSingleton<Environment>((_) => environment)
-      ..registerSingleton<EnvironmentApi>(
+      ..registerLazySingleton<Environment>((_) => environment)
+      ..registerLazySingleton<EnvironmentApi>(
         (it) => EnvironmentApiImpl(it<Environment>()),
       );
   }
