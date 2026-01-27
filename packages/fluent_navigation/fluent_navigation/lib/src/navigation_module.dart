@@ -48,6 +48,8 @@ class NavigationModule extends FluentModule {
       ..registerSingleton<InternalNavigationApi>(
         (it) => const InternalNavigationApiImpl(),
       )
-      ..registerSingleton<NavigationApi>((it) => NavigationApiImpl());
+      // Use lazy singleton to defer initialization
+      // until the API is actually used.
+      ..registerLazySingleton<NavigationApi>((it) => NavigationApiImpl());
   }
 }
