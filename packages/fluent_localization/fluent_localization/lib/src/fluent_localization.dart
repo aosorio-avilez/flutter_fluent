@@ -129,15 +129,16 @@ class FluentLocalization {
     return value;
   }
 
+  static final _argRegExp = RegExp(r'\{([^\}]+)\}');
+
   /// Replaces placeholders in a string with provided arguments.
   ///
   /// Placeholders are identified by curly braces, e.g., `{argName}`.
   String _formatValue(String value, Map<String, String> arguments) {
-    var formatted = value;
-    for (final entry in arguments.entries) {
-      formatted = formatted.replaceAll('{${entry.key}}', entry.value);
-    }
-    return formatted;
+    return value.replaceAllMapped(_argRegExp, (match) {
+      final key = match.group(1);
+      return arguments[key] ?? match.group(0)!;
+    });
   }
 }
 

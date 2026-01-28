@@ -47,6 +47,35 @@ void main() {
       );
     });
 
+    test('verify get ignores unused arguments', () async {
+      final localization = FluentLocalization(
+        bundle: FakeAssetBundle(fakeAssets),
+      );
+
+      await localization.load();
+
+      expect(
+        localization.get(
+          'test.hello',
+          args: {'name': 'Dev', 'unused': 'Value'},
+        ),
+        'Hello Dev!',
+      );
+    });
+
+    test('verify get preserves placeholders for missing arguments', () async {
+      final localization = FluentLocalization(
+        bundle: FakeAssetBundle(fakeAssets),
+      );
+
+      await localization.load();
+
+      expect(
+        localization.get('test.hello', args: {'wrong': 'Dev'}),
+        'Hello {name}!',
+      );
+    });
+
     test(
       'verify load handles missing file gracefully (Safe Fallback)',
       () async {
