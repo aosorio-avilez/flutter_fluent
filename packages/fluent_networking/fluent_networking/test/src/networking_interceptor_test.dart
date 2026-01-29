@@ -8,7 +8,7 @@ class MockRequestHandler extends Mock implements RequestInterceptorHandler {}
 void main() {
   test('verify rest api interceptor', () async {
     final handler = MockRequestHandler();
-    final options = RequestOptions(path: 'http://path.com');
+    final options = RequestOptions(path: 'https://path.com');
 
     NetworkingInterceptor().onRequest(options, handler);
 
