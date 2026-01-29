@@ -23,7 +23,7 @@ workspace:
   - packages/fluent_sdk/example
 
 dev_dependencies:
-  melos: ^7.1.1
+  melos: ^7.4.0
 
 melos:
   scripts:
