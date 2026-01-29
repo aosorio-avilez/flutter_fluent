@@ -16,3 +16,7 @@
 ## 0.0.3
 
 * Dependency `flutter_sdk` was removed
+
+## 0.0.4
+
+* Update version to 0.0.4

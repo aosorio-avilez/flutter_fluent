@@ -63,3 +63,12 @@
 * BREAKING CHANGE: Renamed `build` method to `onCreate` in `FluentModule` to better reflect lifecycle.
 * CHORE: Recreated example platforms and updated READMEs.
 * FEAT: Added `onStart` and `onStop` lifecycle methods to `FluentModule`.
+
+## 0.6.0
+
+* Use FutureOr for zero-overhead module initialization
+* optimize module initialization
+* Upgrade Fluent SDK package to improve performance and prevent race conditions
+* Make fluent module async
+* Improve Fluent SDK
+* Upgrade `get_it` dependency to `v9.2.0`

@@ -75,3 +75,11 @@
 * REFACTOR: Renamed `build` method to `onCreate` in `NavigationModule`
 * CHORE: Recreated example platforms and updated READMEs.
 
+## 1.5.0
+
+* lazy initialization
+* runtime optimization
+* Fix `fluent_navigation` strict exports
+* Enable const constructors for NavigationModule
+* Upgrade `go_router` dependency to `^17.0.1`
+* Upgrade `collection` dependency to `^1.19.1`

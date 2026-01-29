@@ -30,3 +30,6 @@
 * FIX: `EnvironmentType` typo was fixed
 * FEAT: Add convenience extension on `EnvironmentType`
 
+## 0.3.0
+
+* Update version to 0.3.0

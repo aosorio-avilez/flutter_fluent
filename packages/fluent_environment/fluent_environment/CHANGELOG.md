@@ -45,3 +45,9 @@
 * BREAKING CHANGE: Updated `fluent_sdk` dependency to `^0.5.0`
 * REFACTOR: Renamed `build` method to `onCreate` in `EnvironmentModule`
 * CHORE: Recreated example platforms and updated READMEs.
+
+## 0.5.0
+
+* Enable const constructors for EnvironmentModule
+* Show/hide environment banner validation added
+* Use registerLazySingleton for environment optimization

@@ -33,3 +33,6 @@
 
 * Removed `shouldThrowExceptions` parameter to `getDelegates` API method
 
+## 1.0.3
+
+* Update version to 1.0.3

@@ -1,6 +1,6 @@
 name: fluent_localization
 description: Package that allows you to set up and use translations in an easy and quick way
-version: 1.4.0
+version: 1.5.0
 resolution: workspace
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_localization/fluent_localization
 
@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  fluent_sdk: ^0.5.0
-  fluent_localization_api: ^1.0.2
+  fluent_sdk: ^0.6.0
+  fluent_localization_api: ^1.0.3
 
 dev_dependencies:
   flutter_test:

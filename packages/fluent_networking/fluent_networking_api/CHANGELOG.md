@@ -25,3 +25,7 @@
 
 * **FEAT:** Defined `ResponseResult` as a `sealed class` for exhaustiveness checking.
 * **REFACTOR:** Renamed/Removed old result classes (`Succeeded`, `Failed`, `Error`) in favor of `Success` and `Failure`.
+
+## 0.2.0
+
+* Update version to 0.2.0

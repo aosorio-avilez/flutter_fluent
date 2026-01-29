@@ -42,3 +42,12 @@
 * BREAKING CHANGE: Updated `fluent_sdk` dependency to `^0.5.0`
 * REFACTOR: Renamed `build` method to `onCreate` in `NetworkingModule`
 * CHORE: Recreated example platforms and updated READMEs.
+
+## 0.5.0
+
+* lazy initialization
+* Enable const constructors for NetworkingModule and NetworkingConfig
+* Guard debug tools for tree-shaking
+* Refactor fluent networking package
+* Upgrade `dio` dependency to `^5.9.1`
+* Upgrade `equatable` dependency to `^2.0.8`
