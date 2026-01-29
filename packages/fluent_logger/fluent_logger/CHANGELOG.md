@@ -46,3 +46,11 @@
 * BREAKING CHANGE: Updated `fluent_sdk` dependency to `^0.5.0`
 * REFACTOR: Renamed `build` method to `onCreate` in `LoggerModule`
 * CHORE: Recreated example platforms and updated READMEs.
+
+## 0.4.0
+
+* secure logging (Sentinel)
+* Enable const constructors
+* lazy initialization
+* vm:prefer-inline optimizations
+* pin CI dependencies and guard sensitive logs in release mode

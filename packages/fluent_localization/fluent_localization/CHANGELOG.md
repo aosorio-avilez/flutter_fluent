@@ -68,3 +68,11 @@
 * BREAKING CHANGE: Updated `fluent_sdk` dependency to `^0.5.0`
 * REFACTOR: Renamed `build` method to `onCreate` in `LocalizationModule`
 * CHORE: Recreated example platforms and updated READMEs.
+
+## 1.5.0
+
+* optimize json parsing
+* string interpolation optimization
+* runtime optimization
+* Return empty map of string when locale file does not exists
+* Added nested strings and format arguments functionality

@@ -27,3 +27,7 @@
 ## 1.0.1
 
 * `canPop` method was added in order to let users know if they can go back to previous routes if is possible
+
+## 1.0.2
+
+* Update version to 1.0.2
