@@ -71,3 +71,4 @@
 * Upgrade Fluent SDK package to improve performance and prevent race conditions
 * Make fluent module async
 * Improve Fluent SDK
+* Upgrade `get_it` dependency to `v9.2.0`
