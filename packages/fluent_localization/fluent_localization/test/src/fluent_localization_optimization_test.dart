@@ -20,14 +20,14 @@ void main() {
   final largeJsonString = largeJsonContent.toString();
 
   final fakeAssets = {
-    'assets/languages/en.json': '{"small": "value", "nested": {"key": "nestedValue"}}',
+    'assets/languages/en.json':
+        '{"small": "value", "nested": {"key": "nestedValue"}}',
     'assets/languages/es.json': largeJsonString,
   };
 
   group('FluentLocalization Optimization Tests', () {
     test('verify load handles small files correctly (Sync Path)', () async {
       final localization = FluentLocalization(
-        locale: const Locale('en'),
         bundle: FakeAssetBundle(fakeAssets),
       );
 
@@ -37,18 +37,21 @@ void main() {
       expect(localization.get('nested.key'), 'nestedValue');
     });
 
-    test('verify load handles large files correctly (Async Isolate Path)', () async {
-      final localization = FluentLocalization(
-        locale: const Locale('es'),
-        bundle: FakeAssetBundle(fakeAssets),
-      );
+    test(
+      'verify load handles large files correctly (Async Isolate Path)',
+      () async {
+        final localization = FluentLocalization(
+          locale: const Locale('es'),
+          bundle: FakeAssetBundle(fakeAssets),
+        );
 
-      await localization.load();
+        await localization.load();
 
-      expect(localization.get('large'), 'value');
-      expect(localization.get('key0'), 'value0');
-      expect(localization.get('key4999'), 'value4999');
-    });
+        expect(localization.get('large'), 'value');
+        expect(localization.get('key0'), 'value0');
+        expect(localization.get('key4999'), 'value4999');
+      },
+    );
   });
 }
 
