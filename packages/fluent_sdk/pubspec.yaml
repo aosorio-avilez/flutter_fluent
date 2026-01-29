@@ -8,7 +8,7 @@ environment:
   sdk: '^3.9.2'
 
 dependencies:
-  get_it: ^9.1.0
+  get_it: ^9.2.0
 
 dev_dependencies:
   test: ^1.25.5
