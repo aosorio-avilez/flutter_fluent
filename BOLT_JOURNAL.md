@@ -9,3 +9,7 @@
 ## 2026-01-22 - [Tree-Shaking & Production Safety]
 **Learning:** Simply checking `if (config.enableLog)` allows debug-only packages (like `pretty_dio_logger`) to be included in the release bundle.
 **Action:** Guard debug tool instantiation with `!const bool.fromEnvironment('dart.vm.product')` to allow the compiler to tree-shake the dependency entirely in production builds.
+
+## 2026-01-24 - [String Interpolation Optimization]
+**Learning:** Iterative `replaceAll` for string interpolation is O(N*M) and creates intermediate string allocations for every argument.
+**Action:** Use `RegExp.replaceAllMapped` to perform single-pass interpolation (O(M)), reducing CPU and memory overhead significantly for localization.
