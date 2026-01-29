@@ -81,3 +81,5 @@
 * runtime optimization
 * Fix `fluent_navigation` strict exports
 * Enable const constructors for NavigationModule
+* Upgrade `go_router` dependency to `^17.0.1`
+* Upgrade `collection` dependency to `^1.19.1`
