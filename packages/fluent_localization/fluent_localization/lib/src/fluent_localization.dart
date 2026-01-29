@@ -16,6 +16,14 @@ typedef JsonParser = Future<Map<String, String>> Function(String content);
 /// locale codes (e.g., `en.json`, `es.json`).
 const defaultPath = 'assets/languages';
 
+/// The threshold size (in characters) below which JSON parsing is done
+/// synchronously on the main thread to avoid Isolate overhead.
+///
+/// 50,000 characters is roughly 50-100KB depending on encoding, which is
+/// typically fast enough to parse within a frame (16ms) while saving
+/// the 2-10ms overhead of spawning/communicating with an Isolate.
+const _kJsonIsolateThreshold = 50000;
+
 /// A class that provides internationalization and localization
 /// capabilities for Flutter applications.
 ///
@@ -87,6 +95,8 @@ class FluentLocalization {
 
       if (_parserOverride != null) {
         strings = await _parserOverride!(content);
+      } else if (content.length < _kJsonIsolateThreshold) {
+        strings = parseJson(content);
       } else {
         strings = await Isolate.run(() => parseJson(content));
       }

@@ -13,3 +13,7 @@
 ## 2026-01-24 - [String Interpolation Optimization]
 **Learning:** Iterative `replaceAll` for string interpolation is O(N*M) and creates intermediate string allocations for every argument.
 **Action:** Use `RegExp.replaceAllMapped` to perform single-pass interpolation (O(M)), reducing CPU and memory overhead significantly for localization.
+
+## 2026-05-25 - [JSON Parsing Optimization]
+**Learning:** `Isolate.run` has significant overhead (2-10ms) which exceeds the parsing time for small JSON payloads (<50KB). This delays UI availability during startup.
+**Action:** Use a hybrid parsing strategy: Sync parsing for small files (<50KB), Async Isolate for large files.
