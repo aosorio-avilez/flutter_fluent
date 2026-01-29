@@ -49,3 +49,5 @@
 * Enable const constructors for NetworkingModule and NetworkingConfig
 * Guard debug tools for tree-shaking
 * Refactor fluent networking package
+* Upgrade `dio` dependency to `^5.9.1`
+* Upgrade `equatable` dependency to `^2.0.8`

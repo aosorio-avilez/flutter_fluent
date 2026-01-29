@@ -10,8 +10,8 @@ environment:
 dependencies:
   fluent_sdk: ^0.6.0
   fluent_networking_api: ^0.2.0
-  dio: ^5.9.0
-  equatable: ^2.0.5
+  dio: ^5.9.1
+  equatable: ^2.0.8
   pretty_dio_logger: ^1.4.0
 
 dev_dependencies:
