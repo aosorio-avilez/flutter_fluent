@@ -39,12 +39,14 @@ class FluentLocalizationDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return supportedLocales.any(
-      (supported) =>
-          supported.languageCode == locale.languageCode &&
+    for (final supported in supportedLocales) {
+      if (supported.languageCode == locale.languageCode &&
           (supported.countryCode == null ||
-              supported.countryCode == locale.countryCode),
-    );
+              supported.countryCode == locale.countryCode)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @override
