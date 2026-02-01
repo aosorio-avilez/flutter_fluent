@@ -17,3 +17,7 @@
 ## 2026-05-25 - [JSON Parsing Optimization]
 **Learning:** `Isolate.run` has significant overhead (2-10ms) which exceeds the parsing time for small JSON payloads (<50KB). This delays UI availability during startup.
 **Action:** Use a hybrid parsing strategy: Sync parsing for small files (<50KB), Async Isolate for large files.
+
+## 2026-05-26 - [Runtime Efficiency]: [Zero Overhead Logging]
+**Learning:** Disabling logging via a "DisabledPrinter" still incurs overhead from message evaluation, string interpolation, and object allocation (LogRecord).
+**Action:** Use a NoOp implementation of the Logger API when logging is disabled to bypass the underlying logging library entirely.
