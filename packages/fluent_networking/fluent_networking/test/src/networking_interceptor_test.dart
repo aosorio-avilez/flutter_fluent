@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:fluent_networking/fluent_networking.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
