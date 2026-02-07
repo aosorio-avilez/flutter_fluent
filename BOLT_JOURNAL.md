@@ -17,3 +17,7 @@
 ## 2026-05-25 - [JSON Parsing Optimization]
 **Learning:** `Isolate.run` has significant overhead (2-10ms) which exceeds the parsing time for small JSON payloads (<50KB). This delays UI availability during startup.
 **Action:** Use a hybrid parsing strategy: Sync parsing for small files (<50KB), Async Isolate for large files.
+
+## 2026-05-25 - [Closure Allocation in Hot Paths]
+**Learning:** Usage of higher-order functions like `Iterable.any` in frequently called methods (like `LocalizationsDelegate.isSupported`) creates closure allocations that add unnecessary pressure to the GC.
+**Action:** Use standard `for-in` loops in critical paths to eliminate closure overhead.
