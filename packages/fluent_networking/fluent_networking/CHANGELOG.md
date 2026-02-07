@@ -51,3 +51,7 @@
 * Refactor fluent networking package
 * Upgrade `dio` dependency to `^5.9.1`
 * Upgrade `equatable` dependency to `^2.0.8`
+
+## 0.5.1
+
+* **FIX**: Export common dio types and cleanup test imports.
