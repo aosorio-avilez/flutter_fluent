@@ -54,7 +54,8 @@ class NetworkingLogInterceptor extends Interceptor {
     final status = response.statusCode;
     final statusName = response.statusMessage ?? 'Unknown';
 
-    final summary = '│ Success: [${response.requestOptions.method.toUpperCase()}] '
+    final summary =
+        '│ Success: [${response.requestOptions.method.toUpperCase()}] '
         '${response.requestOptions.uri}';
 
     final output = [
@@ -84,7 +85,8 @@ class NetworkingLogInterceptor extends Interceptor {
     final status = err.response?.statusCode;
     final message = err.message;
 
-    final summary = '│ Failure: [${err.requestOptions.method.toUpperCase()}] '
+    final summary =
+        '│ Failure: [${err.requestOptions.method.toUpperCase()}] '
         '${err.requestOptions.uri}';
 
     final output = [
