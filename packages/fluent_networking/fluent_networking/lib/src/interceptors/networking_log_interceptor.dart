@@ -54,10 +54,12 @@ class NetworkingLogInterceptor extends Interceptor {
     final status = response.statusCode;
     final statusName = response.statusMessage ?? 'Unknown';
 
+    final summary = '│ Success: [${response.requestOptions.method.toUpperCase()}] '
+        '${response.requestOptions.uri}';
+
     final output = [
       '┌ HTTP RESPONSE ──────────────────────────────────────────────────',
-      '│ Success: [${response.requestOptions.method.toUpperCase()}] '
-          '${response.requestOptions.uri}',
+      summary,
       '│ Status: $status $statusName',
       if (duration != null) '│ Duration: ${duration}ms',
       if (response.headers.map.isNotEmpty) ...[
@@ -82,10 +84,12 @@ class NetworkingLogInterceptor extends Interceptor {
     final status = err.response?.statusCode;
     final message = err.message;
 
+    final summary = '│ Failure: [${err.requestOptions.method.toUpperCase()}] '
+        '${err.requestOptions.uri}';
+
     final output = [
       '┌ HTTP ERROR ─────────────────────────────────────────────────────',
-      '│ Failure: [${err.requestOptions.method.toUpperCase()}] '
-          '${err.requestOptions.uri}',
+      summary,
       if (status != null) '│ Status: $status',
       '│ Message: $message',
       if (duration != null) '│ Duration: ${duration}ms',
