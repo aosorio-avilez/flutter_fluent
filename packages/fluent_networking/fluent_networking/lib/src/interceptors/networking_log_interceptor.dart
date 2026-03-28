@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:fluent_logger_api/fluent_logger_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
@@ -17,13 +19,29 @@ class NetworkingLogInterceptor extends Interceptor {
     'set-cookie',
   };
 
+  static const _extraStartTime = 'networking_start_time';
+
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    _log('NETWORK REQUEST: [${options.method}] ${options.uri}');
-    _logHeaders('Request Headers', options.headers);
-    if (options.data != null) {
-      _log('Request Body: ${options.data}');
-    }
+    options.extra[_extraStartTime] = DateTime.now().millisecondsSinceEpoch;
+
+    final output = [
+      '┌ HTTP REQUEST ───────────────────────────────────────────────────',
+      '│ Method: ${options.method.toUpperCase()}',
+      '│ URI: ${options.uri}',
+      if (options.headers.isNotEmpty) ...[
+        '│ Headers:',
+        ..._formatHeaders(options.headers).map((e) => '│   $e'),
+      ],
+      if (options.data != null) ...[
+        '│ Body:',
+        ..._formatData(options.data).split('\n').map((e) => '│   $e'),
+      ],
+      '└──────────────────────────────────────────────────────────────────',
+    ];
+
+    _log(output.join('\n'));
+
     super.onRequest(options, handler);
   }
 
@@ -32,84 +50,137 @@ class NetworkingLogInterceptor extends Interceptor {
     Response<dynamic> response,
     ResponseInterceptorHandler handler,
   ) {
-    _log(
-      'NETWORK RESPONSE: [${response.requestOptions.method}] '
-      '${response.requestOptions.uri} '
-      'Status: ${response.statusCode} ${response.statusMessage}',
-    );
-    _logHeaders('Response Headers', response.headers.map);
-    if (response.data != null) {
-      _log('Response Body: ${response.data}');
-    }
+    final duration = _getDuration(response.requestOptions);
+    final status = response.statusCode;
+    final statusName = response.statusMessage ?? 'Unknown';
+
+    final output = [
+      '┌ HTTP RESPONSE ──────────────────────────────────────────────────',
+      '│ Success: [${response.requestOptions.method.toUpperCase()}] '
+          '${response.requestOptions.uri}',
+      '│ Status: $status $statusName',
+      if (duration != null) '│ Duration: ${duration}ms',
+      if (response.headers.map.isNotEmpty) ...[
+        '│ Headers:',
+        ..._formatHeaders(response.headers.map).map((e) => '│   $e'),
+      ],
+      if (response.data != null) ...[
+        '│ Body:',
+        ..._formatData(response.data).split('\n').map((e) => '│   $e'),
+      ],
+      '└──────────────────────────────────────────────────────────────────',
+    ];
+
+    _log(output.join('\n'));
+
     super.onResponse(response, handler);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    _logError(
-      'NETWORK ERROR: [${err.requestOptions.method}] '
-      '${err.requestOptions.uri}\n'
-      'Message: ${err.message}\n'
-      'Error: ${err.error}',
-      stackTrace: err.stackTrace,
-    );
-    if (err.response != null) {
-      _logHeaders('Error Response Headers', err.response!.headers.map);
-      _log('Error Response Body: ${err.response!.data}');
-    }
+    final duration = _getDuration(err.requestOptions);
+    final status = err.response?.statusCode;
+    final message = err.message;
+
+    final output = [
+      '┌ HTTP ERROR ─────────────────────────────────────────────────────',
+      '│ Failure: [${err.requestOptions.method.toUpperCase()}] '
+          '${err.requestOptions.uri}',
+      if (status != null) '│ Status: $status',
+      '│ Message: $message',
+      if (duration != null) '│ Duration: ${duration}ms',
+      if (err.response?.headers.map.isNotEmpty ?? false) ...[
+        '│ Response Headers:',
+        ..._formatHeaders(err.response!.headers.map).map((e) => '│   $e'),
+      ],
+      if (err.response?.data != null) ...[
+        '│ Response Body:',
+        ..._formatData(err.response!.data).split('\n').map((e) => '│   $e'),
+      ],
+      if (err.error != null) '│ Error: ${err.error}',
+      '└──────────────────────────────────────────────────────────────────',
+    ];
+
+    _logError(output.join('\n'), stackTrace: err.stackTrace);
+
     super.onError(err, handler);
   }
 
-  void _logHeaders(String label, Map<String, dynamic> headers) {
-    if (headers.isEmpty) return;
+  List<String> _formatHeaders(Map<String, dynamic> headers) {
+    return headers.entries.map((entry) {
+      final key = entry.key;
+      final value = _sensitiveHeaders.contains(key.toLowerCase())
+          ? '***REDACTED***'
+          : entry.value.toString();
+      return '$key: $value';
+    }).toList();
+  }
 
-    final sanitizedHeaders = headers.map((key, value) {
-      if (_sensitiveHeaders.contains(key.toLowerCase())) {
-        return MapEntry(key, '***REDACTED***');
+  String _formatData(dynamic data) {
+    try {
+      const encoder = JsonEncoder.withIndent('  ');
+      if (data is String) {
+        final decoded = json.decode(data);
+        return encoder.convert(decoded);
+      } else if (data is Map || data is List) {
+        return encoder.convert(data);
       }
-      return MapEntry(key, value);
-    });
+    } on Object catch (_) {
+      // Return raw data if it fails to format as JSON
+    }
+    return data.toString();
+  }
 
-    _log('$label: $sanitizedHeaders');
+  int? _getDuration(RequestOptions options) {
+    final startTime = options.extra[_extraStartTime] as int?;
+    if (startTime == null) return null;
+    return DateTime.now().millisecondsSinceEpoch - startTime;
   }
 
   void _log(String message) {
-    try {
-      Fluent.get<LoggerApi>().logInfo(message);
-    } on Object catch (_) {
-      // If LoggerApi is not registered, we fall back to nothing or a basic
-      // print in debug mode to avoid losing critical information during
-      // development but only if it's not a production build.
-      assert(
-        () {
-          /// Redundant print for debug mode.
-          // ignore: avoid_print
-          print(message);
-          return true;
-        }(),
-        'LoggerApi is not registered',
-      );
+    for (final line in message.split('\n')) {
+      try {
+        Fluent.get<LoggerApi>().logInfo(line);
+      } on Object {
+        assert(
+          () {
+            /// Redundant print for debug mode.
+            // ignore: avoid_print
+            print(line);
+            return true;
+          }(),
+          'LoggerApi is not registered',
+        );
+      }
     }
   }
 
   void _logError(String message, {StackTrace? stackTrace}) {
-    try {
-      Fluent.get<LoggerApi>().logError(message, stackTrace: stackTrace);
-    } on Object catch (_) {
-      assert(
-        () {
-          /// Redundant print for debug mode.
-          // ignore: avoid_print
-          print(message);
-          if (stackTrace != null) {
+    final lines = message.split('\n');
+    for (var i = 0; i < lines.length; i++) {
+      final line = lines[i];
+      final isLastLine = i == lines.length - 1;
+      try {
+        Fluent.get<LoggerApi>().logError(
+          line,
+          stackTrace: isLastLine ? stackTrace : null,
+        );
+      } on Object {
+        assert(
+          () {
             /// Redundant print for debug mode.
             // ignore: avoid_print
-            print(stackTrace);
-          }
-          return true;
-        }(),
-        'LoggerApi is not registered',
-      );
+            print(line);
+            if (isLastLine && stackTrace != null) {
+              /// Redundant print for debug mode.
+              // ignore: avoid_print
+              print(stackTrace);
+            }
+            return true;
+          }(),
+          'LoggerApi is not registered',
+        );
+      }
     }
   }
 }

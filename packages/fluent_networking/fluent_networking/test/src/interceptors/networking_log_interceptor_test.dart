@@ -43,7 +43,7 @@ void main() {
 
       verify(
         () => mockLoggerApi.logInfo(
-          any<String>(that: contains('NETWORK REQUEST')),
+          any<String>(that: contains('HTTP REQUEST')),
         ),
       ).called(1);
       verify(
@@ -75,12 +75,17 @@ void main() {
 
       verify(
         () => mockLoggerApi.logInfo(
-          any<String>(that: contains('NETWORK RESPONSE')),
+          any<String>(that: contains('HTTP RESPONSE')),
         ),
       ).called(1);
       verify(
         () => mockLoggerApi.logInfo(
           any<String>(that: contains('***REDACTED***')),
+        ),
+      ).called(1);
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('success')),
         ),
       ).called(1);
       verifyNever(
@@ -91,11 +96,74 @@ void main() {
       verify(() => handler.next(response)).called(1);
     });
 
-    test('onError should log error', () {
+    test('onRequest should log request with body', () {
+      final options = RequestOptions(
+        path: 'https://api.example.com',
+        method: 'POST',
+        data: {'key': 'value'},
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () =>
+            mockLoggerApi.logInfo(any<String>(that: contains('HTTP REQUEST'))),
+      ).called(1);
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('"key": "value"')),
+        ),
+      ).called(1);
+      verify(() => handler.next(options)).called(1);
+    });
+
+    test('onResponse should handle null data and log duration', () async {
+      final options = RequestOptions(path: 'https://api.example.com');
+      // Set start time to simulate duration
+      options.extra['networking_start_time'] =
+          DateTime.now().millisecondsSinceEpoch - 100;
+
+      final response = Response<dynamic>(
+        requestOptions: options,
+        statusCode: 200,
+      );
+      final handler = MockResponseInterceptorHandler();
+
+      interceptor.onResponse(response, handler);
+
+      verify(
+        () =>
+            mockLoggerApi.logInfo(any<String>(that: contains('HTTP RESPONSE'))),
+      ).called(1);
+      verify(
+        () => mockLoggerApi.logInfo(any<String>(that: contains('Duration:'))),
+      ).called(1);
+      verify(() => handler.next(response)).called(1);
+    });
+
+    test('onResponse should handle invalid JSON string data', () {
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(path: 'https://api.example.com'),
+        statusCode: 200,
+        data: '{invalid json}',
+      );
+      final handler = MockResponseInterceptorHandler();
+
+      interceptor.onResponse(response, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('{invalid json}')),
+        ),
+      ).called(1);
+      verify(() => handler.next(response)).called(1);
+    });
+
+    test('onError should log error without response', () {
       final err = DioException(
         requestOptions: RequestOptions(path: 'https://api.example.com'),
-        message: 'Timeout',
-        error: 'Connection timeout',
+        message: 'Network error',
       );
       final handler = MockErrorInterceptorHandler();
 
@@ -103,11 +171,51 @@ void main() {
 
       verify(
         () => mockLoggerApi.logError(
-          any<String>(that: contains('NETWORK ERROR')),
+          any<String>(that: contains('HTTP ERROR')),
           stackTrace: any(named: 'stackTrace'),
         ),
       ).called(1);
       verify(() => handler.next(err)).called(1);
+    });
+
+    test('onError should log error with response data', () {
+      final err = DioException(
+        requestOptions: RequestOptions(path: 'https://api.example.com'),
+        response: Response(
+          requestOptions: RequestOptions(path: 'https://api.example.com'),
+          statusCode: 400,
+          data: {'error': 'bad request'},
+        ),
+      );
+      final handler = MockErrorInterceptorHandler();
+
+      interceptor.onError(err, handler);
+
+      verify(
+        () => mockLoggerApi.logError(
+          any<String>(that: contains('HTTP ERROR')),
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(1);
+      verify(
+        () => mockLoggerApi.logError(
+          any<String>(that: contains('bad request')),
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(1);
+      verify(() => handler.next(err)).called(1);
+    });
+
+    test('should fallback to print if LoggerApi is not registered', () async {
+      // Unregister LoggerApi to trigger fallback
+      await Fluent.reset();
+
+      final options = RequestOptions(path: 'https://api.example.com');
+      final handler = MockRequestInterceptorHandler();
+
+      // Should not throw even if LoggerApi is missing because of the try-catch
+      // and assert
+      expect(() => interceptor.onRequest(options, handler), returnsNormally);
     });
   });
 }
