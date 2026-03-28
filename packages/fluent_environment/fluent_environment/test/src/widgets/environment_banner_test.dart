@@ -23,41 +23,6 @@ void main() {
     // Act
     await tester.pumpWidget(
       MaterialApp(
-        debugShowCheckedModeBanner: false, // Importante: Apagado
-        home: Scaffold(
-          body: EnvironmentBanner(
-            environment: mockEnv,
-            child: const Text('Content'),
-          ),
-        ),
-      ),
-    );
-
-    // Assert
-    // 1. Verificamos que el Banner existe
-    final bannerFinder = find.byType(Banner);
-    expect(bannerFinder, findsOneWidget);
-
-    // 2. Obtenemos la instancia del widget para inspeccionar sus propiedades
-    final bannerWidget = tester.widget<Banner>(bannerFinder);
-
-    // 3. Verificamos que la propiedad 'message' sea la correcta
-    expect(bannerWidget.message, 'DEV');
-
-    // Opcional: Verificamos el color también para ser exhaustivos
-    expect(bannerWidget.color, Colors.red);
-  });
-
-  testWidgets('should NOT display banner when environment IS prod', (
-    tester,
-  ) async {
-    // Arrange
-    when(() => mockEnv.type).thenReturn(EnvironmentType.prod);
-
-    // Act
-    await tester.pumpWidget(
-      MaterialApp(
-        // CORRECCIÓN CRÍTICA: Apagamos el banner de "DEBUG" aquí también
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           body: EnvironmentBanner(
@@ -69,8 +34,70 @@ void main() {
     );
 
     // Assert
-    // Como apagamos el de debug y tu widget oculta el suyo en prod,
-    // el resultado total debe ser 0 Banners.
+    final bannerFinder = find.byType(Banner);
+    expect(bannerFinder, findsOneWidget);
+
+    final bannerWidget = tester.widget<Banner>(bannerFinder);
+    expect(bannerWidget.message, 'DEV');
+    expect(bannerWidget.color, Colors.red);
+    expect(bannerWidget.location, BannerLocation.bottomEnd);
+
+    // Check Semantics
+    final semanticsFinder = find.byWidgetPredicate(
+      (widget) =>
+          widget is Semantics && widget.properties.label == 'Environment: DEV',
+    );
+    expect(semanticsFinder, findsOneWidget);
+  });
+
+  testWidgets('should respect custom banner location', (tester) async {
+    // Arrange
+    when(() => mockEnv.type).thenReturn(EnvironmentType.stg);
+    when(() => mockEnv.name).thenReturn('STG');
+    when(() => mockEnv.color).thenReturn(Colors.orange);
+
+    // Act
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: EnvironmentBanner(
+            environment: mockEnv,
+            location: BannerLocation.topStart,
+            child: const Text('Content'),
+          ),
+        ),
+      ),
+    );
+
+    // Assert
+    final bannerFinder = find.byType(Banner);
+    expect(bannerFinder, findsOneWidget);
+
+    final bannerWidget = tester.widget<Banner>(bannerFinder);
+    expect(bannerWidget.location, BannerLocation.topStart);
+  });
+
+  testWidgets('should NOT display banner when environment IS prod', (
+    tester,
+  ) async {
+    // Arrange
+    when(() => mockEnv.type).thenReturn(EnvironmentType.prod);
+
+    // Act
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: EnvironmentBanner(
+            environment: mockEnv,
+            child: const Text('Content'),
+          ),
+        ),
+      ),
+    );
+
+    // Assert
     expect(find.byType(Banner), findsNothing);
     expect(find.text('Content'), findsOneWidget);
   });
