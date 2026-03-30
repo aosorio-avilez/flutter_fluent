@@ -1,6 +1,7 @@
 import 'package:fluent_logger_api/fluent_logger_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter_fluent_logger/src/api/logger_api_impl.dart';
+import 'package:flutter_fluent_logger/src/api/no_op_logger_api_impl.dart';
 import 'package:flutter_fluent_logger/src/logger_config.dart';
 import 'package:loggy/loggy.dart';
 
@@ -29,13 +30,19 @@ class LoggerModule extends FluentModule {
           : const DisabledPrinter(),
     );
 
-    registry
-      ..registerLazySingleton<Loggy>((_) {
-        return Loggy(config.globalLogName);
-      })
-      ..registerLazySingleton<LoggerApi>((it) {
-        return LoggerApiImpl(it<Loggy>());
-      });
+    if (config.enableLog && !const bool.fromEnvironment('dart.vm.product')) {
+      registry
+        ..registerLazySingleton<Loggy>((_) {
+          return Loggy(config.globalLogName);
+        })
+        ..registerLazySingleton<LoggerApi>((it) {
+          return LoggerApiImpl(it<Loggy>());
+        });
+    } else {
+      registry.registerLazySingleton<LoggerApi>(
+        (_) => const NoOpLoggerApiImpl(),
+      );
+    }
   }
 }
 

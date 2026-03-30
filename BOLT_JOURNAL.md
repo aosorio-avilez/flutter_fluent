@@ -21,3 +21,7 @@
 ## 2026-05-25 - [Closure Allocation in Hot Paths]
 **Learning:** Usage of higher-order functions like `Iterable.any` in frequently called methods (like `LocalizationsDelegate.isSupported`) creates closure allocations that add unnecessary pressure to the GC.
 **Action:** Use standard `for-in` loops in critical paths to eliminate closure overhead.
+
+## 2026-05-27 - [No-Op Pattern for Production Efficiency]
+**Learning:** Even if a feature is disabled via config, registering its implementation and its dependencies (like `Loggy`) in the DI container still consumes memory and adds minor overhead during initialization.
+**Action:** Use a `NoOp` implementation (e.g., `NoOpLoggerApiImpl`) and conditionally skip registration of heavy internal dependencies in production/disabled modes. Combine with `@pragma('vm:prefer-inline')` for near-zero runtime cost.
