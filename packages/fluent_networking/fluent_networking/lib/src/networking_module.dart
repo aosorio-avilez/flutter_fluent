@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:fluent_networking/fluent_networking.dart';
+import 'package:fluent_networking/src/interceptors/networking_log_interceptor.dart';
 import 'package:fluent_networking/src/networking_api_impl.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class NetworkingModule extends FluentModule {
   const NetworkingModule({
@@ -28,13 +28,7 @@ class NetworkingModule extends FluentModule {
 
         if (config.enableLog &&
             !const bool.fromEnvironment('dart.vm.product')) {
-          dio.interceptors.add(
-            PrettyDioLogger(
-              requestHeader: true,
-              requestBody: true,
-              compact: false,
-            ),
-          );
+          dio.interceptors.add(const NetworkingLogInterceptor());
         }
 
         return dio;
