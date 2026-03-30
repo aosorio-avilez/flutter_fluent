@@ -1,5 +1,8 @@
 /// Interface defined to use the fluent logger functionalities
 abstract class LoggerApi {
+  /// Creates a [LoggerApi].
+  const LoggerApi();
+
   /// Print a debug level message
   void logDebug(dynamic message);
 

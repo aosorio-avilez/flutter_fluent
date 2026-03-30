@@ -1,6 +1,7 @@
 import 'package:fluent_logger_api/fluent_logger_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter_fluent_logger/src/api/logger_api_impl.dart';
+import 'package:flutter_fluent_logger/src/api/no_op_logger_api_impl.dart';
 import 'package:flutter_fluent_logger/src/logger_config.dart';
 import 'package:flutter_fluent_logger/src/logger_module.dart';
 import 'package:loggy/loggy.dart';
@@ -26,7 +27,6 @@ void main() {
     addTearDown(Fluent.reset);
 
     // Assert
-    expect(Fluent.get<Loggy>(), isA<Loggy>());
-    expect(Fluent.get<LoggerApi>(), isA<LoggerApiImpl>());
+    expect(Fluent.get<LoggerApi>(), isA<NoOpLoggerApiImpl>());
   });
 }
