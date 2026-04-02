@@ -16,10 +16,12 @@ class EnvironmentBanner extends StatelessWidget {
   /// The [environment] can be optionally provided; if null, it defaults to
   /// the environment retrieved from `Fluent.get<EnvironmentApi>()`.
   /// The [location] determines where the banner is displayed.
+  /// The [textStyle] determines the style of the text displayed in the banner.
   const EnvironmentBanner({
     required this.child,
     this.environment,
     this.location = BannerLocation.bottomEnd,
+    this.textStyle,
     super.key,
   });
 
@@ -36,6 +38,9 @@ class EnvironmentBanner extends StatelessWidget {
 
   /// The location of the banner.
   final BannerLocation location;
+
+  /// The style of the text displayed in the banner.
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +59,12 @@ class EnvironmentBanner extends StatelessWidget {
           color: env.color,
           message: env.name,
           location: location,
-          textStyle: const TextStyle(
-            fontSize: 10.2,
-            fontWeight: FontWeight.w900,
-            height: 1,
-          ),
+          textStyle: textStyle ??
+              const TextStyle(
+                fontSize: 10.2,
+                fontWeight: FontWeight.w900,
+                height: 1,
+              ),
           child: child,
         ),
       ),
