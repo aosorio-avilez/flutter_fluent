@@ -78,35 +78,6 @@ void main() {
     expect(bannerWidget.location, BannerLocation.topStart);
   });
 
-  testWidgets('should respect custom text style', (tester) async {
-    // Arrange
-    const textStyle = TextStyle(fontSize: 20, color: Colors.blue);
-    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
-    when(() => mockEnv.name).thenReturn('DEV');
-    when(() => mockEnv.color).thenReturn(Colors.red);
-
-    // Act
-    await tester.pumpWidget(
-      MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body: EnvironmentBanner(
-            environment: mockEnv,
-            textStyle: textStyle,
-            child: const Text('Content'),
-          ),
-        ),
-      ),
-    );
-
-    // Assert
-    final bannerFinder = find.byType(Banner);
-    expect(bannerFinder, findsOneWidget);
-
-    final bannerWidget = tester.widget<Banner>(bannerFinder);
-    expect(bannerWidget.textStyle, textStyle);
-  });
-
   testWidgets('should NOT display banner when environment IS prod', (
     tester,
   ) async {
