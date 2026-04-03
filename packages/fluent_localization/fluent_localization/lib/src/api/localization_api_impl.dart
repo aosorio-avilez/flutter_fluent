@@ -1,5 +1,6 @@
 import 'package:fluent_localization/fluent_localization.dart';
 import 'package:fluent_localization/src/fluent_localization.dart';
+import 'package:fluent_logger_api/fluent_logger_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -31,9 +32,13 @@ class LocalizationApiImpl extends LocalizationApi {
     final localization = FluentLocalization.of(context);
 
     if (localization == null) {
-      debugPrint(
-        '⚠️ LocalizationApi: FluentLocalization not found in context.',
-      );
+      try {
+        Fluent.get<LoggerApi>().logWarning(
+          '⚠️ LocalizationApi: FluentLocalization not found in context.',
+        );
+      } on Object {
+        // Silently ignore if LoggerApi is not registered
+      }
       return key;
     }
 
