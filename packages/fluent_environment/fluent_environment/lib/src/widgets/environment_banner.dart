@@ -59,7 +59,8 @@ class EnvironmentBanner extends StatelessWidget {
           color: env.color,
           message: env.name,
           location: location,
-          textStyle: textStyle ??
+          textStyle:
+              textStyle ??
               const TextStyle(
                 fontSize: 10.2,
                 fontWeight: FontWeight.w900,
