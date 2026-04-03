@@ -148,15 +148,7 @@ class NetworkingLogInterceptor extends Interceptor {
       try {
         Fluent.get<LoggerApi>().logInfo(line);
       } on Object {
-        assert(
-          () {
-            /// Redundant print for debug mode.
-            // ignore: avoid_print
-            print(line);
-            return true;
-          }(),
-          'LoggerApi is not registered',
-        );
+        // Silently ignore if LoggerApi is not registered
       }
     }
   }
@@ -172,20 +164,7 @@ class NetworkingLogInterceptor extends Interceptor {
           stackTrace: isLastLine ? stackTrace : null,
         );
       } on Object {
-        assert(
-          () {
-            /// Redundant print for debug mode.
-            // ignore: avoid_print
-            print(line);
-            if (isLastLine && stackTrace != null) {
-              /// Redundant print for debug mode.
-              // ignore: avoid_print
-              print(stackTrace);
-            }
-            return true;
-          }(),
-          'LoggerApi is not registered',
-        );
+        // Silently ignore if LoggerApi is not registered
       }
     }
   }

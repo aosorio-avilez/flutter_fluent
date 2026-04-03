@@ -206,15 +206,14 @@ void main() {
       verify(() => handler.next(err)).called(1);
     });
 
-    test('should fallback to print if LoggerApi is not registered', () async {
-      // Unregister LoggerApi to trigger fallback
+    test('should handle gracefully if LoggerApi is not registered', () async {
+      // Unregister LoggerApi
       await Fluent.reset();
 
       final options = RequestOptions(path: 'https://api.example.com');
       final handler = MockRequestInterceptorHandler();
 
       // Should not throw even if LoggerApi is missing because of the try-catch
-      // and assert
       expect(() => interceptor.onRequest(options, handler), returnsNormally);
     });
   });

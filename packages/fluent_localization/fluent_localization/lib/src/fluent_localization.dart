@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:isolate';
 
+import 'package:fluent_logger_api/fluent_logger_api.dart';
+import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -104,9 +106,15 @@ class FluentLocalization {
       _strings.addAll(strings);
     } on Object catch (e, stack) {
       if (kDebugMode) {
-        debugPrint('❌ FluentLocalization: Failed to load $filePath');
-        debugPrint('Error: $e');
-        debugPrintStack(stackTrace: stack);
+        try {
+          Fluent.get<LoggerApi>().logError(
+            '❌ FluentLocalization: Failed to load $filePath\n'
+            'Error: $e',
+            stackTrace: stack,
+          );
+        } on Object {
+          // Silently ignore if LoggerApi is not registered
+        }
       }
     }
   }
@@ -124,9 +132,13 @@ class FluentLocalization {
 
     if (value == null) {
       assert(() {
-        debugPrint(
-          '⚠️ FluentLocalization: Missing key "$key" for locale $locale',
-        );
+        try {
+          Fluent.get<LoggerApi>().logWarning(
+            '⚠️ FluentLocalization: Missing key "$key" for locale $locale',
+          );
+        } on Object {
+          // Silently ignore if LoggerApi is not registered
+        }
         return true;
       }(), 'Missing key "$key" for locale $locale');
       return key;
