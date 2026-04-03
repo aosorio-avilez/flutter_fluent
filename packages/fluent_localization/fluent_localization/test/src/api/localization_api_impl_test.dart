@@ -79,8 +79,9 @@ void main() {
     expect(delegate.path, customPath);
   });
 
-  testWidgets('verify logWarning is called when localization is missing',
-      (tester) async {
+  testWidgets('verify logWarning is called when localization is missing', (
+    tester,
+  ) async {
     final api = Fluent.get<LocalizationApi>();
     const key = 'test.hello';
 
