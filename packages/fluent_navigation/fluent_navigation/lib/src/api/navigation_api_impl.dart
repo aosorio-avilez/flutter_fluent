@@ -1,14 +1,12 @@
 import 'package:fluent_navigation_api/fluent_navigation_api.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 class NavigationApiImpl extends NavigationApi {
+  NavigationApiImpl(this._router);
+
   /// Internal reference to the registered [GoRouter].
-  ///
-  /// Lazily initialized on first access to avoid premature instantiation
-  /// if [GoRouter] is registered as a lazy singleton.
-  late final GoRouter _router = Fluent.get<GoRouter>();
+  final GoRouter _router;
 
   @override
   void navigateTo(
