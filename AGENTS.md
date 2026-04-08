@@ -1,7 +1,3 @@
----
-trigger: always_on
----
-
 This document serves as the primary guide for AI agents and developers working on the `flutter_fluent` codebase. It outlines the technology stack, architectural patterns, coding standards, and project structure for this toolkit.
 
 ## 1. Tech Stack
