@@ -2,41 +2,50 @@
 trigger: always_on
 ---
 
-This document serves as the primary guide for AI agents and developers working on the `flutter_fluent` codebase. It outlines the technology stack, architectural patterns, coding standards, and project structure for this toolkit.
+# Fluent Toolkit Blueprint & Developer Guide
+
+This document serves as the primary guide for AI agents and developers working on the `flutter_fluent` codebase. It outlines the technology stack, architectural patterns, coding standards, and project structure for this toolkit monorepo.
 
 ## 1. Tech Stack
 
 -  **Language:** Dart (>=3.9.2)
 -  **Framework:** Flutter
+-  **Version Management:** FVM (Flutter Version Management)
 -  **Monorepo Management:** [Melos](https://pub.dev/packages/melos)
--  **Dependency Injection:**  `fluent_sdk` (Service Locator pattern via `Fluent.get<T>()`)
--  **Navigation:**  `fluent_navigation` (wrapper around `go_router`)
--  **Localization:**  `fluent_localization`
--  **Networking:** `fluent_networking` (wrapper around `dio`)
--  **Logging:** `fluent_logger`
+-  **Dependency Injection:** `fluent_sdk` (Service Locator pattern via `Fluent.get<T>()`)
+-  **Navigation:** `fluent_navigation` (wrapper around `go_router`)
+-  **Localization:** `fluent_localization`
+-  **Networking:** `fluent_networking` (wrapper around `dio` and interceptors)
+-  **Logging:** `fluent_logger` (abstracted logging mechanism)
 -  **Environment Management:** `fluent_environment`
--  **Linting:** `very_good_analysis` (implied by standard practices)
+-  **Linting:** `very_good_analysis`
+-  **Testing:** Native `flutter test` with `mocktail` (implied by mock structures).
 
 ## 2. Project Structure
 
-This project is a **Toolkit Monorepo** managed by Melos, providing a set of packages for building Flutter applications.
+This project is a **Toolkit Monorepo** managed by Melos, providing a cohesive set of packages for building highly scalable Flutter applications.
 
 ### Top-Level Directories
 
--  **`packages/`**: Contains the toolkit modules.
-- Each major component is typically split into two packages:
--  **`fluent_<name>`**: The implementation package. Contains logic and internal details.
--  **`fluent_<name>_api`**: The public API package. Defines interfaces/contracts exposed to consumers to avoid implementation leakage.
--  **`packages/fluent_sdk`**: The core package providing the module system and registry.
+-  **`packages/`**: Contains all the toolkit modules.
+   - Most major components are split into two strictly separated packages:
+     -  **`fluent_<name>`**: The implementation package. Contains core logic, internal details, and tests.
+     -  **`fluent_<name>_api`**: The public API package. Defines abstract interfaces, models, and contracts exposed to consumers to avoid implementation leakage.
+   -  **`packages/fluent_sdk`**: The core infrastructure package providing the module system, registry, and Dependency Injection. (Does not have a separate `_api` package).
 
-### Package Structure (`packages/fluent_<name>/lib/src`)
+### Internal Package Structure (`packages/fluent_<name>/`)
 
-Inside an implementation package, code is generally organized as:
+Inside an implementation package, code is strictly organized:
 
--  **`api/`**: Implementation of the interfaces defined in the `_api` package.
--  **`provider/`**: Riverpod providers or other state management wrappers (if any).
--  **`widgets/`**: Reusable UI components specific to the toolkit's purpose.
--  **`<NameSpace>Module.dart`**: The module definition extending `FluentModule`. Registers dependencies and configurations.
+-  **`lib/fluent_<name>.dart`**: The **Barrel File**. The ONLY file that should export public elements of the implementation.
+-  **`lib/src/`**: Internal implementation (Never imported directly by external consumers).
+   -  **`api/`**: Concrete implementations of the interfaces defined in the `_api` package.
+   -  **`interceptors/` / `widgets/` / `utils/`**: Domain-specific helpers.
+   -  **`<NameSpace>Module.dart`**: The module definition extending `FluentModule`. Registers dependencies and configurations.
+-  **`example/`**: A standalone Flutter application demonstrating how to integrate and use the package.
+-  **`test/`**: Unit tests for the package logic.
+   -  **`test/mocks/`**: Mock definitions for internal/external dependencies.
+   -  **`test/src/`**: Mirrored structure of `lib/src/` for targeted testing.
 
 ## 3. Architecture & Patterns
 
@@ -50,15 +59,15 @@ Future<void> onCreate(Registry registry) async {
   registry.registerLazySingleton<MyApi>((it) => MyApiImpl());
 }
 ```
-- **✅ Constructor Injection:** Always inject dependencies through the class constructor.
-- Access dependencies using `Fluent.get<T>()` at the entry points or within modules:
+- **✅ Constructor Injection:** Always inject dependencies through the class constructor for internal logic to facilitate testing.
+- Access dependencies using `Fluent.get<T>()` at the entry points or within `FluentModule` registrations:
 ```dart
 final api = Fluent.get<MyApi>();
 ```
 
 ### Module Orchestration
 
-The `Fluent.build()` method is used to initialize all modules in the correct order:
+The `Fluent.build()` method is used to initialize all modules in the correct order inside the consumer app's `main.dart` or `bootstrap.dart`:
 ```dart
 await Fluent.build([
   EnvironmentModule(),
@@ -68,10 +77,10 @@ await Fluent.build([
 ]);
 ```
 
-### Navigation
+### Navigation Integration
 
-- `fluent_navigation` provides a `NavigationApi` (wrapping `go_router`).
-- Routes are registered using the `Registry` extension:
+- `fluent_navigation` provides an `InternalNavigationApi` and `NavigationApi`.
+- Routes are registered using the `Registry` extension during module initialization:
 ```dart
 registry.registerRoute(
   GoRoute(
@@ -81,36 +90,39 @@ registry.registerRoute(
 );
 ```
 
-### API Separation
+### API Separation (The Contract)
 
-- **✅ API Packages:** Define interfaces in the `_api` package. This allows other packages to depend on the interface without pulling in the implementation details.
-- **❌ Direct Implementation Imports:** Never import code from `fluent_<name>/src` into another package. Always use the `_api` package.
+- **✅ API Packages:** Define pure abstract classes/interfaces and DTOs in the `_api` package. This allows features to interact without pulling heavy third-party dependencies (like `dio` or `go_router`) into their scope.
+- **❌ Direct Implementation Imports:** Never import code from `fluent_<name>/lib/src/` into another package. Always depend on `fluent_<name>_api`.
 
 ## 4. Naming Conventions
 
--  **Files & Directories:**  `snake_case` (e.g., `navigation_module.dart`, `internal_navigation_api.dart`).
--  **Classes:**  `PascalCase` (e.g., `FluentModule`, `NavigationApi`).
--  **Variables & Functions:**  `camelCase` (e.g., `isRegistered`, `getRegisteredRoutes`).
--  **Constants:**  `lowerCamelCase` or `SCREAMING_SNAKE_CASE` (follow Dart style guide).
+-  **Files & Directories:** `snake_case` (e.g., `navigation_module.dart`, `internal_navigation_api.dart`).
+-  **Classes:** `PascalCase` (e.g., `FluentModule`, `NavigationApi`).
+-  **Variables & Functions:** `camelCase` (e.g., `isRegistered`, `getRegisteredRoutes`).
+-  **Tests:** Must end with `_test.dart`. Mocks should be named `[concept]_mock.dart`.
 
 ## 5. Development Commands
 
 Run these commands from the root of the repository using `melos`:  
 
--  **Clean Workspace:**  `melos clean`
--  **Bootstrap Dependencies:**  `melos bs`
--  **Format Code:**  `melos format`
--  **Analyze Code:**  `melos analyze`
+-  **Clean Workspace:** `melos clean`
+-  **Bootstrap Dependencies:** `melos bs`
+-  **Format Code:** `melos run format`
+-  **Analyze Code:** `melos run analyze`
 -  **Run Tests:** `melos test`
 -  **Run Coverage:** `melos coverage`
 
-## 6. Rules for Agents
+*Note: When testing the `example/` apps manually, ensure you use `fvm flutter run` within the respective example directory.*
 
-1.  **Library Mindset:** Remember this is a set of tools. Focus on API clarity, modularity, and extensibility.
-2.  **Respect Module Boundaries:** Strictly adhere to the `_api` vs implementation package separation.
-3.  **Update Registry:** When adding new services, ensure they are registered in the appropriate `FluentModule`.
-4.  **Verify Before Commit:** Always run `melos analyze`, `melos test`, and `melos coverage` to ensure the code is of high quality.
-5.  **Example Applications:** When modifying a package, check its `example/` directory to ensure the changes don't break the demo apps.
+## 6. Rules for Agents (Library Maintainer Guidelines)
+
+1.  **Library Mindset:** Remember this is a set of foundational tools. Focus on backwards compatibility, strict API contracts, and high reusability. 
+2.  **Respect Module Boundaries:** Strictly adhere to the `_api` vs implementation package separation. An `_api` package should NEVER depend on its implementation counterpart.
+3.  **Barrel File Strictness:** New internal classes should NOT be exported in `lib/fluent_<name>.dart` unless they are explicitly meant to be consumed by external applications (like Modules or public extensions). Keep internal logic hidden inside `src/`.
+4.  **Update Registry:** When adding new services, ensure they are registered in the appropriate `FluentModule`.
+5.  **Test Everything:** Any new feature, utility, or interceptor MUST be accompanied by a corresponding unit test in the `test/src/` folder. Use the `test/mocks/` directory for dependency isolation.
+6.  **Example Applications:** When modifying an implementation package, you MUST verify or update its `example/` application to reflect the changes and ensure the demo does not break.
 
 ## 7. Git & PR Conventions
 
@@ -119,41 +131,41 @@ Run these commands from the root of the repository using `melos`:
 We follow [Conventional Commits](https://www.conventionalcommits.org/):
 -  **`feat`**: New toolkit feature/module.
 -  **`fix`**: Bug fix in a package.
--  **`refactor`**: Internal package cleanup.
--  **`docs`**: Documentation changes.
--  **`chore`**: Workspace updates, Melos config, etc.
+-  **`test`**: Adding or fixing unit tests.
+-  **`refactor`**: Internal package cleanup without API changes.
+-  **`docs`**: Documentation changes (README, code comments).
+-  **`chore`**: Workspace updates, Melos config, CI/CD changes.
 
-**Example:**  `feat(navigation): add support for nested routing`
+**Example:** `feat(networking): add support for global header interceptors`
 
 ### Pull Requests
 
-- Use the provided template at [.github/PULL_REQUEST_TEMPLATE.md].
-- **Write for a non-technical audience:** Briefly describe the changes made and their impact without diving into technical implementation details.
+- Use the provided template at `.github/PULL_REQUEST_TEMPLATE.md`.
+- **Write for a non-technical audience:** Briefly describe the changes made and their impact on the consumer applications.
+- Generate also the most accurate title for the PR.
 - The result must be in raw markdown format (wrapped in a ```markdown code block) and in English ready for copy and paste.
-- Ensure all packages in the monorepo still pass analysis.
-- Update `CHANGELOG.md` in the affected packages if necessary.
+- Ensure all packages in the monorepo still pass `melos run analyze` and `melos test`.
+- Update `CHANGELOG.md` in the strictly affected packages.
 
 ## 8. Release Preparation
 
 When a user requests to prepare the packages for a new release, follow these steps:
 
 1.  **Analyze Commits:** Identify the starting point (commit hash) and analyze all commits since then.
-2.  **Update CHANGELOG.md:** Add a new section at the top for the target version (e.g., `## 1.1.0`). Group changes by type (Features, Improvements, Bug Fixes, Chore).
-3.  **Update Version:** Synchronize the version and build number in both the root `pubspec.yaml` and `packages/<name>/pubspec.yaml`.
+2.  **Update CHANGELOG.md:** Add a new section at the top for the target version (e.g., `## 1.1.0`) ONLY for the packages that actually changed. Group changes by type (Features, Improvements, Bug Fixes, Chore).
+3.  **Update Version:** Synchronize the version in `packages/<name>/pubspec.yaml` (and `_api` package if the contract changed).
 4.  **Sync Workspace:** Run `melos clean && melos bs` to ensure all packages are up to date.
-5.  **Analyze:** Run `melos run analyze` to validate code quality.
-6.  **Test:** Run `melos test` to run all tests.
-7.  **Coverage:** Run `melos coverage` to validate code coverage.
+5.  **Analyze & Test:** Run `melos run analyze`, `melos test`, and `melos coverage` to validate absolute code quality.
 
 ## 9. Publish
 
-To publish a new version of a package, navigate to `packages/fluent_<name>/fluent_<name>_api` or `packages/fluent_<name>/fluent_<name>` and use the following command first to check if the package is ready to be published:
+To publish a new version of a package, navigate to the specific package directory (`packages/fluent_<name>/fluent_<name>_api` or `packages/fluent_<name>/fluent_<name>`) and use the following command first to check if the package is ready:
 
 ```bash
 fvm dart pub publish --dry-run
 ```
 
-If the package is ready to be published, run the following command:
+If the package is ready and there are no warnings, run the final publish command:
 
 ```bash
 fvm dart pub publish

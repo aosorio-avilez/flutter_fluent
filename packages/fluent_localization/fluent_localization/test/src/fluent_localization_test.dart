@@ -1,12 +1,25 @@
 import 'package:fluent_localization/src/fluent_localization.dart';
+import 'package:fluent_logger_api/fluent_logger_api.dart';
+import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockLoggerApi extends Mock implements LoggerApi {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUpAll(() {
     FluentLocalization.parser = (content) async => parseJson(content);
+  });
+
+  late MockLoggerApi mockLoggerApi;
+
+  setUp(() {
+    mockLoggerApi = MockLoggerApi();
+    Fluent.mock<LoggerApi>(mockLoggerApi);
+    addTearDown(Fluent.reset);
   });
   // Definimos los "archivos" que existen en nuestra memoria para la prueba
   final fakeAssets = {
@@ -98,6 +111,28 @@ void main() {
       await localization.load();
 
       expect(localization.get('missing.key'), 'missing.key');
+
+      verify(
+        () => mockLoggerApi.logWarning(
+          any<String>(that: contains('Missing key "missing.key"')),
+        ),
+      ).called(1);
+    });
+
+    test('verify load logs error on missing file', () async {
+      final localization = FluentLocalization(
+        path: 'wrong/path',
+        bundle: FakeAssetBundle(fakeAssets),
+      );
+
+      await localization.load();
+
+      verify(
+        () => mockLoggerApi.logError(
+          any<String>(that: contains('Failed to load')),
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(1);
     });
   });
 }

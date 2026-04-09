@@ -1,15 +1,23 @@
 import 'package:fluent_localization/fluent_localization.dart';
 import 'package:fluent_localization/src/fluent_localization.dart';
+import 'package:fluent_logger_api/fluent_logger_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockLoggerApi extends Mock implements LoggerApi {}
 
 void main() {
   setUpAll(() {
     FluentLocalization.parser = (content) async => parseJson(content);
   });
 
+  late MockLoggerApi mockLoggerApi;
+
   setUp(() async {
+    mockLoggerApi = MockLoggerApi();
     await Fluent.build([LocalizationModule()]);
+    Fluent.mock<LoggerApi>(mockLoggerApi);
     addTearDown(Fluent.reset);
   });
 
@@ -69,5 +77,33 @@ void main() {
 
     final delegate = delegates.first as FluentLocalizationDelegate;
     expect(delegate.path, customPath);
+  });
+
+  testWidgets('verify logWarning is called when localization is missing', (
+    tester,
+  ) async {
+    final api = Fluent.get<LocalizationApi>();
+    const key = 'test.hello';
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) {
+              return Text(api.translate(context, key));
+            },
+          ),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    verify(
+      () => mockLoggerApi.logWarning(
+        any<String>(that: contains('FluentLocalization not found in context')),
+      ),
+    ).called(1);
+    expect(find.text(key), findsOneWidget);
   });
 }
