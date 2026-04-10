@@ -18,16 +18,16 @@ class MockErrorInterceptorHandler extends Mock
 
 void main() {
   late MockLoggerApi mockLoggerApi;
+  late NetworkingLogInterceptor interceptor;
 
   setUp(() async {
     await Fluent.reset();
     mockLoggerApi = MockLoggerApi();
     Fluent.mock<LoggerApi>(mockLoggerApi);
+    interceptor = NetworkingLogInterceptor(mockLoggerApi);
   });
 
   group('NetworkingLogInterceptor', () {
-    const interceptor = NetworkingLogInterceptor();
-
     test('onRequest should log request and sanitize authorization header', () {
       final options = RequestOptions(
         path: 'https://api.example.com',
@@ -206,14 +206,13 @@ void main() {
       verify(() => handler.next(err)).called(1);
     });
 
-    test('should handle gracefully if LoggerApi is not registered', () async {
-      // Unregister LoggerApi
-      await Fluent.reset();
+    test('should handle gracefully if LoggerApi is null', () async {
+      const interceptor = NetworkingLogInterceptor();
 
       final options = RequestOptions(path: 'https://api.example.com');
       final handler = MockRequestInterceptorHandler();
 
-      // Should not throw even if LoggerApi is missing because of the try-catch
+      // Should not throw even if LoggerApi is missing
       expect(() => interceptor.onRequest(options, handler), returnsNormally);
     });
   });
