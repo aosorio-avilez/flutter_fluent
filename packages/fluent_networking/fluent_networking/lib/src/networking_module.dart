@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fluent_logger_api/fluent_logger_api.dart';
 import 'package:fluent_networking/fluent_networking.dart';
 import 'package:fluent_networking/src/interceptors/networking_log_interceptor.dart';
+import 'package:fluent_networking/src/interceptors/networking_retry_interceptor.dart';
 import 'package:fluent_networking/src/networking_api_impl.dart';
 
 class NetworkingModule extends FluentModule {
@@ -37,6 +38,13 @@ class NetworkingModule extends FluentModule {
             ),
           );
         }
+
+        dio.interceptors.add(
+          NetworkingRetryInterceptor(
+            dio: dio,
+            globalRetryConfig: config.retryConfig,
+          ),
+        );
 
         return dio;
       })

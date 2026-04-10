@@ -27,7 +27,7 @@ void main() {
       test('should return Success when status is 200', () async {
         // Arrange
         when(
-          () => mockDio.get<Map<String, dynamic>>(
+          () => mockDio.get<dynamic>(
             any(),
             options: any(named: 'options'),
           ),
@@ -47,12 +47,57 @@ void main() {
         expect((result as Success<Map<String, dynamic>>).data['id'], 1);
       });
 
+      test('should pass retryConfig to Dio options', () async {
+        const retryConfig = RetryConfig(maxRetries: 5);
+        when(
+          () => mockDio.get<dynamic>(any(), options: any(named: 'options')),
+        ).thenAnswer(
+          (_) async => Response(
+            requestOptions: RequestOptions(path: '/'),
+            statusCode: 200,
+          ),
+        );
+
+        await networkingApi.get<void>('/', retryConfig: retryConfig);
+
+        final captured = verify(
+          () =>
+              mockDio.get<dynamic>(any(), options: captureAny(named: 'options')),
+        ).captured;
+
+        final options = captured.first as Options;
+        expect(options.extra!['retry_config'], retryConfig);
+      });
+
+      test('should NOT mutate original Options object', () async {
+        const retryConfig = RetryConfig(maxRetries: 5);
+        final originalOptions = Options(extra: {'existing': 'value'});
+
+        when(
+          () => mockDio.get<dynamic>(any(), options: any(named: 'options')),
+        ).thenAnswer(
+          (_) async => Response(
+            requestOptions: RequestOptions(path: '/'),
+            statusCode: 200,
+          ),
+        );
+
+        await networkingApi.get<void>(
+          '/',
+          options: originalOptions,
+          retryConfig: retryConfig,
+        );
+
+        expect(originalOptions.extra!['retry_config'], isNull);
+        expect(originalOptions.extra!['existing'], 'value');
+      });
+
       test(
         'should return Failure when Dio throws DioException (e.g. 400)',
         () async {
           // Arrange
           when(
-            () => mockDio.get<void>(any(), options: any(named: 'options')),
+            () => mockDio.get<dynamic>(any(), options: any(named: 'options')),
           ).thenThrow(
             DioException(
               requestOptions: RequestOptions(path: '/'),
@@ -81,7 +126,7 @@ void main() {
         () async {
           // Arrange
           when(
-            () => mockDio.get<void>(any(), options: any(named: 'options')),
+            () => mockDio.get<dynamic>(any(), options: any(named: 'options')),
           ).thenThrow(Exception('Unexpected error'));
 
           // Act
@@ -100,7 +145,7 @@ void main() {
     group('POST', () {
       test('should return Success when status is 201', () async {
         when(
-          () => mockDio.post<void>(
+          () => mockDio.post<dynamic>(
             any(),
             data: any(named: 'data'),
             options: any(named: 'options'),
@@ -119,7 +164,7 @@ void main() {
 
       test('should return Failure on DioException', () async {
         when(
-          () => mockDio.post<void>(
+          () => mockDio.post<dynamic>(
             any(),
             data: any(named: 'data'),
             options: any(named: 'options'),
@@ -140,7 +185,7 @@ void main() {
     group('PUT', () {
       test('should return Success when status is 200', () async {
         when(
-          () => mockDio.put<void>(
+          () => mockDio.put<dynamic>(
             any(),
             data: any(named: 'data'),
             options: any(named: 'options'),
@@ -161,7 +206,7 @@ void main() {
     group('PATCH', () {
       test('should return Success when status is 200', () async {
         when(
-          () => mockDio.patch<void>(
+          () => mockDio.patch<dynamic>(
             any(),
             data: any(named: 'data'),
             options: any(named: 'options'),
@@ -182,7 +227,7 @@ void main() {
     group('DELETE', () {
       test('should return Success when status is 204', () async {
         when(
-          () => mockDio.delete<void>(
+          () => mockDio.delete<dynamic>(
             any(),
             data: any(named: 'data'),
             options: any(named: 'options'),
@@ -201,7 +246,7 @@ void main() {
 
       test('should return Failure when Dio throws', () async {
         when(
-          () => mockDio.delete<void>(
+          () => mockDio.delete<dynamic>(
             any(),
             data: any(named: 'data'),
             options: any(named: 'options'),

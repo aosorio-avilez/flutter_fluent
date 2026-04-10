@@ -8,6 +8,7 @@ class NetworkingConfig {
     this.enableLog = false,
     this.sensitiveHeaders = const {},
     this.sensitiveBodyKeys = const {},
+    this.retryConfig,
   });
 
   /// Base url to make the http request
@@ -24,4 +25,7 @@ class NetworkingConfig {
 
   /// Keys in the JSON body to redact in logs
   final Set<String> sensitiveBodyKeys;
+
+  /// Global retry configuration
+  final RetryConfig? retryConfig;
 }

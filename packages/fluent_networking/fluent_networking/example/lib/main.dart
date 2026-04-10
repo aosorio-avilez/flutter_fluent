@@ -17,7 +17,13 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final networkingApi = Fluent.get<NetworkingApi>();
 
-    final future = networkingApi.get<Map<String, dynamic>>("/pokemon");
+    final future = networkingApi.get<Map<String, dynamic>>(
+      "/pokemon",
+      retryConfig: const RetryConfig(
+        maxRetries: 2,
+        retryInterval: Duration(seconds: 1),
+      ),
+    );
 
     return MaterialApp(
       theme: ThemeData(
