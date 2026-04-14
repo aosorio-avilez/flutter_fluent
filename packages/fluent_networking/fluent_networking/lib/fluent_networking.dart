@@ -1,5 +1,6 @@
 export 'package:dio/dio.dart'
     show
+        Options,
         RequestInterceptorHandler,
         RequestOptions,
         Response,
