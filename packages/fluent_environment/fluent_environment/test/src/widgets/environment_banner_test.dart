@@ -101,4 +101,98 @@ void main() {
     expect(find.byType(Banner), findsNothing);
     expect(find.text('Content'), findsOneWidget);
   });
+
+  testWidgets('should use default text style when none is provided', (
+    tester,
+  ) async {
+    // Arrange
+    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+    when(() => mockEnv.name).thenReturn('DEV');
+    when(() => mockEnv.color).thenReturn(Colors.red);
+
+    // Act
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: EnvironmentBanner(
+            environment: mockEnv,
+            child: const Text('Content'),
+          ),
+        ),
+      ),
+    );
+
+    // Assert
+    final bannerWidget = tester.widget<Banner>(find.byType(Banner));
+    expect(bannerWidget.textStyle.fontSize, 10.2);
+    expect(bannerWidget.textStyle.fontWeight, FontWeight.w900);
+    expect(bannerWidget.textStyle.height, 1);
+  });
+
+  testWidgets('should NOT leak directionality to child', (tester) async {
+    // Arrange
+    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+    when(() => mockEnv.name).thenReturn('DEV');
+    when(() => mockEnv.color).thenReturn(Colors.red);
+
+    // Act
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
+            body: EnvironmentBanner(
+              environment: mockEnv,
+              child: Builder(
+                builder: (context) {
+                  return Text(Directionality.of(context).name);
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // Assert
+    // If the bug exists, it will find 'ltr' because EnvironmentBanner
+    // wraps the child in Directionality(textDirection: TextDirection.ltr).
+    // We expect it to be 'rtl'.
+    expect(find.text('rtl'), findsOneWidget);
+  });
+
+  testWidgets('should use custom text style when provided', (tester) async {
+    // Arrange
+    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+    when(() => mockEnv.name).thenReturn('DEV');
+    when(() => mockEnv.color).thenReturn(Colors.red);
+
+    const customStyle = TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      color: Colors.blue,
+    );
+
+    // Act
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: EnvironmentBanner(
+            environment: mockEnv,
+            textStyle: customStyle,
+            child: const Text('Content'),
+          ),
+        ),
+      ),
+    );
+
+    // Assert
+    final bannerWidget = tester.widget<Banner>(find.byType(Banner));
+    expect(bannerWidget.textStyle.fontSize, 20);
+    expect(bannerWidget.textStyle.fontWeight, FontWeight.bold);
+    expect(bannerWidget.textStyle.color, Colors.blue);
+  });
 }
