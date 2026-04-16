@@ -61,8 +61,10 @@ void main() {
         await networkingApi.get<void>('/', retryConfig: retryConfig);
 
         final captured = verify(
-          () =>
-              mockDio.get<dynamic>(any(), options: captureAny(named: 'options')),
+          () => mockDio.get<dynamic>(
+            any(),
+            options: captureAny(named: 'options'),
+          ),
         ).captured;
 
         final options = captured.first as Options;
