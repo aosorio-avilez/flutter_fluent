@@ -29,13 +29,13 @@ class NetworkingModule extends FluentModule {
 
         if (config.enableLog &&
             !const bool.fromEnvironment('dart.vm.product')) {
-          LoggerApi? logger;
-          try {
-            logger = it<LoggerApi>();
-          } on Object {
-            // Silently ignore if LoggerApi is not registered
-          }
-          dio.interceptors.add(NetworkingLogInterceptor(logger));
+          dio.interceptors.add(
+            NetworkingLogInterceptor(
+              loggerApi: it<LoggerApi>(),
+              sensitiveHeaders: config.sensitiveHeaders,
+              sensitiveBodyKeys: config.sensitiveBodyKeys,
+            ),
+          );
         }
 
         return dio;
