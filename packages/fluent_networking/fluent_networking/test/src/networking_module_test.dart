@@ -34,9 +34,8 @@ void main() {
     addTearDown(Fluent.reset);
 
     final dio = Fluent.get<Dio>();
-    final retryInterceptor = dio.interceptors
-        .whereType<NetworkingRetryInterceptor>()
-        .firstOrNull;
+    final retryInterceptor =
+        dio.interceptors.whereType<NetworkingRetryInterceptor>().firstOrNull;
 
     expect(retryInterceptor, isNotNull);
     expect(retryInterceptor!.globalRetryConfig, retryConfig);
