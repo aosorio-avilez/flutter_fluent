@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:fluent_logger_api/fluent_logger_api.dart';
+import 'package:fluent_sdk/fluent_sdk.dart';
 
 /// A secure networking interceptor that logs requests and responses.
 ///
@@ -9,22 +10,9 @@ import 'package:fluent_logger_api/fluent_logger_api.dart';
 /// [LoggerApi] for output.
 class NetworkingLogInterceptor extends Interceptor {
   /// Creates a [NetworkingLogInterceptor].
-  NetworkingLogInterceptor({
-    required LoggerApi loggerApi,
-    Set<String>? sensitiveHeaders,
-    Set<String>? sensitiveBodyKeys,
-  }) : _loggerApi = loggerApi,
-       _sensitiveHeaders = {
-         ..._defaultSensitiveHeaders,
-         if (sensitiveHeaders != null) ...sensitiveHeaders,
-       },
-       _sensitiveBodyKeys = sensitiveBodyKeys ?? const {};
+  const NetworkingLogInterceptor();
 
-  final LoggerApi _loggerApi;
-  final Set<String> _sensitiveHeaders;
-  final Set<String> _sensitiveBodyKeys;
-
-  static const _defaultSensitiveHeaders = {
+  static const _sensitiveHeaders = {
     'authorization',
     'cookie',
     'proxy-authorization',
@@ -127,10 +115,9 @@ class NetworkingLogInterceptor extends Interceptor {
   List<String> _formatHeaders(Map<String, dynamic> headers) {
     return headers.entries.map((entry) {
       final key = entry.key;
-      final isSensitive = _sensitiveHeaders.any(
-        (sensitive) => sensitive.toLowerCase() == key.toLowerCase(),
-      );
-      final value = isSensitive ? '***REDACTED***' : entry.value.toString();
+      final value = _sensitiveHeaders.contains(key.toLowerCase())
+          ? '***REDACTED***'
+          : entry.value.toString();
       return '$key: $value';
     }).toList();
   }
@@ -140,36 +127,14 @@ class NetworkingLogInterceptor extends Interceptor {
       const encoder = JsonEncoder.withIndent('  ');
       if (data is String) {
         final decoded = json.decode(data);
-        final sanitized = _sanitizeBody(decoded);
-        return encoder.convert(sanitized);
+        return encoder.convert(decoded);
       } else if (data is Map || data is List) {
-        final sanitized = _sanitizeBody(data);
-        return encoder.convert(sanitized);
+        return encoder.convert(data);
       }
     } on Object catch (_) {
       // Return raw data if it fails to format as JSON
     }
     return data.toString();
-  }
-
-  dynamic _sanitizeBody(dynamic data) {
-    if (_sensitiveBodyKeys.isEmpty) return data;
-
-    if (data is Map) {
-      return data.map((key, value) {
-        final isSensitive = _sensitiveBodyKeys.any(
-          (sensitiveKey) =>
-              sensitiveKey.toLowerCase() == key.toString().toLowerCase(),
-        );
-        if (isSensitive) {
-          return MapEntry(key, '***REDACTED***');
-        }
-        return MapEntry(key, _sanitizeBody(value));
-      });
-    } else if (data is List) {
-      return data.map(_sanitizeBody).toList();
-    }
-    return data;
   }
 
   int? _getDuration(RequestOptions options) {
@@ -179,31 +144,27 @@ class NetworkingLogInterceptor extends Interceptor {
   }
 
   void _log(String message) {
-    final logger = _loggerApi;
-
     for (final line in message.split('\n')) {
       try {
-        logger.logInfo(line);
+        Fluent.get<LoggerApi>().logInfo(line);
       } on Object {
-        // Silently ignore
+        // Silently ignore if LoggerApi is not registered
       }
     }
   }
 
   void _logError(String message, {StackTrace? stackTrace}) {
-    final logger = _loggerApi;
-
     final lines = message.split('\n');
     for (var i = 0; i < lines.length; i++) {
       final line = lines[i];
       final isLastLine = i == lines.length - 1;
       try {
-        logger.logError(
+        Fluent.get<LoggerApi>().logError(
           line,
           stackTrace: isLastLine ? stackTrace : null,
         );
       } on Object {
-        // Silently ignore
+        // Silently ignore if LoggerApi is not registered
       }
     }
   }

@@ -21,14 +21,7 @@ class MainApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Fluent Environment Example',
-      builder: (context, child) => EnvironmentBanner(
-        textStyle: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-        child: child!,
-      ),
+      builder: (context, child) => EnvironmentBanner(child: child!),
       home: Scaffold(
         body: Center(child: Text("Environment: ${environment.name}")),
       ),

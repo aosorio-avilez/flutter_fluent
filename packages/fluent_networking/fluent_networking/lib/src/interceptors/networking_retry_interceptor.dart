@@ -68,10 +68,11 @@ class NetworkingRetryInterceptor extends Interceptor {
   }
 
   bool _shouldRetry(DioException err) {
-    // Retry on timeouts or server errors (5xx)
+    // Retry on timeouts, connection errors or server errors (5xx)
     return err.type == DioExceptionType.connectionTimeout ||
         err.type == DioExceptionType.sendTimeout ||
         err.type == DioExceptionType.receiveTimeout ||
+        err.type == DioExceptionType.connectionError ||
         (err.type == DioExceptionType.badResponse &&
             (err.response?.statusCode ?? 0) >= 500);
   }
