@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:fluent_logger_api/fluent_logger_api.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
 
 /// A secure networking interceptor that logs requests and responses.
 ///
@@ -10,7 +9,9 @@ import 'package:fluent_sdk/fluent_sdk.dart';
 /// [LoggerApi] for output.
 class NetworkingLogInterceptor extends Interceptor {
   /// Creates a [NetworkingLogInterceptor].
-  const NetworkingLogInterceptor();
+  const NetworkingLogInterceptor([this._logger]);
+
+  final LoggerApi? _logger;
 
   static const _sensitiveHeaders = {
     'authorization',
@@ -144,27 +145,35 @@ class NetworkingLogInterceptor extends Interceptor {
   }
 
   void _log(String message) {
+    final logger = _logger;
+
+    if (logger == null) return;
+
     for (final line in message.split('\n')) {
       try {
-        Fluent.get<LoggerApi>().logInfo(line);
+        logger.logInfo(line);
       } on Object {
-        // Silently ignore if LoggerApi is not registered
+        // Silently ignore
       }
     }
   }
 
   void _logError(String message, {StackTrace? stackTrace}) {
+    final logger = _logger;
+
+    if (logger == null) return;
+
     final lines = message.split('\n');
     for (var i = 0; i < lines.length; i++) {
       final line = lines[i];
       final isLastLine = i == lines.length - 1;
       try {
-        Fluent.get<LoggerApi>().logError(
+        logger.logError(
           line,
           stackTrace: isLastLine ? stackTrace : null,
         );
       } on Object {
-        // Silently ignore if LoggerApi is not registered
+        // Silently ignore
       }
     }
   }
