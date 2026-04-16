@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:fluent_networking_api/src/response_result.dart';
+import 'package:fluent_networking_api/src/retry_config.dart';
 
 /// Interface defined to use the fluent networking functionalities
 abstract class NetworkingApi {
@@ -8,6 +9,7 @@ abstract class NetworkingApi {
   Future<ResponseResult<T>> get<T>(
     String url, {
     Options? options,
+    RetryConfig? retryConfig,
   });
 
   /// Makes a POST request to the specific url
@@ -16,6 +18,7 @@ abstract class NetworkingApi {
     String url, {
     Object? body,
     Options? options,
+    RetryConfig? retryConfig,
   });
 
   /// Makes a PATCH request to the specific url
@@ -24,6 +27,7 @@ abstract class NetworkingApi {
     String url, {
     Object? body,
     Options? options,
+    RetryConfig? retryConfig,
   });
 
   /// Makes a PUT request to the specific url
@@ -32,6 +36,7 @@ abstract class NetworkingApi {
     String url, {
     Object? body,
     Options? options,
+    RetryConfig? retryConfig,
   });
 
   /// Makes a DELETE request to the specific url
@@ -40,5 +45,6 @@ abstract class NetworkingApi {
     String url, {
     Object? body,
     Options? options,
+    RetryConfig? retryConfig,
   });
 }
