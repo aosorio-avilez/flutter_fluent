@@ -20,6 +20,7 @@ class EnvironmentBanner extends StatelessWidget {
     required this.child,
     this.environment,
     this.location = BannerLocation.bottomEnd,
+    this.enableInspector = false,
     super.key,
   });
 
@@ -37,12 +38,35 @@ class EnvironmentBanner extends StatelessWidget {
   /// The location of the banner.
   final BannerLocation location;
 
+  /// Whether to enable the environment inspector on long press.
+  final bool enableInspector;
+
   @override
   Widget build(BuildContext context) {
-    final env = environment ?? Fluent.get<EnvironmentApi>().environment;
+    final envApi = Fluent.get<EnvironmentApi>();
+    final env = environment ?? envApi.environment;
 
     if (env.isProduction) {
       return child;
+    }
+
+    Widget content = Banner(
+      color: env.color,
+      message: env.name,
+      location: location,
+      textStyle: const TextStyle(
+        fontSize: 10.2,
+        fontWeight: FontWeight.w900,
+        height: 1,
+      ),
+      child: child,
+    );
+
+    if (enableInspector) {
+      content = GestureDetector(
+        onLongPress: () => envApi.showInspector(context),
+        child: content,
+      );
     }
 
     return Semantics(
@@ -50,17 +74,7 @@ class EnvironmentBanner extends StatelessWidget {
       container: true,
       child: Directionality(
         textDirection: TextDirection.ltr,
-        child: Banner(
-          color: env.color,
-          message: env.name,
-          location: location,
-          textStyle: const TextStyle(
-            fontSize: 10.2,
-            fontWeight: FontWeight.w900,
-            height: 1,
-          ),
-          child: child,
-        ),
+        child: content,
       ),
     );
   }
