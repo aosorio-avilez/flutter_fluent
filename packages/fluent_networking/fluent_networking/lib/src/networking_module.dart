@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:fluent_logger_api/fluent_logger_api.dart';
 import 'package:fluent_networking/fluent_networking.dart';
 import 'package:fluent_networking/src/interceptors/networking_log_interceptor.dart';
 import 'package:fluent_networking/src/interceptors/networking_retry_interceptor.dart';
@@ -14,7 +15,7 @@ class NetworkingModule extends FluentModule {
   @override
   void onCreate(Registry registry) {
     registry
-      ..registerLazySingleton<Dio>((_) {
+      ..registerLazySingleton<Dio>((it) {
         final dio = Dio(
           BaseOptions(
             baseUrl: config.baseUrl,
@@ -29,7 +30,8 @@ class NetworkingModule extends FluentModule {
 
         if (config.enableLog &&
             !const bool.fromEnvironment('dart.vm.product')) {
-          dio.interceptors.add(const NetworkingLogInterceptor());
+          final logger = it.isRegistered<LoggerApi>() ? it<LoggerApi>() : null;
+          dio.interceptors.add(NetworkingLogInterceptor(logger));
         }
 
         dio.interceptors.add(

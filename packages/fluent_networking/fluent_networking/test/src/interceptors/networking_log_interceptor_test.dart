@@ -26,7 +26,11 @@ void main() {
   });
 
   group('NetworkingLogInterceptor', () {
-    const interceptor = NetworkingLogInterceptor();
+    late NetworkingLogInterceptor interceptor;
+
+    setUp(() {
+      interceptor = NetworkingLogInterceptor(mockLoggerApi);
+    });
 
     test('onRequest should log request and sanitize authorization header', () {
       final options = RequestOptions(
@@ -206,15 +210,16 @@ void main() {
       verify(() => handler.next(err)).called(1);
     });
 
-    test('should handle gracefully if LoggerApi is not registered', () async {
-      // Unregister LoggerApi
-      await Fluent.reset();
+    test('should handle gracefully if LoggerApi is not provided', () async {
+      const noLoggerInterceptor = NetworkingLogInterceptor();
 
       final options = RequestOptions(path: 'https://api.example.com');
       final handler = MockRequestInterceptorHandler();
 
-      // Should not throw even if LoggerApi is missing because of the try-catch
-      expect(() => interceptor.onRequest(options, handler), returnsNormally);
+      expect(
+        () => noLoggerInterceptor.onRequest(options, handler),
+        returnsNormally,
+      );
     });
   });
 }
