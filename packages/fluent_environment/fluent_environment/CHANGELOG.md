@@ -51,3 +51,5 @@
 * Enable const constructors for EnvironmentModule
 * Show/hide environment banner validation added
 * Use registerLazySingleton for environment optimization
+* Added `textStyle` parameter to `EnvironmentBanner` for better customization
+* Fixed `Directionality` leakage in `EnvironmentBanner` to prevent affecting child layouts

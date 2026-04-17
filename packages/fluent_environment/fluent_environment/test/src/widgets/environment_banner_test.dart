@@ -78,6 +78,63 @@ void main() {
     expect(bannerWidget.location, BannerLocation.topStart);
   });
 
+  testWidgets('should apply custom text style', (tester) async {
+    // Arrange
+    const customStyle = TextStyle(fontSize: 20, color: Colors.blue);
+    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+    when(() => mockEnv.name).thenReturn('DEV');
+    when(() => mockEnv.color).thenReturn(Colors.red);
+
+    // Act
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: EnvironmentBanner(
+            environment: mockEnv,
+            textStyle: customStyle,
+            child: const Text('Content'),
+          ),
+        ),
+      ),
+    );
+
+    // Assert
+    final bannerFinder = find.byType(Banner);
+    final bannerWidget = tester.widget<Banner>(bannerFinder);
+    expect(bannerWidget.textStyle, customStyle);
+  });
+
+  testWidgets('should NOT leak Directionality to child', (tester) async {
+    // Arrange
+    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+    when(() => mockEnv.name).thenReturn('DEV');
+    when(() => mockEnv.color).thenReturn(Colors.red);
+
+    // Act
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
+            body: EnvironmentBanner(
+              environment: mockEnv,
+              child: Builder(
+                builder: (context) {
+                  return Text(Directionality.of(context).toString());
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // Assert
+    expect(find.text('TextDirection.rtl'), findsOneWidget);
+  });
+
   testWidgets('should NOT display banner when environment IS prod', (
     tester,
   ) async {
