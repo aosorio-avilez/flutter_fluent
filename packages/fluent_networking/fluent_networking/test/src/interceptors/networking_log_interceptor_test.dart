@@ -26,9 +26,8 @@ void main() {
   });
 
   group('NetworkingLogInterceptor', () {
-    const interceptor = NetworkingLogInterceptor();
-
     test('onRequest should log request and sanitize authorization header', () {
+      final interceptor = NetworkingLogInterceptor();
       final options = RequestOptions(
         path: 'https://api.example.com',
         method: 'GET',
@@ -59,7 +58,85 @@ void main() {
       verify(() => handler.next(options)).called(1);
     });
 
+    test('onRequest should sanitize custom sensitive headers', () {
+      final interceptor = NetworkingLogInterceptor(
+        sensitiveHeaders: {'x-api-key'},
+      );
+      final options = RequestOptions(
+        path: 'https://api.example.com',
+        method: 'GET',
+        headers: {
+          'x-api-key': 'secret-api-key',
+        },
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('***REDACTED***')),
+        ),
+      ).called(1);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('secret-api-key')),
+        ),
+      );
+    });
+
+    test('onRequest should sanitize sensitive body keys', () {
+      final interceptor = NetworkingLogInterceptor(
+        sensitiveBodyKeys: {'password', 'token'},
+      );
+      final options = RequestOptions(
+        path: 'https://api.example.com',
+        method: 'POST',
+        data: {
+          'username': 'jules',
+          'password': 'secret-password',
+          'nested': {
+            'token': 'secret-token',
+          },
+          'list': [
+            {'token': 'other-token'},
+            'normal-value',
+          ],
+        },
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('***REDACTED***')),
+        ),
+      ).called(3);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('secret-password')),
+        ),
+      );
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('secret-token')),
+        ),
+      );
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('other-token')),
+        ),
+      );
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('jules')),
+        ),
+      ).called(1);
+    });
+
     test('onResponse should log response', () {
+      final interceptor = NetworkingLogInterceptor();
       final response = Response<dynamic>(
         requestOptions: RequestOptions(path: 'https://api.example.com'),
         statusCode: 200,
@@ -97,6 +174,7 @@ void main() {
     });
 
     test('onRequest should log request with body', () {
+      final interceptor = NetworkingLogInterceptor();
       final options = RequestOptions(
         path: 'https://api.example.com',
         method: 'POST',
@@ -119,6 +197,7 @@ void main() {
     });
 
     test('onResponse should handle null data and log duration', () async {
+      final interceptor = NetworkingLogInterceptor();
       final options = RequestOptions(path: 'https://api.example.com');
       // Set start time to simulate duration
       options.extra['networking_start_time'] =
@@ -143,6 +222,7 @@ void main() {
     });
 
     test('onResponse should handle invalid JSON string data', () {
+      final interceptor = NetworkingLogInterceptor();
       final response = Response<dynamic>(
         requestOptions: RequestOptions(path: 'https://api.example.com'),
         statusCode: 200,
@@ -161,6 +241,7 @@ void main() {
     });
 
     test('onError should log error without response', () {
+      final interceptor = NetworkingLogInterceptor();
       final err = DioException(
         requestOptions: RequestOptions(path: 'https://api.example.com'),
         message: 'Network error',
@@ -179,6 +260,7 @@ void main() {
     });
 
     test('onError should log error with response data', () {
+      final interceptor = NetworkingLogInterceptor();
       final err = DioException(
         requestOptions: RequestOptions(path: 'https://api.example.com'),
         response: Response(
@@ -207,6 +289,7 @@ void main() {
     });
 
     test('should handle gracefully if LoggerApi is not registered', () async {
+      final interceptor = NetworkingLogInterceptor();
       // Unregister LoggerApi
       await Fluent.reset();
 

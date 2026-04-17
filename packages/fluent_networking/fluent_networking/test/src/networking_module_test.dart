@@ -15,6 +15,8 @@ void main() {
     when(() => config.interceptors).thenReturn([]);
     when(() => config.enableLog).thenReturn(true);
     when(() => config.retryConfig).thenReturn(null);
+    when(() => config.sensitiveHeaders).thenReturn({});
+    when(() => config.sensitiveBodyKeys).thenReturn({});
 
     await Fluent.build([NetworkingModule(config: config)]);
     addTearDown(Fluent.reset);

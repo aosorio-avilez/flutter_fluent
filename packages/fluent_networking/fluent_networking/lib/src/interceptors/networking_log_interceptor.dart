@@ -10,9 +10,22 @@ import 'package:fluent_sdk/fluent_sdk.dart';
 /// [LoggerApi] for output.
 class NetworkingLogInterceptor extends Interceptor {
   /// Creates a [NetworkingLogInterceptor].
-  const NetworkingLogInterceptor();
+  NetworkingLogInterceptor({
+    LoggerApi? loggerApi,
+    Set<String> sensitiveHeaders = const {},
+    Set<String> sensitiveBodyKeys = const {},
+  }) : _loggerApi = loggerApi,
+       _sensitiveHeaders = {
+         ..._defaultSensitiveHeaders,
+         ...sensitiveHeaders.map((e) => e.toLowerCase()),
+       },
+       _sensitiveBodyKeys = sensitiveBodyKeys;
 
-  static const _sensitiveHeaders = {
+  final LoggerApi? _loggerApi;
+  final Set<String> _sensitiveHeaders;
+  final Set<String> _sensitiveBodyKeys;
+
+  static const _defaultSensitiveHeaders = {
     'authorization',
     'cookie',
     'proxy-authorization',
@@ -126,15 +139,31 @@ class NetworkingLogInterceptor extends Interceptor {
     try {
       const encoder = JsonEncoder.withIndent('  ');
       if (data is String) {
-        final decoded = json.decode(data);
-        return encoder.convert(decoded);
+        final dynamic decoded = json.decode(data);
+        final sanitized = _sanitizeBody(decoded);
+        return encoder.convert(sanitized);
       } else if (data is Map || data is List) {
-        return encoder.convert(data);
+        final sanitized = _sanitizeBody(data);
+        return encoder.convert(sanitized);
       }
     } on Object catch (_) {
       // Return raw data if it fails to format as JSON
     }
     return data.toString();
+  }
+
+  dynamic _sanitizeBody(dynamic data) {
+    if (data is Map) {
+      return data.map((key, value) {
+        if (_sensitiveBodyKeys.contains(key)) {
+          return MapEntry(key, '***REDACTED***');
+        }
+        return MapEntry(key, _sanitizeBody(value));
+      });
+    } else if (data is List) {
+      return data.map(_sanitizeBody).toList();
+    }
+    return data;
   }
 
   int? _getDuration(RequestOptions options) {
@@ -143,29 +172,34 @@ class NetworkingLogInterceptor extends Interceptor {
     return DateTime.now().millisecondsSinceEpoch - startTime;
   }
 
-  void _log(String message) {
-    for (final line in message.split('\n')) {
-      try {
-        Fluent.get<LoggerApi>().logInfo(line);
-      } on Object {
-        // Silently ignore if LoggerApi is not registered
-      }
+  LoggerApi? _getLogger() {
+    if (_loggerApi != null) {
+      return _loggerApi;
+    }
+    try {
+      return Fluent.get<LoggerApi>();
+    } on Object {
+      return null;
     }
   }
 
+  void _log(String message) {
+    final logger = _getLogger();
+    if (logger == null) return;
+    message.split('\n').forEach(logger.logInfo);
+  }
+
   void _logError(String message, {StackTrace? stackTrace}) {
+    final logger = _getLogger();
+    if (logger == null) return;
     final lines = message.split('\n');
     for (var i = 0; i < lines.length; i++) {
       final line = lines[i];
       final isLastLine = i == lines.length - 1;
-      try {
-        Fluent.get<LoggerApi>().logError(
-          line,
-          stackTrace: isLastLine ? stackTrace : null,
-        );
-      } on Object {
-        // Silently ignore if LoggerApi is not registered
-      }
+      logger.logError(
+        line,
+        stackTrace: isLastLine ? stackTrace : null,
+      );
     }
   }
 }

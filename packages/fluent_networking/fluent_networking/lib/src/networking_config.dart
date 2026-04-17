@@ -7,6 +7,8 @@ class NetworkingConfig {
     this.interceptors = const [],
     this.enableLog = false,
     this.retryConfig,
+    this.sensitiveHeaders = const {},
+    this.sensitiveBodyKeys = const {},
   });
 
   /// Base url to make the http request
@@ -20,4 +22,10 @@ class NetworkingConfig {
 
   /// Global retry configuration
   final RetryConfig? retryConfig;
+
+  /// Additional headers to redact in the logs
+  final Set<String> sensitiveHeaders;
+
+  /// Body keys to redact in the logs
+  final Set<String> sensitiveBodyKeys;
 }
