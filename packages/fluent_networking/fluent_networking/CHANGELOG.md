@@ -1,3 +1,7 @@
+## 0.5.4
+
+* **FIX**: Reintroduce `Options` export that was missed in previous merge.
+
 ## 0.5.3
 
 * **FEAT**: Add customizable retry interceptor and test coverage.
