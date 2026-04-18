@@ -1,5 +1,7 @@
 export 'package:dio/dio.dart'
     show
+        DioException,
+        ErrorInterceptorHandler,
         RequestInterceptorHandler,
         RequestOptions,
         Response,
