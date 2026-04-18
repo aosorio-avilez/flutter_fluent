@@ -1,47 +1,20 @@
-## 0.0.1
+## 0.5.3
 
-* Initial version.
+* **FEAT**: Add customizable retry interceptor and test coverage.
+* **FIX**: Implement secure logging with body sanitization and configurable redaction.
+* **FIX**: Add missing dio exports.
+* **PERF**: Optimize logging in networking interceptor.
 
-## 0.0.2
+## 0.5.2
 
-* Version of `fluent_networking_api` was updated to v0.0.3
+* **FIX**: Implement a secure `NetworkingLogInterceptor` that redacts sensitive headers (Authorization, Cookie, Set-Cookie).
+* **FEAT**: Expose `Options` type from `dio` in the public barrel file.
+* **REFACTOR**: Integrate `LoggerApi` for internal package logging instead of `print`/`debugPrint`.
+* **CHORE**: Replace `pretty_dio_logger` dependency with `fluent_logger_api`.
 
-## 0.0.2+1
+## 0.5.1
 
-* Removed sdk flutter dependency
-* Replace `flutter_test` to `test` dependency
-
-## 0.0.3
-
-* Dependency `fluent_sdk` was added
-* Version of `fluent_networking_api` was updated to v0.0.4
-
-## 0.0.4
-
-* Version of `fluent_sdk` was updated to v0.2.0
-
-## 0.1.0
-
-* Upgrade package to flutter version v3.35
-
-## 0.2.0
-
-> **BREAKING CHANGE:** This version migrates response handling to Sealed Classes.
-
-* **FIX:** Interceptors provided in config are now correctly added to Dio.
-* **REFACTOR:** `NetworkingConfig` now requires `enableLog` boolean instead of auto-detecting debug mode.
-* **FEAT:** Defined `ResponseResult` as a `sealed class` for exhaustiveness checking.
-* **REFACTOR:** Renamed/Removed old result classes (`Succeeded`, `Failed`, `Error`) in favor of `Success` and `Failure`.
-
-## 0.3.0
-
-* Upgrade fluent_sdk version to v0.4.0
-
-## 0.4.0
-
-* BREAKING CHANGE: Updated `fluent_sdk` dependency to `^0.5.0`
-* REFACTOR: Renamed `build` method to `onCreate` in `NetworkingModule`
-* CHORE: Recreated example platforms and updated READMEs.
+* **FIX**: Export common dio types and cleanup test imports.
 
 ## 0.5.0
 
@@ -52,6 +25,47 @@
 * Upgrade `dio` dependency to `^5.9.1`
 * Upgrade `equatable` dependency to `^2.0.8`
 
-## 0.5.1
+## 0.4.0
 
-* **FIX**: Export common dio types and cleanup test imports.
+* BREAKING CHANGE: Updated `fluent_sdk` dependency to `^0.5.0`
+* REFACTOR: Renamed `build` method to `onCreate` in `NetworkingModule`
+* CHORE: Recreated example platforms and updated READMEs.
+
+## 0.3.0
+
+* Upgrade fluent_sdk version to v0.4.0
+
+## 0.2.0
+
+> **BREAKING CHANGE:** This version migrates response handling to Sealed Classes.
+
+* **FIX:** Interceptors provided in config are now correctly added to Dio.
+* **REFACTOR:** `NetworkingConfig` now requires `enableLog` boolean instead of auto-detecting debug mode.
+* **FEAT:** Defined `ResponseResult` as a `sealed class` for exhaustiveness checking.
+* **REFACTOR:** Renamed/Removed old result classes (`Succeeded`, `Failed`, `Error`) in favor of `Success` and `Failure`.
+
+## 0.1.0
+
+* Upgrade package to flutter version v3.35
+
+## 0.0.4
+
+* Version of `fluent_sdk` was updated to v0.2.0
+
+## 0.0.3
+
+* Dependency `fluent_sdk` was added
+* Version of `fluent_networking_api` was updated to v0.0.4
+
+## 0.0.2+1
+
+* Removed sdk flutter dependency
+* Replace `flutter_test` to `test` dependency
+
+## 0.0.2
+
+* Version of `fluent_networking_api` was updated to v0.0.3
+
+## 0.0.1
+
+* Initial version.
