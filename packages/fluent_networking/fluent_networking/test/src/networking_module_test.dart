@@ -14,6 +14,8 @@ void main() {
     when(() => config.baseUrl).thenReturn('https://api.test');
     when(() => config.interceptors).thenReturn([]);
     when(() => config.enableLog).thenReturn(true);
+    when(() => config.sensitiveHeaders).thenReturn({});
+    when(() => config.sensitiveBodyKeys).thenReturn({});
     when(() => config.retryConfig).thenReturn(null);
 
     await Fluent.build([NetworkingModule(config: config)]);

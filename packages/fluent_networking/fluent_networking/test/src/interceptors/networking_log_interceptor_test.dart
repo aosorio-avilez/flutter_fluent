@@ -29,7 +29,7 @@ void main() {
     late NetworkingLogInterceptor interceptor;
 
     setUp(() {
-      interceptor = NetworkingLogInterceptor(mockLoggerApi);
+      interceptor = NetworkingLogInterceptor(logger: mockLoggerApi);
     });
 
     test('onRequest should log request and sanitize authorization header', () {
@@ -61,6 +61,96 @@ void main() {
         ),
       );
       verify(() => handler.next(options)).called(1);
+    });
+
+    test('onRequest should log request and sanitize custom header', () {
+      final customInterceptor = NetworkingLogInterceptor(
+        logger: mockLoggerApi,
+        sensitiveHeaders: {'X-Api-Key'},
+      );
+      final options = RequestOptions(
+        path: 'https://api.example.com',
+        headers: {'X-Api-Key': 'my-api-key'},
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      customInterceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('***REDACTED***')),
+        ),
+      ).called(1);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('my-api-key')),
+        ),
+      );
+    });
+
+    test('onRequest should log request and sanitize sensitive body keys', () {
+      final customInterceptor = NetworkingLogInterceptor(
+        logger: mockLoggerApi,
+        sensitiveBodyKeys: {'password', 'token'},
+      );
+      final options = RequestOptions(
+        path: 'https://api.example.com',
+        method: 'POST',
+        data: {
+          'email': 'test@example.com',
+          'password': 'secret-password',
+          'nested': {
+            'token': 'secret-token',
+          },
+        },
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      customInterceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('***REDACTED***')),
+        ),
+      ).called(2);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('secret-password')),
+        ),
+      );
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('secret-token')),
+        ),
+      );
+    });
+
+    test('onResponse should log response and sanitize sensitive body keys', () {
+      final customInterceptor = NetworkingLogInterceptor(
+        logger: mockLoggerApi,
+        sensitiveBodyKeys: {'secret'},
+      );
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(path: 'https://api.example.com'),
+        data: {
+          'public': 'data',
+          'secret': 'hidden',
+        },
+      );
+      final handler = MockResponseInterceptorHandler();
+
+      customInterceptor.onResponse(response, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('***REDACTED***')),
+        ),
+      ).called(1);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('hidden')),
+        ),
+      );
     });
 
     test('onResponse should log response', () {
@@ -211,7 +301,7 @@ void main() {
     });
 
     test('should handle gracefully if LoggerApi is not provided', () async {
-      const noLoggerInterceptor = NetworkingLogInterceptor();
+      final noLoggerInterceptor = NetworkingLogInterceptor(logger: null);
 
       final options = RequestOptions(path: 'https://api.example.com');
       final handler = MockRequestInterceptorHandler();
