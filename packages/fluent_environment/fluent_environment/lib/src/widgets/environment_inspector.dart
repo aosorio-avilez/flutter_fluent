@@ -137,7 +137,9 @@ class EnvironmentInspector extends StatelessWidget {
                                 if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text('Copied "$key" to clipboard'),
+                                      content: Text(
+                                        'Copied "$key" to clipboard',
+                                      ),
                                       duration: const Duration(seconds: 2),
                                     ),
                                   );

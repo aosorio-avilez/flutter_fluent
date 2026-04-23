@@ -119,32 +119,34 @@ void main() {
   });
 
   testWidgets(
-      'should call showInspector on long press when enableInspector is true', (
-    tester,
-  ) async {
-    // Arrange
-    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
-    when(() => mockEnv.name).thenReturn('DEV');
-    when(() => mockEnv.color).thenReturn(Colors.red);
-    when(() => mockEnvApi.environment).thenReturn(mockEnv);
-    when(() => mockEnvApi.showInspector(any())).thenAnswer((_) async {});
+    'should call showInspector on long press when enableInspector is true',
+    (
+      tester,
+    ) async {
+      // Arrange
+      when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+      when(() => mockEnv.name).thenReturn('DEV');
+      when(() => mockEnv.color).thenReturn(Colors.red);
+      when(() => mockEnvApi.environment).thenReturn(mockEnv);
+      when(() => mockEnvApi.showInspector(any())).thenAnswer((_) async {});
 
-    // Act
-    await tester.pumpWidget(
-      const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body: EnvironmentBanner(
-            enableInspector: true,
-            child: Text('Content'),
+      // Act
+      await tester.pumpWidget(
+        const MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+            body: EnvironmentBanner(
+              enableInspector: true,
+              child: Text('Content'),
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    await tester.longPress(find.byType(Banner));
+      await tester.longPress(find.byType(Banner));
 
-    // Assert
-    verify(() => mockEnvApi.showInspector(any())).called(1);
-  });
+      // Assert
+      verify(() => mockEnvApi.showInspector(any())).called(1);
+    },
+  );
 }

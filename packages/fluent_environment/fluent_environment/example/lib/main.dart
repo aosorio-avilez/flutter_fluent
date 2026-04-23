@@ -39,9 +39,7 @@ class HomePage extends StatelessWidget {
     final environment = Fluent.get<EnvironmentApi>().environment;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Fluent Environment'),
-      ),
+      appBar: AppBar(title: const Text('Fluent Environment')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
