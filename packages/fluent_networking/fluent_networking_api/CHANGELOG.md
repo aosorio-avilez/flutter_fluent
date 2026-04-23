@@ -1,23 +1,10 @@
-## 0.0.1
+## 0.3.0
 
-* Initial version.
+* **FEAT**: Add customizable retry interceptor and configuration.
 
-## 0.0.2
+## 0.2.0
 
-* Version of `fluent_sdk` was updated to v0.1.1
-* Public APIs was documented
-
-## 0.0.3
-
-* Removed flutter dependency
-
-## 0.0.3+1
-
-* Removed sdk flutter dependency
-
-## 0.0.4
-
-* Dependency `fluent_sdk` was removed
+* Update version to 0.2.0
 
 ## 0.1.0
 
@@ -26,6 +13,23 @@
 * **FEAT:** Defined `ResponseResult` as a `sealed class` for exhaustiveness checking.
 * **REFACTOR:** Renamed/Removed old result classes (`Succeeded`, `Failed`, `Error`) in favor of `Success` and `Failure`.
 
-## 0.2.0
+## 0.0.4
 
-* Update version to 0.2.0
+* Dependency `fluent_sdk` was removed
+
+## 0.0.3+1
+
+* Removed sdk flutter dependency
+
+## 0.0.3
+
+* Removed flutter dependency
+
+## 0.0.2
+
+* Version of `fluent_sdk` was updated to v0.1.1
+* Public APIs was documented
+
+## 0.0.1
+
+* Initial version.
