@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:fluent_logger_api/fluent_logger_api.dart';
-import 'package:fluent_sdk/fluent_sdk.dart';
 
 /// A secure networking interceptor that logs requests and responses.
 ///
@@ -10,9 +9,22 @@ import 'package:fluent_sdk/fluent_sdk.dart';
 /// [LoggerApi] for output.
 class NetworkingLogInterceptor extends Interceptor {
   /// Creates a [NetworkingLogInterceptor].
-  const NetworkingLogInterceptor();
+  NetworkingLogInterceptor({
+    required LoggerApi? logger,
+    Set<String>? sensitiveHeaders,
+    Set<String>? sensitiveBodyKeys,
+  }) : _logger = logger,
+       _sensitiveHeaders = {
+         ..._defaultSensitiveHeaders,
+         if (sensitiveHeaders != null) ...sensitiveHeaders,
+       },
+       _sensitiveBodyKeys = sensitiveBodyKeys ?? const {};
 
-  static const _sensitiveHeaders = {
+  final LoggerApi? _logger;
+  final Set<String> _sensitiveHeaders;
+  final Set<String> _sensitiveBodyKeys;
+
+  static const _defaultSensitiveHeaders = {
     'authorization',
     'cookie',
     'proxy-authorization',
@@ -115,9 +127,10 @@ class NetworkingLogInterceptor extends Interceptor {
   List<String> _formatHeaders(Map<String, dynamic> headers) {
     return headers.entries.map((entry) {
       final key = entry.key;
-      final value = _sensitiveHeaders.contains(key.toLowerCase())
-          ? '***REDACTED***'
-          : entry.value.toString();
+      final isSensitive = _sensitiveHeaders.any(
+        (sensitive) => sensitive.toLowerCase() == key.toLowerCase(),
+      );
+      final value = isSensitive ? '***REDACTED***' : entry.value.toString();
       return '$key: $value';
     }).toList();
   }
@@ -125,16 +138,36 @@ class NetworkingLogInterceptor extends Interceptor {
   String _formatData(dynamic data) {
     try {
       const encoder = JsonEncoder.withIndent('  ');
-      if (data is String) {
-        final decoded = json.decode(data);
-        return encoder.convert(decoded);
-      } else if (data is Map || data is List) {
-        return encoder.convert(data);
+      final sanitized = _sanitizeBody(data);
+      if (sanitized is String) {
+        final decoded = json.decode(sanitized);
+        return encoder.convert(_sanitizeBody(decoded));
       }
+      return encoder.convert(sanitized);
     } on Object catch (_) {
       // Return raw data if it fails to format as JSON
     }
     return data.toString();
+  }
+
+  dynamic _sanitizeBody(dynamic data) {
+    if (_sensitiveBodyKeys.isEmpty) return data;
+
+    if (data is Map) {
+      return data.map((key, value) {
+        final isSensitive = _sensitiveBodyKeys.any(
+          (sensitiveKey) =>
+              sensitiveKey.toLowerCase() == key.toString().toLowerCase(),
+        );
+        if (isSensitive) {
+          return MapEntry(key, '***REDACTED***');
+        }
+        return MapEntry(key, _sanitizeBody(value));
+      });
+    } else if (data is List) {
+      return data.map(_sanitizeBody).toList();
+    }
+    return data;
   }
 
   int? _getDuration(RequestOptions options) {
@@ -144,28 +177,20 @@ class NetworkingLogInterceptor extends Interceptor {
   }
 
   void _log(String message) {
-    for (final line in message.split('\n')) {
-      try {
-        Fluent.get<LoggerApi>().logInfo(line);
-      } on Object {
-        // Silently ignore if LoggerApi is not registered
-      }
-    }
+    if (_logger == null) return;
+    message.split('\n').forEach(_logger.logInfo);
   }
 
   void _logError(String message, {StackTrace? stackTrace}) {
+    if (_logger == null) return;
     final lines = message.split('\n');
     for (var i = 0; i < lines.length; i++) {
       final line = lines[i];
       final isLastLine = i == lines.length - 1;
-      try {
-        Fluent.get<LoggerApi>().logError(
-          line,
-          stackTrace: isLastLine ? stackTrace : null,
-        );
-      } on Object {
-        // Silently ignore if LoggerApi is not registered
-      }
+      _logger.logError(
+        line,
+        stackTrace: isLastLine ? stackTrace : null,
+      );
     }
   }
 }
