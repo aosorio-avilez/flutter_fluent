@@ -9,5 +9,10 @@ abstract class EnvironmentApi {
   Environment get environment;
 
   /// Shows the environment inspector.
-  Future<void> showInspector(BuildContext context);
+  Future<void> showInspector(
+    BuildContext context, {
+    String? configValuesLabel,
+    String? noValuesLabel,
+    GlobalKey<NavigatorState>? navigatorKey,
+  });
 }

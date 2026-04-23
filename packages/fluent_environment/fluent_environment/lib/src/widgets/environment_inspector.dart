@@ -1,5 +1,6 @@
 import 'package:fluent_environment_api/fluent_environment_api.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// A widget that displays the details of the current environment.
 ///
@@ -9,11 +10,19 @@ class EnvironmentInspector extends StatelessWidget {
   /// Creates an [EnvironmentInspector].
   const EnvironmentInspector({
     required this.environment,
+    this.configValuesLabel = 'Configuration Values',
+    this.noValuesLabel = 'No configuration values defined.',
     super.key,
   });
 
   /// The environment to inspect.
   final Environment environment;
+
+  /// The label for the configuration values section.
+  final String configValuesLabel;
+
+  /// The message to display when no configuration values are defined.
+  final String noValuesLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -67,17 +76,17 @@ class EnvironmentInspector extends StatelessWidget {
             ),
             const Divider(height: 24),
             Text(
-              'Configuration Values',
+              configValuesLabel,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 16),
             if (environment.values.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24),
                 child: Center(
-                  child: Text('No configuration values defined.'),
+                  child: Text(noValuesLabel),
                 ),
               )
             else
@@ -90,25 +99,51 @@ class EnvironmentInspector extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final key = environment.values.keys.elementAt(index);
                     final value = environment.values[key];
+                    final stringValue = value ?? 'N/A';
+
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
                         children: [
-                          Text(
-                            key,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: colorScheme.secondary,
-                              fontWeight: FontWeight.bold,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  key,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: colorScheme.secondary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                SelectableText(
+                                  stringValue,
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    fontFamily: 'monospace',
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 2),
-                          SelectableText(
-                            value ?? 'N/A',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontFamily: 'monospace',
+                          if (value != null)
+                            IconButton(
+                              icon: const Icon(Icons.copy_all, size: 20),
+                              tooltip: 'Copy to clipboard',
+                              onPressed: () async {
+                                await Clipboard.setData(
+                                  ClipboardData(text: stringValue),
+                                );
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Copied "$key" to clipboard'),
+                                      duration: const Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
+                              },
                             ),
-                          ),
                         ],
                       ),
                     );

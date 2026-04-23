@@ -11,12 +11,23 @@ class EnvironmentApiImpl extends EnvironmentApi {
   Environment get environment => _environment;
 
   @override
-  Future<void> showInspector(BuildContext context) {
+  Future<void> showInspector(
+    BuildContext context, {
+    String? configValuesLabel,
+    String? noValuesLabel,
+    GlobalKey<NavigatorState>? navigatorKey,
+  }) {
+    final effectiveContext = navigatorKey?.currentContext ?? context;
+
     return showModalBottomSheet<void>(
-      context: context,
+      context: effectiveContext,
       isScrollControlled: true,
       builder: (context) {
-        return EnvironmentInspector(environment: _environment);
+        return EnvironmentInspector(
+          environment: _environment,
+          configValuesLabel: configValuesLabel ?? 'Configuration Values',
+          noValuesLabel: noValuesLabel ?? 'No configuration values defined.',
+        );
       },
     );
   }

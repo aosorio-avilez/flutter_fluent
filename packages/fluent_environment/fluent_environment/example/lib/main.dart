@@ -12,12 +12,18 @@ void main() async {
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
+  static final navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Fluent Environment Example',
+      navigatorKey: navigatorKey,
       builder: (context, child) => EnvironmentBanner(
         enableInspector: true,
+        configValuesLabel: 'Custom Config Label',
+        noValuesLabel: 'Custom No Values Message',
+        navigatorKey: navigatorKey,
         child: child!,
       ),
       home: const HomePage(),
@@ -49,7 +55,11 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {
-                Fluent.get<EnvironmentApi>().showInspector(context);
+                Fluent.get<EnvironmentApi>().showInspector(
+                  context,
+                  configValuesLabel: 'Manual Config Label',
+                  noValuesLabel: 'Manual No Values Message',
+                );
               },
               child: const Text("Show Inspector Manually"),
             ),
