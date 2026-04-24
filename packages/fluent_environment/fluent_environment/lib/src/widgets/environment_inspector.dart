@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fluent_environment_api/fluent_environment_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -131,8 +133,10 @@ class EnvironmentInspector extends StatelessWidget {
                               icon: const Icon(Icons.copy_all, size: 20),
                               tooltip: 'Copy to clipboard',
                               onPressed: () {
-                                Clipboard.setData(
-                                  ClipboardData(text: stringValue),
+                                unawaited(
+                                  Clipboard.setData(
+                                    ClipboardData(text: stringValue),
+                                  ),
                                 );
                                 if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
