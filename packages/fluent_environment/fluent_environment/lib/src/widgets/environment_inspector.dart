@@ -101,7 +101,13 @@ class EnvironmentInspector extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final key = environment.values.keys.elementAt(index);
                     final value = environment.values[key];
-                    final stringValue = value ?? 'N/A';
+                    final isSensitive = environment.sensitiveKeys.any(
+                      (sensitiveKey) =>
+                          sensitiveKey.toLowerCase() == key.toLowerCase(),
+                    );
+                    final stringValue = isSensitive
+                        ? '***REDACTED***'
+                        : (value ?? 'N/A');
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -128,7 +134,7 @@ class EnvironmentInspector extends StatelessWidget {
                               ],
                             ),
                           ),
-                          if (value != null)
+                          if (value != null && !isSensitive)
                             IconButton(
                               icon: const Icon(Icons.copy_all, size: 20),
                               tooltip: 'Copy to clipboard',

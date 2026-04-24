@@ -17,6 +17,9 @@ abstract class Environment {
 
   /// A map of configuration values (API Keys, Base URLs, etc.).
   Map<String, String> get values;
+
+  /// A set of keys that should be redacted in logs or UI.
+  Set<String> get sensitiveKeys => const {};
 }
 
 /// Convenience extensions to avoid verbose type checks.
