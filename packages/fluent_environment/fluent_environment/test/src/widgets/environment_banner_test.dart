@@ -3,13 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../mocks/environment_api_mock.dart';
+
 class MockEnvironment extends Mock implements Environment {}
 
+class BuildContextFake extends Fake implements BuildContext {}
+
 void main() {
+  setUpAll(() {
+    registerFallbackValue(BuildContextFake());
+  });
+
   late MockEnvironment mockEnv;
+  late EnvironmentApiMock mockEnvApi;
 
   setUp(() {
     mockEnv = MockEnvironment();
+    mockEnvApi = EnvironmentApiMock();
+
+    Fluent.mock<EnvironmentApi>(mockEnvApi);
+  });
+
+  tearDown(() async {
+    await Fluent.reset();
   });
 
   testWidgets('should display banner when environment is NOT prod', (
@@ -101,4 +117,36 @@ void main() {
     expect(find.byType(Banner), findsNothing);
     expect(find.text('Content'), findsOneWidget);
   });
+
+  testWidgets(
+    'should call showInspector on long press when enableInspector is true',
+    (
+      tester,
+    ) async {
+      // Arrange
+      when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+      when(() => mockEnv.name).thenReturn('DEV');
+      when(() => mockEnv.color).thenReturn(Colors.red);
+      when(() => mockEnvApi.environment).thenReturn(mockEnv);
+      when(() => mockEnvApi.showInspector(any())).thenAnswer((_) async {});
+
+      // Act
+      await tester.pumpWidget(
+        const MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+            body: EnvironmentBanner(
+              enableInspector: true,
+              child: Text('Content'),
+            ),
+          ),
+        ),
+      );
+
+      await tester.longPress(find.byType(Banner));
+
+      // Assert
+      verify(() => mockEnvApi.showInspector(any())).called(1);
+    },
+  );
 }

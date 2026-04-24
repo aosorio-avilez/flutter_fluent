@@ -12,18 +12,57 @@ void main() async {
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
+  static final navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
-    // Return environment banner to display the current environment
-
-    // Return the current environment
-    final environment = Fluent.get<EnvironmentApi>().environment;
-
     return MaterialApp(
       title: 'Fluent Environment Example',
-      builder: (context, child) => EnvironmentBanner(child: child!),
-      home: Scaffold(
-        body: Center(child: Text("Environment: ${environment.name}")),
+      navigatorKey: navigatorKey,
+      builder: (context, child) => EnvironmentBanner(
+        enableInspector: true,
+        configValuesLabel: 'Custom Config Label',
+        noValuesLabel: 'Custom No Values Message',
+        navigatorKey: navigatorKey,
+        child: child!,
+      ),
+      home: const HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final environment = Fluent.get<EnvironmentApi>().environment;
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Fluent Environment')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Environment: ${environment.name}"),
+            const SizedBox(height: 16),
+            const Text(
+              "Long press the environment banner to see the inspector",
+              style: TextStyle(color: Colors.grey),
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton(
+              onPressed: () {
+                Fluent.get<EnvironmentApi>().showInspector(
+                  context,
+                  configValuesLabel: 'Manual Config Label',
+                  noValuesLabel: 'Manual No Values Message',
+                );
+              },
+              child: const Text("Show Inspector Manually"),
+            ),
+          ],
+        ),
       ),
     );
   }
