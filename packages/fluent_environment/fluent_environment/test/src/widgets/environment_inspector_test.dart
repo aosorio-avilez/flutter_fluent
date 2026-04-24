@@ -91,5 +91,8 @@ void main() {
     // Assert
     expect(find.byType(SnackBar), findsOneWidget);
     expect(find.text('Copied "key" to clipboard'), findsOneWidget);
+
+    final iconButton = tester.widget<IconButton>(find.byType(IconButton));
+    expect(iconButton.tooltip, 'Copy "key" to clipboard');
   });
 }
