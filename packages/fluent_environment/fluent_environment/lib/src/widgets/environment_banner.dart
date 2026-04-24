@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fluent_environment_api/fluent_environment_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/material.dart';
@@ -87,11 +89,13 @@ class EnvironmentBanner extends StatelessWidget {
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onLongPress: () {
-                  envApi.showInspector(
-                    context,
-                    configValuesLabel: configValuesLabel,
-                    noValuesLabel: noValuesLabel,
-                    navigatorKey: navigatorKey,
+                  unawaited(
+                    envApi.showInspector(
+                      context,
+                      configValuesLabel: configValuesLabel,
+                      noValuesLabel: noValuesLabel,
+                      navigatorKey: navigatorKey,
+                    ),
                   );
                 },
                 child: const SizedBox(
