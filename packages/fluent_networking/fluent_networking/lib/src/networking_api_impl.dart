@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:fluent_networking/fluent_networking.dart';
+import 'package:fluent_networking/src/interceptors/networking_cache_interceptor.dart';
 import 'package:fluent_networking/src/interceptors/networking_retry_interceptor.dart';
 
 class NetworkingApiImpl extends NetworkingApi {
@@ -12,11 +13,12 @@ class NetworkingApiImpl extends NetworkingApi {
     String url, {
     Options? options,
     RetryConfig? retryConfig,
+    CacheConfig? cacheConfig,
   }) {
     return _execute(
       () => _httpClient.get<dynamic>(
         url,
-        options: _mergeOptions(options, retryConfig),
+        options: _mergeOptions(options, retryConfig, cacheConfig),
       ),
     );
   }
@@ -27,12 +29,13 @@ class NetworkingApiImpl extends NetworkingApi {
     Object? body,
     Options? options,
     RetryConfig? retryConfig,
+    CacheConfig? cacheConfig,
   }) {
     return _execute(
       () => _httpClient.post<dynamic>(
         url,
         data: body,
-        options: _mergeOptions(options, retryConfig),
+        options: _mergeOptions(options, retryConfig, cacheConfig),
       ),
     );
   }
@@ -43,12 +46,13 @@ class NetworkingApiImpl extends NetworkingApi {
     Object? body,
     Options? options,
     RetryConfig? retryConfig,
+    CacheConfig? cacheConfig,
   }) {
     return _execute(
       () => _httpClient.put<dynamic>(
         url,
         data: body,
-        options: _mergeOptions(options, retryConfig),
+        options: _mergeOptions(options, retryConfig, cacheConfig),
       ),
     );
   }
@@ -59,12 +63,13 @@ class NetworkingApiImpl extends NetworkingApi {
     Object? body,
     Options? options,
     RetryConfig? retryConfig,
+    CacheConfig? cacheConfig,
   }) {
     return _execute(
       () => _httpClient.patch<dynamic>(
         url,
         data: body,
-        options: _mergeOptions(options, retryConfig),
+        options: _mergeOptions(options, retryConfig, cacheConfig),
       ),
     );
   }
@@ -75,22 +80,34 @@ class NetworkingApiImpl extends NetworkingApi {
     Object? body,
     Options? options,
     RetryConfig? retryConfig,
+    CacheConfig? cacheConfig,
   }) {
     return _execute(
       () => _httpClient.delete<dynamic>(
         url,
         data: body,
-        options: _mergeOptions(options, retryConfig),
+        options: _mergeOptions(options, retryConfig, cacheConfig),
       ),
     );
   }
 
-  Options _mergeOptions(Options? options, RetryConfig? retryConfig) {
-    if (retryConfig == null) return options ?? Options();
+  Options _mergeOptions(
+    Options? options,
+    RetryConfig? retryConfig,
+    CacheConfig? cacheConfig,
+  ) {
+    if (retryConfig == null && cacheConfig == null) return options ?? Options();
 
     final effectiveOptions = options ?? Options();
     final extra = Map<String, dynamic>.from(effectiveOptions.extra ?? {});
-    extra[NetworkingRetryInterceptor.extraRetryConfig] = retryConfig;
+
+    if (retryConfig != null) {
+      extra[NetworkingRetryInterceptor.extraRetryConfig] = retryConfig;
+    }
+
+    if (cacheConfig != null) {
+      extra[NetworkingCacheInterceptor.extraCacheConfig] = cacheConfig;
+    }
 
     return effectiveOptions.copyWith(extra: extra);
   }
