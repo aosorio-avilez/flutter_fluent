@@ -1,5 +1,6 @@
 import 'package:fluent_environment/fluent_environment.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -61,5 +62,34 @@ void main() {
     expect(find.text('Staging'), findsOneWidget);
     expect(find.text('STG'), findsOneWidget);
     expect(find.text('No configuration values defined.'), findsOneWidget);
+  });
+
+  testWidgets('should copy value to clipboard when copy button is pressed',
+      (tester) async {
+    // Arrange
+    when(() => mockEnv.name).thenReturn('Dev');
+    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+    when(() => mockEnv.color).thenReturn(Colors.blue);
+    when(() => mockEnv.values).thenReturn({'key': 'value'});
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: EnvironmentInspector(environment: mockEnv),
+        ),
+      ),
+    );
+
+    // Act
+    expect(find.byIcon(Icons.copy_all), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.copy_all));
+    
+    // Trigger the async onPressed and wait for the snackbar animation
+    await tester.pump(); 
+    await tester.pump(const Duration(milliseconds: 500));
+
+    // Assert
+    expect(find.byType(SnackBar), findsOneWidget);
+    expect(find.text('Copied "key" to clipboard'), findsOneWidget);
   });
 }

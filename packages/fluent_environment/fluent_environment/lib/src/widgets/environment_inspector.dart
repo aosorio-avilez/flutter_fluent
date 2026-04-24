@@ -130,8 +130,8 @@ class EnvironmentInspector extends StatelessWidget {
                             IconButton(
                               icon: const Icon(Icons.copy_all, size: 20),
                               tooltip: 'Copy to clipboard',
-                              onPressed: () async {
-                                await Clipboard.setData(
+                              onPressed: () {
+                                Clipboard.setData(
                                   ClipboardData(text: stringValue),
                                 );
                                 if (context.mounted) {
