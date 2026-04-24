@@ -64,8 +64,9 @@ void main() {
     expect(find.text('No configuration values defined.'), findsOneWidget);
   });
 
-  testWidgets('should copy value to clipboard when copy button is pressed',
-      (tester) async {
+  testWidgets('should copy value to clipboard when copy button is pressed', (
+    tester,
+  ) async {
     // Arrange
     when(() => mockEnv.name).thenReturn('Dev');
     when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
@@ -83,9 +84,9 @@ void main() {
     // Act
     expect(find.byIcon(Icons.copy_all), findsOneWidget);
     await tester.tap(find.byIcon(Icons.copy_all));
-    
+
     // Trigger the async onPressed and wait for the snackbar animation
-    await tester.pump(); 
+    await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
 
     // Assert

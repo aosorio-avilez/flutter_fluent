@@ -20,42 +20,45 @@ void main() {
     expect(api.environment, equals(mockEnv));
   });
 
-  testWidgets('showInspector should display EnvironmentInspector in bottom sheet',
-      (tester) async {
-    // Arrange
-    final mockEnv = MockEnvironment();
-    when(() => mockEnv.name).thenReturn('Test');
-    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
-    when(() => mockEnv.color).thenReturn(Colors.red);
-    when(() => mockEnv.values).thenReturn({});
+  testWidgets(
+    'showInspector should display EnvironmentInspector in bottom sheet',
+    (tester) async {
+      // Arrange
+      final mockEnv = MockEnvironment();
+      when(() => mockEnv.name).thenReturn('Test');
+      when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+      when(() => mockEnv.color).thenReturn(Colors.red);
+      when(() => mockEnv.values).thenReturn({});
 
-    final api = EnvironmentApiImpl(mockEnv);
+      final api = EnvironmentApiImpl(mockEnv);
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Builder(
-            builder: (context) => ElevatedButton(
-              onPressed: () => api.showInspector(context),
-              child: const Text('Show'),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () => api.showInspector(context),
+                child: const Text('Show'),
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
 
-    // Act
-    await tester.tap(find.text('Show'));
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
+      // Act
+      await tester.tap(find.text('Show'));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
 
-    // Assert
-    expect(find.byType(EnvironmentInspector), findsOneWidget);
-    expect(find.text('Test'), findsOneWidget);
-  });
+      // Assert
+      expect(find.byType(EnvironmentInspector), findsOneWidget);
+      expect(find.text('Test'), findsOneWidget);
+    },
+  );
 
-  testWidgets('showInspector should use navigatorKey if provided',
-      (tester) async {
+  testWidgets('showInspector should use navigatorKey if provided', (
+    tester,
+  ) async {
     // Arrange
     final mockEnv = MockEnvironment();
     when(() => mockEnv.name).thenReturn('Test');
