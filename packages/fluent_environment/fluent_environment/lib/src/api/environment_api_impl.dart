@@ -22,6 +22,7 @@ class EnvironmentApiImpl extends EnvironmentApi {
     return showModalBottomSheet<void>(
       context: effectiveContext,
       isScrollControlled: true,
+      showDragHandle: true,
       builder: (context) {
         return EnvironmentInspector(
           environment: _environment,

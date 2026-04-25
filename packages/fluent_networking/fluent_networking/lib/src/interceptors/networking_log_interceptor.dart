@@ -16,9 +16,11 @@ class NetworkingLogInterceptor extends Interceptor {
   }) : _logger = logger,
        _sensitiveHeaders = {
          ..._defaultSensitiveHeaders,
-         if (sensitiveHeaders != null) ...sensitiveHeaders,
+         if (sensitiveHeaders != null)
+           ...sensitiveHeaders.map((e) => e.toLowerCase()),
        },
-       _sensitiveBodyKeys = sensitiveBodyKeys ?? const {};
+       _sensitiveBodyKeys =
+           sensitiveBodyKeys?.map((e) => e.toLowerCase()).toSet() ?? const {};
 
   final LoggerApi? _logger;
   final Set<String> _sensitiveHeaders;
@@ -32,6 +34,8 @@ class NetworkingLogInterceptor extends Interceptor {
   };
 
   static const _extraStartTime = 'networking_start_time';
+
+  static const _encoder = JsonEncoder.withIndent('  ');
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
@@ -52,7 +56,7 @@ class NetworkingLogInterceptor extends Interceptor {
       '└──────────────────────────────────────────────────────────────────',
     ];
 
-    _log(output.join('\n'));
+    _log(output);
 
     super.onRequest(options, handler);
   }
@@ -86,7 +90,7 @@ class NetworkingLogInterceptor extends Interceptor {
       '└──────────────────────────────────────────────────────────────────',
     ];
 
-    _log(output.join('\n'));
+    _log(output);
 
     super.onResponse(response, handler);
   }
@@ -119,31 +123,28 @@ class NetworkingLogInterceptor extends Interceptor {
       '└──────────────────────────────────────────────────────────────────',
     ];
 
-    _logError(output.join('\n'), stackTrace: err.stackTrace);
+    _logError(output, stackTrace: err.stackTrace);
 
     super.onError(err, handler);
   }
 
-  List<String> _formatHeaders(Map<String, dynamic> headers) {
+  Iterable<String> _formatHeaders(Map<String, dynamic> headers) {
     return headers.entries.map((entry) {
       final key = entry.key;
-      final isSensitive = _sensitiveHeaders.any(
-        (sensitive) => sensitive.toLowerCase() == key.toLowerCase(),
-      );
+      final isSensitive = _sensitiveHeaders.contains(key.toLowerCase());
       final value = isSensitive ? '***REDACTED***' : entry.value.toString();
       return '$key: $value';
-    }).toList();
+    });
   }
 
   String _formatData(dynamic data) {
     try {
-      const encoder = JsonEncoder.withIndent('  ');
       final sanitized = _sanitizeBody(data);
       if (sanitized is String) {
         final decoded = json.decode(sanitized);
-        return encoder.convert(_sanitizeBody(decoded));
+        return _encoder.convert(_sanitizeBody(decoded));
       }
-      return encoder.convert(sanitized);
+      return _encoder.convert(sanitized);
     } on Object catch (_) {
       // Return raw data if it fails to format as JSON
     }
@@ -155,9 +156,8 @@ class NetworkingLogInterceptor extends Interceptor {
 
     if (data is Map) {
       return data.map((key, value) {
-        final isSensitive = _sensitiveBodyKeys.any(
-          (sensitiveKey) =>
-              sensitiveKey.toLowerCase() == key.toString().toLowerCase(),
+        final isSensitive = _sensitiveBodyKeys.contains(
+          key.toString().toLowerCase(),
         );
         if (isSensitive) {
           return MapEntry(key, '***REDACTED***');
@@ -176,17 +176,17 @@ class NetworkingLogInterceptor extends Interceptor {
     return DateTime.now().millisecondsSinceEpoch - startTime;
   }
 
-  void _log(String message) {
+  void _log(Iterable<String> lines) {
     if (_logger == null) return;
-    message.split('\n').forEach(_logger.logInfo);
+    lines.forEach(_logger.logInfo);
   }
 
-  void _logError(String message, {StackTrace? stackTrace}) {
+  void _logError(Iterable<String> lines, {StackTrace? stackTrace}) {
     if (_logger == null) return;
-    final lines = message.split('\n');
-    for (var i = 0; i < lines.length; i++) {
-      final line = lines[i];
-      final isLastLine = i == lines.length - 1;
+    final list = lines.toList();
+    for (var i = 0; i < list.length; i++) {
+      final line = list[i];
+      final isLastLine = i == list.length - 1;
       _logger.logError(
         line,
         stackTrace: isLastLine ? stackTrace : null,
