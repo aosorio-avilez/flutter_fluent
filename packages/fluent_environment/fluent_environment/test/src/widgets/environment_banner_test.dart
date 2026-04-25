@@ -149,4 +149,91 @@ void main() {
       verify(() => mockEnvApi.showInspector(any())).called(1);
     },
   );
+
+  testWidgets('should apply custom text style', (tester) async {
+    // Arrange
+    const textStyle = TextStyle(fontSize: 20, color: Colors.blue);
+    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+    when(() => mockEnv.name).thenReturn('DEV');
+    when(() => mockEnv.color).thenReturn(Colors.red);
+
+    // Act
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: EnvironmentBanner(
+            environment: mockEnv,
+            textStyle: textStyle,
+            child: const Text('Content'),
+          ),
+        ),
+      ),
+    );
+
+    // Assert
+    final bannerWidget = tester.widget<Banner>(find.byType(Banner));
+    expect(bannerWidget.textStyle, textStyle);
+  });
+
+  testWidgets('should NOT override child directionality', (tester) async {
+    // Arrange
+    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+    when(() => mockEnv.name).thenReturn('DEV');
+    when(() => mockEnv.color).thenReturn(Colors.red);
+
+    TextDirection? capturedDirection;
+
+    // Act
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
+            body: EnvironmentBanner(
+              environment: mockEnv,
+              child: Builder(
+                builder: (context) {
+                  capturedDirection = Directionality.of(context);
+                  return const Text('Content');
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // Assert
+    expect(capturedDirection, TextDirection.rtl);
+  });
+
+  testWidgets('should respect ambient directionality', (tester) async {
+    // Arrange
+    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+    when(() => mockEnv.name).thenReturn('DEV');
+    when(() => mockEnv.color).thenReturn(Colors.red);
+
+    // Act
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
+            body: EnvironmentBanner(
+              environment: mockEnv,
+              child: const Text('Content'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // Assert
+    final bannerWidget = tester.widget<Banner>(find.byType(Banner));
+    expect(bannerWidget.textDirection, TextDirection.rtl);
+    expect(bannerWidget.layoutDirection, TextDirection.rtl);
+  });
 }
