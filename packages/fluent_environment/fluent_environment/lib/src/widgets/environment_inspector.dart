@@ -30,6 +30,9 @@ class EnvironmentInspector extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final sensitiveKeys = environment.sensitiveKeys
+        .map((e) => e.toLowerCase())
+        .toSet();
 
     return SafeArea(
       child: Container(
@@ -101,9 +104,8 @@ class EnvironmentInspector extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final key = environment.values.keys.elementAt(index);
                     final value = environment.values[key];
-                    final isSensitive = environment.sensitiveKeys.any(
-                      (sensitiveKey) =>
-                          sensitiveKey.toLowerCase() == key.toLowerCase(),
+                    final isSensitive = sensitiveKeys.contains(
+                      key.toLowerCase(),
                     );
                     final stringValue = isSensitive
                         ? '***REDACTED***'
