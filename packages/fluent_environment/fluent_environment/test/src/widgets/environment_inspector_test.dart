@@ -10,6 +10,7 @@ void main() {
 
   setUp(() {
     mockEnv = MockEnvironment();
+    when(() => mockEnv.sensitiveKeys).thenReturn({});
   });
 
   testWidgets('should display environment details', (tester) async {
@@ -94,5 +95,38 @@ void main() {
 
     final iconButton = tester.widget<IconButton>(find.byType(IconButton));
     expect(iconButton.tooltip, 'Copy "key" to clipboard');
+  });
+
+  testWidgets('should redact sensitive keys and hide copy button', (
+    tester,
+  ) async {
+    // Arrange
+    when(() => mockEnv.name).thenReturn('Dev');
+    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+    when(() => mockEnv.color).thenReturn(Colors.blue);
+    when(() => mockEnv.values).thenReturn({
+      'public_key': 'public_123',
+      'secret_key': 'secret_456',
+    });
+    when(() => mockEnv.sensitiveKeys).thenReturn({'secret_key'});
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: EnvironmentInspector(environment: mockEnv),
+        ),
+      ),
+    );
+
+    // Assert
+    expect(find.text('public_key'), findsOneWidget);
+    expect(find.text('public_123'), findsOneWidget);
+    expect(find.text('secret_key'), findsOneWidget);
+    expect(find.text('secret_456'), findsNothing);
+    expect(find.text('***REDACTED***'), findsOneWidget);
+
+    // Copy button should exist for public_key but not for secret_key
+    // In this case, we expect only one copy button in the entire widget
+    expect(find.byIcon(Icons.copy_all), findsOneWidget);
   });
 }
