@@ -75,8 +75,8 @@ class EnvironmentBanner extends StatelessWidget {
       color: env.color,
       message: env.name,
       location: location,
-      textDirection: TextDirection.ltr,
-      layoutDirection: TextDirection.ltr,
+      textDirection: Directionality.maybeOf(context) ?? TextDirection.ltr,
+      layoutDirection: Directionality.maybeOf(context) ?? TextDirection.ltr,
       textStyle:
           textStyle ??
           const TextStyle(
