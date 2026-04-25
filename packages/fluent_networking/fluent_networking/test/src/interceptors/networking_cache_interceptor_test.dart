@@ -101,8 +101,9 @@ void main() {
 
     final forceOptions = options.copyWith(
       extra: {
-        NetworkingCacheInterceptor.extraCacheConfig:
-            const CacheConfig(forceRefresh: true),
+        NetworkingCacheInterceptor.extraCacheConfig: const CacheConfig(
+          forceRefresh: true,
+        ),
       },
     );
 

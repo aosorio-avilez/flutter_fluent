@@ -34,9 +34,7 @@ class _MainAppState extends State<MainApp> {
       _future = networkingApi.get<Map<String, dynamic>>(
         "/pokemon",
         cacheConfig: _useCache
-            ? const CacheConfig(
-                duration: Duration(minutes: 1),
-              )
+            ? const CacheConfig(duration: Duration(minutes: 1))
             : const CacheConfig(forceRefresh: true),
       );
     });
@@ -84,35 +82,35 @@ class _MainAppState extends State<MainApp> {
 
             return switch (result) {
               Success(data: final pokemonData) => _PokemonList(
-                  data: pokemonData,
-                  onRefresh: _fetchPokemon,
-                ),
+                data: pokemonData,
+                onRefresh: _fetchPokemon,
+              ),
               Failure(error: final httpError) => Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.error_outline,
-                          size: 48,
-                          color: Colors.red,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Error ${httpError.code ?? 'Unknown'}",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(httpError.message),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: _fetchPokemon,
-                          child: const Text("Retry"),
-                        ),
-                      ],
-                    ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.error_outline,
+                        size: 48,
+                        color: Colors.red,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Error ${httpError.code ?? 'Unknown'}",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(httpError.message),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: _fetchPokemon,
+                        child: const Text("Retry"),
+                      ),
+                    ],
                   ),
                 ),
+              ),
             };
           },
         ),
