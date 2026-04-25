@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:fluent_networking/fluent_networking.dart';
 
@@ -6,6 +8,10 @@ class NetworkingCacheInterceptor extends Interceptor {
   /// The key used to store the cache configuration in [RequestOptions.extra].
   static const extraCacheConfig = 'networking_cache_config';
 
+  /// The maximum number of entries to keep in the cache.
+  static const _maxEntries = 100;
+
+  /// In-memory cache using a LinkedHashMap to maintain insertion order for LRU.
   final Map<String, _CacheEntry> _cache = {};
 
   @override
@@ -25,11 +31,15 @@ class NetworkingCacheInterceptor extends Interceptor {
 
     if (entry != null) {
       if (entry.isValid) {
+        // Move to end to mark as recently used
+        _cache.remove(key);
+        _cache[key] = entry;
+
         return handler.resolve(
           Response(
             requestOptions: options,
             data: entry.data,
-            statusCode: 200,
+            statusCode: entry.statusCode,
             statusMessage: 'OK (Cached)',
           ),
         );
@@ -48,11 +58,20 @@ class NetworkingCacheInterceptor extends Interceptor {
   ) {
     final cacheConfig =
         response.requestOptions.extra[extraCacheConfig] as CacheConfig?;
+    final statusCode = response.statusCode ?? 0;
+    final isSuccess = statusCode >= 200 && statusCode < 300;
 
-    if (cacheConfig != null && response.statusCode == 200) {
+    if (cacheConfig != null && isSuccess) {
       final key = cacheConfig.key ?? _buildKey(response.requestOptions);
+
+      // Evict oldest entry if limit reached
+      if (_cache.length >= _maxEntries && !_cache.containsKey(key)) {
+        _cache.remove(_cache.keys.first);
+      }
+
       _cache[key] = _CacheEntry(
         data: response.data,
+        statusCode: statusCode,
         expiry: DateTime.now().add(cacheConfig.duration),
       );
     }
@@ -61,14 +80,32 @@ class NetworkingCacheInterceptor extends Interceptor {
   }
 
   String _buildKey(RequestOptions options) {
-    return '${options.method}:${options.uri}:${options.data}';
+    final data = options.data;
+    String? dataString;
+
+    try {
+      if (data is Map || data is List) {
+        dataString = jsonEncode(data);
+      } else {
+        dataString = data?.toString();
+      }
+    } on Object catch (_) {
+      dataString = data.toString();
+    }
+
+    return '${options.method}:${options.uri}:$dataString';
   }
 }
 
 class _CacheEntry {
-  _CacheEntry({required this.data, required this.expiry});
+  _CacheEntry({
+    required this.data,
+    required this.statusCode,
+    required this.expiry,
+  });
 
   final dynamic data;
+  final int statusCode;
   final DateTime expiry;
 
   bool get isValid => DateTime.now().isBefore(expiry);
