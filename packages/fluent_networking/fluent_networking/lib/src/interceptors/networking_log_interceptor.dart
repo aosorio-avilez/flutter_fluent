@@ -156,8 +156,9 @@ class NetworkingLogInterceptor extends Interceptor {
 
     if (data is Map) {
       return data.map((key, value) {
-        final isSensitive =
-            _sensitiveBodyKeys.contains(key.toString().toLowerCase());
+        final isSensitive = _sensitiveBodyKeys.contains(
+          key.toString().toLowerCase(),
+        );
         if (isSensitive) {
           return MapEntry(key, '***REDACTED***');
         }
@@ -180,11 +181,12 @@ class NetworkingLogInterceptor extends Interceptor {
     lines.forEach(_logger.logInfo);
   }
 
-  void _logError(List<String> lines, {StackTrace? stackTrace}) {
+  void _logError(Iterable<String> lines, {StackTrace? stackTrace}) {
     if (_logger == null) return;
-    for (var i = 0; i < lines.length; i++) {
-      final line = lines[i];
-      final isLastLine = i == lines.length - 1;
+    final list = lines.toList();
+    for (var i = 0; i < list.length; i++) {
+      final line = list[i];
+      final isLastLine = i == list.length - 1;
       _logger.logError(
         line,
         stackTrace: isLastLine ? stackTrace : null,
