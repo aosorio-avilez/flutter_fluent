@@ -29,6 +29,7 @@ void main() {
       when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
       when(() => mockEnv.color).thenReturn(Colors.red);
       when(() => mockEnv.values).thenReturn({});
+      when(() => mockEnv.sensitiveKeys).thenReturn({});
 
       final api = EnvironmentApiImpl(mockEnv);
 
@@ -65,6 +66,7 @@ void main() {
     when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
     when(() => mockEnv.color).thenReturn(Colors.red);
     when(() => mockEnv.values).thenReturn({});
+    when(() => mockEnv.sensitiveKeys).thenReturn({});
 
     final navigatorKey = GlobalKey<NavigatorState>();
     final api = EnvironmentApiImpl(mockEnv);
