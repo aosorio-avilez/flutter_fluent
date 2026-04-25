@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:fluent_networking_api/src/cache_config.dart';
 import 'package:fluent_networking_api/src/response_result.dart';
 import 'package:fluent_networking_api/src/retry_config.dart';
 
@@ -10,6 +11,7 @@ abstract class NetworkingApi {
     String url, {
     Options? options,
     RetryConfig? retryConfig,
+    CacheConfig? cacheConfig,
   });
 
   /// Makes a POST request to the specific url
@@ -19,6 +21,7 @@ abstract class NetworkingApi {
     Object? body,
     Options? options,
     RetryConfig? retryConfig,
+    CacheConfig? cacheConfig,
   });
 
   /// Makes a PATCH request to the specific url
@@ -28,6 +31,7 @@ abstract class NetworkingApi {
     Object? body,
     Options? options,
     RetryConfig? retryConfig,
+    CacheConfig? cacheConfig,
   });
 
   /// Makes a PUT request to the specific url
@@ -37,6 +41,7 @@ abstract class NetworkingApi {
     Object? body,
     Options? options,
     RetryConfig? retryConfig,
+    CacheConfig? cacheConfig,
   });
 
   /// Makes a DELETE request to the specific url
@@ -46,5 +51,6 @@ abstract class NetworkingApi {
     Object? body,
     Options? options,
     RetryConfig? retryConfig,
+    CacheConfig? cacheConfig,
   });
 }
