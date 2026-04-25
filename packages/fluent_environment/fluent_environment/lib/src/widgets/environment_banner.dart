@@ -26,6 +26,7 @@ class EnvironmentBanner extends StatelessWidget {
     this.configValuesLabel,
     this.noValuesLabel,
     this.navigatorKey,
+    this.textStyle,
     super.key,
   });
 
@@ -58,6 +59,9 @@ class EnvironmentBanner extends StatelessWidget {
   /// context that is not a descendant of a [Navigator].
   final GlobalKey<NavigatorState>? navigatorKey;
 
+  /// The text style of the banner.
+  final TextStyle? textStyle;
+
   @override
   Widget build(BuildContext context) {
     final envApi = Fluent.get<EnvironmentApi>();
@@ -71,11 +75,15 @@ class EnvironmentBanner extends StatelessWidget {
       color: env.color,
       message: env.name,
       location: location,
-      textStyle: const TextStyle(
-        fontSize: 10.2,
-        fontWeight: FontWeight.w900,
-        height: 1,
-      ),
+      textDirection: Directionality.maybeOf(context) ?? TextDirection.ltr,
+      layoutDirection: Directionality.maybeOf(context) ?? TextDirection.ltr,
+      textStyle:
+          textStyle ??
+          const TextStyle(
+            fontSize: 10.2,
+            fontWeight: FontWeight.w900,
+            height: 1,
+          ),
       child: child,
     );
 
@@ -112,10 +120,7 @@ class EnvironmentBanner extends StatelessWidget {
     return Semantics(
       label: 'Environment: ${env.name}',
       container: true,
-      child: Directionality(
-        textDirection: TextDirection.ltr,
-        child: content,
-      ),
+      child: content,
     );
   }
 
