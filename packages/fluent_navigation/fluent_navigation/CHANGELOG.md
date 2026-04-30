@@ -1,3 +1,9 @@
+## 1.6.5
+
+* **Fix**: Resolved critical compilation errors when consuming the package from external apps.
+* **Fix**: Replaced implicit registry calls with explicit `.get<T>()` to ensure compatibility.
+* **Fix**: Corrected `registerSingleton` usage for route registration.
+
 ## 1.6.1
 
 * **Fixes**: Fixed analysis issues on pub.dev by making dependency registration and retrieval more explicit.

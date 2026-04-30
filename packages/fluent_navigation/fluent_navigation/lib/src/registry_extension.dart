@@ -9,8 +9,8 @@ extension RegistryExtension on Registry {
   /// to navigate later through the navigation api
   void registerRoute(RouteBase route) {
     if (!isRegistered<FluentRoutes>()) {
-      registerSingleton<FluentRoutes>((it) => <RouteBase>[]);
+      registerSingleton<FluentRoutes>((_) => <RouteBase>[]);
     }
-    this<FluentRoutes>().add(route);
+    get<FluentRoutes>().add(route);
   }
 }
