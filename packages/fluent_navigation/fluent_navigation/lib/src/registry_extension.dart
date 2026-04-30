@@ -9,7 +9,6 @@ extension RegistryExtension on Registry {
   /// to navigate later through the navigation api
   void registerRoute(RouteBase route) {
     if (!isRegistered<FluentRoutes>()) {
-      // ignore: avoid_types_on_closure_parameters, Required for pub.dev analysis compatibility during downgrade tests.
       registerSingleton<FluentRoutes>((Registry it) => <RouteBase>[]);
     }
     this<FluentRoutes>().add(route);
