@@ -1,3 +1,8 @@
 {
-    "hello": "{greetings} {name} from Fluent Localization Example"
+    "hello": "Hello {name}!",
+    "welcome": "Welcome to the Example App",
+    "home": {
+        "title": "Home Page",
+        "description": "This is a type-safe localization example"
+    }
 }

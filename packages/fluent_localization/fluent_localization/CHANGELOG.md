@@ -1,3 +1,9 @@
+## 1.6.1
+
+* **Fix**: Resolved linter warnings in the CLI tool and generator logic.
+* **Fix**: Added missing linter ignores to the generated file for better consumer compatibility.
+* **Test**: Added unit tests for the localization generator and string utilities.
+
 ## 1.6.0
 
 * **Feature**: Added a built-in code generator for type-safe localization keys.

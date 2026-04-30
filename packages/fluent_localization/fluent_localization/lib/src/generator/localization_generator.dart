@@ -7,7 +7,7 @@ import 'package:fluent_localization/src/generator/string_utils.dart';
 class LocalizationGenerator {
   const LocalizationGenerator({
     this.inputPath = 'assets/languages',
-    this.outputPath = 'lib/src/api/localization_keys.g.dart',
+    this.outputPath = 'lib/localization_keys.g.dart',
   });
 
   final String inputPath;
@@ -53,8 +53,11 @@ class LocalizationGenerator {
     await outputFile.writeAsString(buffer.toString());
   }
 
-  void _flattenEntries(Map<String, dynamic> data, Map<String, String> result,
-      [String prefix = '']) {
+  void _flattenEntries(
+    Map<String, dynamic> data,
+    Map<String, String> result, [
+    String prefix = '',
+  ]) {
     data.forEach((key, value) {
       final newKey = prefix.isEmpty ? key : '$prefix.$key';
       if (value is Map<String, dynamic>) {
@@ -72,7 +75,9 @@ class LocalizationGenerator {
         '// ignore_for_file: avoid_redundant_argument_values, lines_longer_than_80_chars, public_member_api_docs, unused_element, prefer_const_constructors, library_private_types_in_public_api, directives_ordering',
       )
       ..writeln()
-      ..writeln("import 'package:fluent_localization/fluent_localization.dart';")
+      ..writeln(
+        "import 'package:fluent_localization/fluent_localization.dart';",
+      )
       ..writeln("import 'package:flutter/widgets.dart';")
       ..writeln();
   }

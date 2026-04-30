@@ -14,22 +14,21 @@ class _LocalizationKeys {
 
   final BuildContext _context;
 
-  /// Translation for "test.hello"
+  /// Translation for "hello"
   /// Value: "Hello {name}!"
-  String testHello({required String name}) {
-    return _context.tr('test.hello', args: {'name': name});
+  String hello({required String name}) {
+    return _context.tr('hello', args: {'name': name});
   }
 
-  /// Translation for "test.hello_args"
-  /// Value: "{greetings} {name}"
-  String testHelloArgs({required String greetings, required String name}) {
-    return _context.tr(
-      'test.hello_args',
-      args: {'greetings': greetings, 'name': name},
-    );
-  }
+  /// Translation for "welcome"
+  /// Value: "Welcome to the Example App"
+  String get welcome => _context.tr('welcome');
 
-  /// Translation for "title"
-  /// Value: "Title"
-  String get title => _context.tr('title');
+  /// Translation for "home.title"
+  /// Value: "Home Page"
+  String get homeTitle => _context.tr('home.title');
+
+  /// Translation for "home.description"
+  /// Value: "This is a type-safe localization example"
+  String get homeDescription => _context.tr('home.description');
 }
