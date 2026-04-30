@@ -1,12 +1,11 @@
+import 'package:fluent_navigation/src/api/internal_navigation_api.dart';
+import 'package:fluent_navigation/src/api/internal_navigation_api_impl.dart';
+import 'package:fluent_navigation/src/api/navigation_api_impl.dart';
+import 'package:fluent_navigation/src/registry_extension.dart';
 import 'package:fluent_navigation_api/fluent_navigation_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-
-import 'api/internal_navigation_api.dart';
-import 'api/internal_navigation_api_impl.dart';
-import 'api/navigation_api_impl.dart';
-import 'registry_extension.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 
