@@ -11,6 +11,6 @@ extension RegistryExtension on Registry {
     if (!isRegistered<FluentRoutes>()) {
       registerSingleton<FluentRoutes>((it) => <RouteBase>[]);
     }
-    get<FluentRoutes>().add(route);
+    this<FluentRoutes>().add(route);
   }
 }
