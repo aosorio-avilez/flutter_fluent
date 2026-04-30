@@ -1,3 +1,7 @@
+## 1.6.3
+
+* **Fixes**: Reverted to using `Fluent.get<T>()` for dependency retrieval within module registrations to restore full compatibility with `pub.dev` analysis tools.
+
 ## 1.6.2
 
 * **Fixes**: Replaced all `.get<T>()` calls with the callable interface and added explicit type annotations to closures to resolve persistent `pub.dev` analysis failures.
