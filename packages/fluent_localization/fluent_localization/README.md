@@ -1,12 +1,12 @@
 ## fluent_localization
-Package that allows you to set up and use translations in an easy and quick way
+Package that allows you to set up and use translations in an easy and quick way.
 
 ## Getting Started
 
 ### Add dependencies
 
 ```yaml
-fluent_localization: ^1.4.0
+fluent_localization: ^1.6.0
 ```
 
 ### Add language folder to Flutter assets
@@ -19,11 +19,12 @@ flutter:
 
 ### Create assets files
 
-```yaml 
-assets/
-    languages/
-        en.json
-        es.json
+```json
+// assets/languages/en.json
+{
+    "hello": "Hello {name}!",
+    "title": "Welcome"
+}
 ```
 
 ### Build module
@@ -37,38 +38,35 @@ void main() async {
 }
 ```
 
-### Use it
-```dart
-class App extends StatelessWidget {
-    const App({super.key});
+## Type-Safe Generation (NEW 🚀)
 
-    @override
-    Widget build(BuildContext context) {
-        // Define your supported locales
-        final locales = [
-            Locale("es"),
-            Locale("en"),
-        ];
-        // Get localization delegates
-        final delegates = Fluent.get<LocalizationApi>().getDelegates(locales);
-        
-        return MaterialApp(
-            title: 'Fluent Localization Demo',
-            localizationsDelegates: delegates,
-            supportedLocales: locales,
-            home: Scaffold(
-                body: Builder(
-                    builder: (context) {
-                        final hello = context.tl('hello');
-                        return Center(
-                            child: Text(hello),
-                        );
-                    },
-                ),
-            ),
-        );
-    }
-}
+To avoid using strings keys manually, you can generate type-safe keys using the built-in generator.
+
+### 1. Run the generator
+Run this command in your project root:
+
+```bash
+fvm dart run fluent_localization:generate
+```
+
+This will create a file at `lib/src/api/localization_keys.g.dart`.
+
+### 2. Use it in your code
+Import the generated file and use the `context.loc` extension:
+
+```dart
+// Simple key
+Text(context.loc.title)
+
+// Key with arguments
+Text(context.loc.hello(name: 'John'))
+```
+
+## Manual Usage
+If you prefer not to use the generator:
+
+```dart
+final hello = context.tr('hello', args: {'name': 'John'});
 ```
 
 ## Example
