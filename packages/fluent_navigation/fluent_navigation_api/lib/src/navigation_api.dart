@@ -33,4 +33,7 @@ abstract class NavigationApi {
 
   /// Get the router configuration
   RouterConfig<Object> get router;
+
+  /// Get the navigator key
+  GlobalKey<NavigatorState> get navigatorKey;
 }

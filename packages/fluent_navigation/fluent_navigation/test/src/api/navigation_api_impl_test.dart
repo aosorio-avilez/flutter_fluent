@@ -33,6 +33,13 @@ void main() {
     expect(router, isA<RouterConfig<Object>>());
   });
 
+  test('verify navigatorKey', () async {
+    final navigatorKey = Fluent.get<NavigationApi>().navigatorKey;
+
+    expect(navigatorKey, isA<GlobalKey<NavigatorState>>());
+    expect(navigatorKey, equals(rootNavigatorKey));
+  });
+
   testWidgets('verify canPop returns false on initial route (root)', (
     tester,
   ) async {

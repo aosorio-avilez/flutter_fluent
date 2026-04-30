@@ -57,7 +57,7 @@ class NavigationModule extends FluentModule {
       // Use lazy singleton to defer initialization
       // until the API is actually used.
       ..registerLazySingleton<NavigationApi>(
-        (it) => NavigationApiImpl(it.get<GoRouter>()),
+        (it) => NavigationApiImpl(it.get<GoRouter>(), rootNavigatorKey),
       );
   }
 }
