@@ -1,3 +1,8 @@
+## 0.4.0
+
+* **FEAT**: Add caching support to networking API.
+* **FEAT**: (Consolidated) Add customizable retry configuration and policy.
+
 ## 0.3.0
 
 * **FEAT**: Add customizable retry interceptor and configuration.
