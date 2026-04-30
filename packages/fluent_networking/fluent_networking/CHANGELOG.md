@@ -1,3 +1,11 @@
+## 0.6.0
+
+* **FEAT**: Implement caching support using `NetworkingCacheInterceptor`.
+* **FEAT**: Implement customizable retry policy with `NetworkingRetryInterceptor` (PR #108).
+* **PERF**: Optimize performance and memory efficiency in `NetworkingLogInterceptor`.
+* **PERF**: Optimize `LoggerApi` lookup in `NetworkingLogInterceptor`.
+* **FIX**: Restore secure logging features and custom redaction support.
+
 ## 0.5.4
 
 * **FIX**: Reintroduce `Options` export that was missed in previous merge.
