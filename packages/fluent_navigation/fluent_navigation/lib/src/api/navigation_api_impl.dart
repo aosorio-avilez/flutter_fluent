@@ -3,10 +3,15 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 class NavigationApiImpl extends NavigationApi {
-  NavigationApiImpl(this._router);
+  NavigationApiImpl(this._router, this._navigatorKey);
 
   /// Internal reference to the registered [GoRouter].
   final GoRouter _router;
+
+  final GlobalKey<NavigatorState> _navigatorKey;
+
+  @override
+  GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
 
   @override
   void navigateTo(
