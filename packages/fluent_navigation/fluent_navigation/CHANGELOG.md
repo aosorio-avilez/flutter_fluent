@@ -1,34 +1,55 @@
-## 0.0.1
+## 1.6.1
 
-* Initial version.
+* **Fixes**: Fixed analysis issues on pub.dev by making dependency registration and retrieval more explicit.
 
-## 0.0.2
+## 1.6.0
 
-* Class `FluentRoute` was added to define routes (This class was removed from `fluent_sdk` package)
-* A `Registry` extension was added in order to define the `registerRoute` method (This method was removed from `Registry` interface on `fluent_sdk`)
-* Document all the public APIs
+*   **Features**: Added `navigatorKey` to `NavigationApi` to allow access to the global navigator state.
+*   **Improvements**: Optimized dependency injection and internal router initialization for better startup performance.
 
-## 0.0.2+1
+## 1.5.0
 
-* Package `fluent_navigation_api` was updated to `v0.0.2+1`
+* lazy initialization
+* runtime optimization
+* Fix `fluent_navigation` strict exports
+* Enable const constructors for NavigationModule
+* Upgrade `go_router` dependency to `^17.0.1`
+* Upgrade `collection` dependency to `^1.19.1`
 
-## 0.0.3
+## 1.4.0
 
-* Package `fluent_navigation_api` was updated to `v0.0.3`
-* Package `fluent_sdk` was added
+* BREAKING CHANGE: Updated `fluent_sdk` dependency to `^0.5.0`
+* REFACTOR: Renamed `build` method to `onCreate` in `NavigationModule`
+* CHORE: Recreated example platforms and updated READMEs.
 
-## 0.0.4
+## 1.3.1
 
-* `pop` method was added in order to let users go back to previous routes if is possible
+* New parameter `refreshListenable` was added to `NavigationModule` in order to let users listen to `GoRouter` refresh streams
 
-## 0.0.5
+## 1.3.0
 
-* Package `fluent_sdk` was updated to `v0.2.0`
+* Upgrade fluent_sdk version to v0.4.0
 
-## 0.0.6
+## 1.2.2
 
-* Class `FluentRoute` was removed
-* `registerRoute` now use `GoRoute` instead of `FluentRoute` in order to expose more out-of-the-box functionalities 
+* Upgrade interface `fluent_navigation_api` to `v1.0.1`
+
+## 1.2.1
+
+* New method `canPop` was added in order to let users know if they can go back to previous routes
+
+## 1.2.0
+
+* Upgrade package to flutter version v3.35
+
+## 1.1.0
+
+* Package `go_router` was updated to `v13.2.1`
+* Package `collection` was updated to `v1.18.0`
+* Package example was updated to latest version
+* Example android and ios platform updated to latest versions
+* Example web platform enabled
+* Dev dependencies updated
 
 ## 1.0.0
 
@@ -40,51 +61,34 @@
 * Package `collection` was updated to `v1.17.1`
 * Package `very_good_analysis` was updated to `v5.0.0+1`
 
-## 1.1.0
+## 0.0.6
 
-* Package `go_router` was updated to `v13.2.1`
-* Package `collection` was updated to `v1.18.0`
-* Package example was updated to latest version
-* Example android and ios platform updated to latest versions
-* Example web platform enabled
-* Dev dependencies updated
+* Class `FluentRoute` was removed
+* `registerRoute` now use `GoRoute` instead of `FluentRoute` in order to expose more out-of-the-box functionalities 
 
-## 1.2.0
+## 0.0.5
 
-* Upgrade package to flutter version v3.35
+* Package `fluent_sdk` was updated to `v0.2.0`
 
-## 1.2.1
+## 0.0.4
 
-* New method `canPop` was added in order to let users know if they can go back to previous routes
+* `pop` method was added in order to let users go back to previous routes if is possible
 
-## 1.2.2
+## 0.0.3
 
-* Upgrade interface `fluent_navigation_api` to `v1.0.1`
+* Package `fluent_navigation_api` was updated to `v0.0.3`
+* Package `fluent_sdk` was added
 
-## 1.3.0
+## 0.0.2+1
 
-* Upgrade fluent_sdk version to v0.4.0
+* Package `fluent_navigation_api` was updated to `v0.0.2+1`
 
-## 1.3.1
+## 0.0.2
 
-* New parameter `refreshListenable` was added to `NavigationModule` in order to let users listen to `GoRouter` refresh streams
+* Class `FluentRoute` was added to define routes (This class was removed from `fluent_sdk` package)
+* A `Registry` extension was added in order to define the `registerRoute` method (This method was removed from `Registry` interface on `fluent_sdk`)
+* Document all the public APIs
 
-## 1.4.0
+## 0.0.1
 
-* BREAKING CHANGE: Updated `fluent_sdk` dependency to `^0.5.0`
-* REFACTOR: Renamed `build` method to `onCreate` in `NavigationModule`
-* CHORE: Recreated example platforms and updated READMEs.
-
-## 1.5.0
-
-* lazy initialization
-* runtime optimization
-* Fix `fluent_navigation` strict exports
-* Enable const constructors for NavigationModule
-* Upgrade `go_router` dependency to `^17.0.1`
-* Upgrade `collection` dependency to `^1.19.1`
-
-## 1.6.0
-
-*   **Features**: Added `navigatorKey` to `NavigationApi` to allow access to the global navigator state.
-*   **Improvements**: Optimized dependency injection and internal router initialization for better startup performance.
+* Initial version.
