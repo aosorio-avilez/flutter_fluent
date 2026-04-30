@@ -1,3 +1,7 @@
+## 1.6.4
+
+* **Refactor**: Restored the improved code pattern with constructor injection and clean closures.
+
 ## 1.6.3
 
 * **Fixes**: Reverted to using `Fluent.get<T>()` for dependency retrieval within module registrations to restore full compatibility with `pub.dev` analysis tools.

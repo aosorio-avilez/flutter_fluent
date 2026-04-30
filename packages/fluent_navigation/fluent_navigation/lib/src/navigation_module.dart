@@ -35,11 +35,11 @@ class NavigationModule extends FluentModule {
   Future<void> onCreate(Registry registry) async {
     registry
       ..registerLazySingleton<GoRouter>(
-        (_) {
+        (it) {
           return GoRouter(
             initialLocation: initialLocation,
             navigatorKey: rootNavigatorKey,
-            routes: Fluent.get<InternalNavigationApi>().getRegisteredRoutes(),
+            routes: it<InternalNavigationApi>().getRegisteredRoutes(),
             redirect: (context, state) => redirect?.call(state.uri.toString()),
             refreshListenable: refreshListenable,
           );
@@ -48,15 +48,15 @@ class NavigationModule extends FluentModule {
       ..registerLazySingleton<InternalNavigationApi>(
         (it) {
           if (!it.isRegistered<FluentRoutes>()) {
-            it.registerSingleton<FluentRoutes>((_) => <RouteBase>[]);
+            it.registerSingleton<FluentRoutes>((it) => <RouteBase>[]);
           }
-          return InternalNavigationApiImpl(Fluent.get<FluentRoutes>());
+          return InternalNavigationApiImpl(it<FluentRoutes>());
         },
       )
       // Use lazy singleton to defer initialization
       // until the API is actually used.
       ..registerLazySingleton<NavigationApi>(
-        (_) => NavigationApiImpl(Fluent.get<GoRouter>(), rootNavigatorKey),
+        (it) => NavigationApiImpl(it<GoRouter>(), rootNavigatorKey),
       );
   }
 }
