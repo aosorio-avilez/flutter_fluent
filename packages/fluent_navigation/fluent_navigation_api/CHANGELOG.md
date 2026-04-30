@@ -31,3 +31,7 @@
 ## 1.0.2
 
 * Update version to 1.0.2
+
+## 1.1.0
+
+*   Added `navigatorKey` getter to `NavigationApi` interface.

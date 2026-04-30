@@ -83,3 +83,8 @@
 * Enable const constructors for NavigationModule
 * Upgrade `go_router` dependency to `^17.0.1`
 * Upgrade `collection` dependency to `^1.19.1`
+
+## 1.6.0
+
+*   **Features**: Added `navigatorKey` to `NavigationApi` to allow access to the global navigator state.
+*   **Improvements**: Optimized dependency injection and internal router initialization for better startup performance.
