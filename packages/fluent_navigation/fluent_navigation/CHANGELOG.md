@@ -1,3 +1,8 @@
+## 1.6.6
+
+* **Fix**: Cleaned up barrel file exports to prevent type conflicts in consumer applications.
+* **Fix**: Normalized internal imports to use relative paths, improving Flutter compiler compatibility.
+
 ## 1.6.5
 
 * **Fix**: Resolved critical compilation errors when consuming the package from external apps.

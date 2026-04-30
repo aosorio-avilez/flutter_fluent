@@ -1,5 +1,4 @@
 export 'package:fluent_navigation_api/fluent_navigation_api.dart';
-export 'package:fluent_sdk/fluent_sdk.dart';
 export 'package:go_router/go_router.dart'
     show
         CustomTransitionPage,
