@@ -49,6 +49,7 @@ class NavigationModule extends FluentModule {
       ..registerLazySingleton<InternalNavigationApi>(
         (it) {
           if (!it.isRegistered<FluentRoutes>()) {
+            // ignore: avoid_types_on_closure_parameters, Required for pub.dev analysis compatibility during downgrade tests.
             it.registerSingleton<FluentRoutes>((Registry it) => <RouteBase>[]);
           }
           return InternalNavigationApiImpl(it<FluentRoutes>());
