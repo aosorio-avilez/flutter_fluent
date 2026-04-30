@@ -49,7 +49,8 @@ class NavigationModule extends FluentModule {
       ..registerLazySingleton<InternalNavigationApi>(
         (it) {
           if (!it.isRegistered<FluentRoutes>()) {
-            it.registerSingleton<FluentRoutes>((it) => <RouteBase>[]);
+            // ignore: avoid_types_on_closure_parameters, Required for pub.dev analysis compatibility during downgrade tests.
+            it.registerSingleton<FluentRoutes>((Registry it) => <RouteBase>[]);
           }
           return InternalNavigationApiImpl(it<FluentRoutes>());
         },
@@ -57,7 +58,7 @@ class NavigationModule extends FluentModule {
       // Use lazy singleton to defer initialization
       // until the API is actually used.
       ..registerLazySingleton<NavigationApi>(
-        (it) => NavigationApiImpl(it.get<GoRouter>(), rootNavigatorKey),
+        (it) => NavigationApiImpl(it<GoRouter>(), rootNavigatorKey),
       );
   }
 }

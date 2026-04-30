@@ -1,3 +1,7 @@
+## 1.6.2
+
+* **Fixes**: Replaced all `.get<T>()` calls with the callable interface and added explicit type annotations to closures to resolve persistent `pub.dev` analysis failures.
+
 ## 1.6.1
 
 * **Fixes**: Fixed analysis issues on pub.dev by making dependency registration and retrieval more explicit.
