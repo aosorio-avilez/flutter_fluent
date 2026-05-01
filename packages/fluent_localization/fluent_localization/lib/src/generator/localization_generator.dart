@@ -8,10 +8,12 @@ class LocalizationGenerator {
   const LocalizationGenerator({
     this.inputPath = 'assets/languages',
     this.outputPath = 'lib/localization_keys.g.dart',
+    this.baseLocale = 'en',
   });
 
   final String inputPath;
   final String outputPath;
+  final String baseLocale;
 
   static final _argRegExp = RegExp(r'\{([^\}]+)\}');
 
@@ -23,17 +25,19 @@ class LocalizationGenerator {
       throw Exception('Directory not found: $inputPath');
     }
 
-    final englishFile = File('$inputPath/en.json');
+    final baseFile = File('$inputPath/$baseLocale.json');
     // ignore: avoid_slow_async_io, Required for CLI tool to read the base translation file.
-    if (!await englishFile.exists()) {
-      throw Exception('Base localization file not found: $inputPath/en.json');
+    if (!await baseFile.exists()) {
+      throw Exception(
+        'Base localization file not found: $inputPath/$baseLocale.json',
+      );
     }
 
-    final content = await englishFile.readAsString();
+    final content = await baseFile.readAsString();
     final dynamic jsonMap = json.decode(content);
 
     if (jsonMap is! Map<String, dynamic>) {
-      throw Exception('Invalid JSON format in en.json');
+      throw Exception('Invalid JSON format in $baseLocale.json');
     }
 
     final entries = <String, String>{};

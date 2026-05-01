@@ -6,6 +6,7 @@ void main(List<String> args) async {
 
   var inputPath = 'assets/languages';
   var outputPath = 'lib/localization_keys.g.dart';
+  var baseLocale = 'en';
 
   if (args.isNotEmpty) {
     inputPath = args[0];
@@ -15,9 +16,14 @@ void main(List<String> args) async {
     outputPath = args[1];
   }
 
+  if (args.length > 2) {
+    baseLocale = args[2];
+  }
+
   final generator = LocalizationGenerator(
     inputPath: inputPath,
     outputPath: outputPath,
+    baseLocale: baseLocale,
   );
 
   try {
