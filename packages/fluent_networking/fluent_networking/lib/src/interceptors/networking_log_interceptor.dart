@@ -40,25 +40,27 @@ class NetworkingLogInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     options.extra[_extraStartTime] = DateTime.now().millisecondsSinceEpoch;
-
-    final output = [
-      '┌ HTTP REQUEST ───────────────────────────────────────────────────',
-      '│ Method: ${options.method.toUpperCase()}',
-      '│ URI: ${options.uri}',
-      if (options.headers.isNotEmpty) ...[
-        '│ Headers:',
-        ..._formatHeaders(options.headers).map((e) => '│   $e'),
-      ],
-      if (options.data != null) ...[
-        '│ Body:',
-        ..._formatData(options.data).split('\n').map((e) => '│   $e'),
-      ],
-      '└──────────────────────────────────────────────────────────────────',
-    ];
-
-    _log(output);
-
+    _log(_yieldRequestLog(options));
     super.onRequest(options, handler);
+  }
+
+  Iterable<String> _yieldRequestLog(RequestOptions options) sync* {
+    yield '┌ HTTP REQUEST ───────────────────────────────────────────────────';
+    yield '│ Method: ${options.method.toUpperCase()}';
+    yield '│ URI: ${options.uri}';
+    if (options.headers.isNotEmpty) {
+      yield '│ Headers:';
+      for (final header in _formatHeaders(options.headers)) {
+        yield '│   $header';
+      }
+    }
+    if (options.data != null) {
+      yield '│ Body:';
+      for (final line in LineSplitter.split(_formatData(options.data))) {
+        yield '│   $line';
+      }
+    }
+    yield '└──────────────────────────────────────────────────────────────────';
   }
 
   @override
@@ -66,66 +68,74 @@ class NetworkingLogInterceptor extends Interceptor {
     Response<dynamic> response,
     ResponseInterceptorHandler handler,
   ) {
+    _log(_yieldResponseLog(response));
+    super.onResponse(response, handler);
+  }
+
+  Iterable<String> _yieldResponseLog(Response<dynamic> response) sync* {
     final duration = _getDuration(response.requestOptions);
     final status = response.statusCode;
     final statusName = response.statusMessage ?? 'Unknown';
 
-    final summary =
-        '│ Success: [${response.requestOptions.method.toUpperCase()}] '
+    yield '┌ HTTP RESPONSE ──────────────────────────────────────────────────';
+    yield '│ Success: [${response.requestOptions.method.toUpperCase()}] '
         '${response.requestOptions.uri}';
-
-    final output = [
-      '┌ HTTP RESPONSE ──────────────────────────────────────────────────',
-      summary,
-      '│ Status: $status $statusName',
-      if (duration != null) '│ Duration: ${duration}ms',
-      if (response.headers.map.isNotEmpty) ...[
-        '│ Headers:',
-        ..._formatHeaders(response.headers.map).map((e) => '│   $e'),
-      ],
-      if (response.data != null) ...[
-        '│ Body:',
-        ..._formatData(response.data).split('\n').map((e) => '│   $e'),
-      ],
-      '└──────────────────────────────────────────────────────────────────',
-    ];
-
-    _log(output);
-
-    super.onResponse(response, handler);
+    yield '│ Status: $status $statusName';
+    if (duration != null) {
+      yield '│ Duration: ${duration}ms';
+    }
+    if (response.headers.map.isNotEmpty) {
+      yield '│ Headers:';
+      for (final header in _formatHeaders(response.headers.map)) {
+        yield '│   $header';
+      }
+    }
+    if (response.data != null) {
+      yield '│ Body:';
+      for (final line in LineSplitter.split(_formatData(response.data))) {
+        yield '│   $line';
+      }
+    }
+    yield '└──────────────────────────────────────────────────────────────────';
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
+    _logError(_yieldErrorLog(err), stackTrace: err.stackTrace);
+    super.onError(err, handler);
+  }
+
+  Iterable<String> _yieldErrorLog(DioException err) sync* {
     final duration = _getDuration(err.requestOptions);
     final status = err.response?.statusCode;
     final message = err.message;
 
-    final summary =
-        '│ Failure: [${err.requestOptions.method.toUpperCase()}] '
+    yield '┌ HTTP ERROR ─────────────────────────────────────────────────────';
+    yield '│ Failure: [${err.requestOptions.method.toUpperCase()}] '
         '${err.requestOptions.uri}';
-
-    final output = [
-      '┌ HTTP ERROR ─────────────────────────────────────────────────────',
-      summary,
-      if (status != null) '│ Status: $status',
-      '│ Message: $message',
-      if (duration != null) '│ Duration: ${duration}ms',
-      if (err.response?.headers.map.isNotEmpty ?? false) ...[
-        '│ Response Headers:',
-        ..._formatHeaders(err.response!.headers.map).map((e) => '│   $e'),
-      ],
-      if (err.response?.data != null) ...[
-        '│ Response Body:',
-        ..._formatData(err.response!.data).split('\n').map((e) => '│   $e'),
-      ],
-      if (err.error != null) '│ Error: ${err.error}',
-      '└──────────────────────────────────────────────────────────────────',
-    ];
-
-    _logError(output, stackTrace: err.stackTrace);
-
-    super.onError(err, handler);
+    if (status != null) {
+      yield '│ Status: $status';
+    }
+    yield '│ Message: $message';
+    if (duration != null) {
+      yield '│ Duration: ${duration}ms';
+    }
+    if (err.response?.headers.map.isNotEmpty ?? false) {
+      yield '│ Response Headers:';
+      for (final header in _formatHeaders(err.response!.headers.map)) {
+        yield '│   $header';
+      }
+    }
+    if (err.response?.data != null) {
+      yield '│ Response Body:';
+      for (final line in LineSplitter.split(_formatData(err.response!.data))) {
+        yield '│   $line';
+      }
+    }
+    if (err.error != null) {
+      yield '│ Error: ${err.error}';
+    }
+    yield '└──────────────────────────────────────────────────────────────────';
   }
 
   Iterable<String> _formatHeaders(Map<String, dynamic> headers) {
@@ -155,17 +165,34 @@ class NetworkingLogInterceptor extends Interceptor {
     if (_sensitiveBodyKeys.isEmpty) return data;
 
     if (data is Map) {
-      return data.map((key, value) {
+      Map<dynamic, dynamic>? result;
+      data.forEach((key, value) {
         final isSensitive = _sensitiveBodyKeys.contains(
           key.toString().toLowerCase(),
         );
         if (isSensitive) {
-          return MapEntry(key, '***REDACTED***');
+          result ??= Map<dynamic, dynamic>.from(data);
+          result![key] = '***REDACTED***';
+        } else {
+          final sanitizedValue = _sanitizeBody(value);
+          if (!identical(sanitizedValue, value)) {
+            result ??= Map<dynamic, dynamic>.from(data);
+            result![key] = sanitizedValue;
+          }
         }
-        return MapEntry(key, _sanitizeBody(value));
       });
+      return result ?? data;
     } else if (data is List) {
-      return data.map(_sanitizeBody).toList();
+      List<dynamic>? result;
+      for (var i = 0; i < data.length; i++) {
+        final value = data[i];
+        final sanitizedValue = _sanitizeBody(value);
+        if (!identical(sanitizedValue, value)) {
+          result ??= List<dynamic>.from(data);
+          result[i] = sanitizedValue;
+        }
+      }
+      return result ?? data;
     }
     return data;
   }
@@ -178,19 +205,25 @@ class NetworkingLogInterceptor extends Interceptor {
 
   void _log(Iterable<String> lines) {
     if (_logger == null) return;
-    lines.forEach(_logger.logInfo);
+    // Using for-in to avoid closure allocation, although linter prefers forEach
+    // with tear-offs.
+    // ignore: prefer_foreach
+    for (final line in lines) {
+      _logger.logInfo(line);
+    }
   }
 
   void _logError(Iterable<String> lines, {StackTrace? stackTrace}) {
     if (_logger == null) return;
-    final list = lines.toList();
-    for (var i = 0; i < list.length; i++) {
-      final line = list[i];
-      final isLastLine = i == list.length - 1;
-      _logger.logError(
-        line,
-        stackTrace: isLastLine ? stackTrace : null,
-      );
+
+    final iterator = lines.iterator;
+    if (!iterator.moveNext()) return;
+
+    var current = iterator.current;
+    while (iterator.moveNext()) {
+      _logger.logError(current);
+      current = iterator.current;
     }
+    _logger.logError(current, stackTrace: stackTrace);
   }
 }
