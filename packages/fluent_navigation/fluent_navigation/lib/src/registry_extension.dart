@@ -9,7 +9,7 @@ extension RegistryExtension on Registry {
   /// to navigate later through the navigation api
   void registerRoute(RouteBase route) {
     if (!isRegistered<FluentRoutes>()) {
-      registerSingleton<FluentRoutes>((it) => []);
+      registerSingleton<FluentRoutes>((it) => <RouteBase>[]);
     }
     Fluent.get<FluentRoutes>().add(route);
   }
