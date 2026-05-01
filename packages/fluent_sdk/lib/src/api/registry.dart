@@ -35,6 +35,7 @@ abstract class Registry {
   /// Retrieves an instance of a registered object [T].
   T get<T extends Object>({String? instanceName});
 
-  /// Callable interface to retrieve an instance.
+  /// Callable method to retrieve an instance of a registered object [T].
+  /// This allows the syntax `registry<T>()`.
   T call<T extends Object>();
 }

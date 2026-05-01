@@ -64,6 +64,10 @@
 * CHORE: Recreated example platforms and updated READMEs.
 * FEAT: Added `onStart` and `onStop` lifecycle methods to `FluentModule`.
 
+## 0.6.1
+
+* **Fix**: Added missing `call` and `get` methods to the `Registry` interface to ensure consistency and support shorthand syntax.
+
 ## 0.6.0
 
 * Use FutureOr for zero-overhead module initialization
