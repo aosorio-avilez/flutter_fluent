@@ -22,6 +22,15 @@ abstract class NavigationApi {
     Object? extra,
   });
 
+  /// Replace the current route with a named route with optional parameters,
+  /// query parameters and an extra object.
+  Future<void> replaceWith(
+    String routeName, {
+    Map<String, String> params = const <String, String>{},
+    Map<String, dynamic> queryParams = const <String, dynamic>{},
+    Object? extra,
+  });
+
   /// Checks if the current route can be popped.
   ///
   /// Returns `true` if there is a previous route to pop to, `false` otherwise.

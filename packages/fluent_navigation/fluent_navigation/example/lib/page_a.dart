@@ -15,6 +15,10 @@ class PageOne extends StatelessWidget {
             onPressed: () => Fluent.get<NavigationApi>().pushTo("c"),
             child: const Text("Go to Page C"),
           ),
+          ElevatedButton(
+            onPressed: () => Fluent.get<NavigationApi>().replaceWith("b"),
+            child: const Text("Replace with Page B"),
+          ),
         ],
       ),
     );
