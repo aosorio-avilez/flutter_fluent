@@ -7,4 +7,4 @@ flutter config --no-analytics
 flutter pub global activate melos 7.4.0
 
 # Cover
-flutter pub global activate cover 0.2.0
+flutter pub global activate cover 0.3.0
