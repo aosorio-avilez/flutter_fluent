@@ -1,3 +1,8 @@
+## 1.6.9
+
+* **Fix**: Restored architectural stability by decoupling internal route initialization.
+* **Fix**: Simplified internal navigation API and restored registry contract.
+
 ## 1.6.8
 
 * **Fix**: Restored full compatibility with `fluent_sdk` v0.6.0.
