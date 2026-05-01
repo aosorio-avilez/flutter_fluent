@@ -1,3 +1,8 @@
+## 1.6.8
+
+* **Fix**: Restored full compatibility with `fluent_sdk` v0.6.0.
+* **Fix**: Standardized on explicit `.get<T>()` and factory patterns for maximum stability across different build environments.
+
 ## 1.6.7
 
 * **Fix**: Optimized dependency retrieval using static locator for better modular compatibility.

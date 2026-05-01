@@ -20,7 +20,7 @@ void main() {
     });
 
     test('registerSingleton should register immediate object', () {
-      registry.registerSingleton<TestClass>((_) => TestClass());
+      registry.registerSingleton<TestClass>(TestClass());
       expect(GetIt.instance<TestClass>(), isA<TestClass>());
     });
 
@@ -35,9 +35,9 @@ void main() {
 
     test('allowReassignment should enable overriding registrations', () {
       registry
-        ..registerSingleton<TestClass>((it) => TestClass())
+        ..registerSingleton<TestClass>(TestClass())
         ..allowReassignment(allow: true)
-        ..registerSingleton<TestClass>((p0) => TestClass2());
+        ..registerSingleton<TestClass>(TestClass2());
 
       expect(GetIt.instance<TestClass>(), isA<TestClass2>());
     });
@@ -45,7 +45,7 @@ void main() {
     test(
       'isRegistered should return true if instance is already registered',
       () {
-        registry.registerSingleton<TestClass>((it) => TestClass());
+        registry.registerSingleton<TestClass>(TestClass());
         expect(registry.isRegistered<TestClass>(), isTrue);
       },
     );
@@ -55,20 +55,20 @@ void main() {
     });
 
     test('get should return registered instance', () {
-      registry.registerSingleton<TestClass>((_) => TestClass());
+      registry.registerSingleton<TestClass>(TestClass());
       expect(registry.get<TestClass>(), isA<TestClass>());
     });
 
     test('get should return registered instance with name', () {
       registry.registerSingleton<TestClass>(
-        (_) => TestClass(),
+        TestClass(),
         instanceName: 'named',
       );
       expect(registry.get<TestClass>(instanceName: 'named'), isA<TestClass>());
     });
 
     test('call should return registered instance (callable interface)', () {
-      registry.registerSingleton<TestClass>((_) => TestClass());
+      registry.registerSingleton<TestClass>(TestClass());
       expect(registry<TestClass>(), isA<TestClass>());
     });
 
@@ -79,7 +79,7 @@ void main() {
           instanceName: 'lazy',
         )
         ..registerSingleton<TestClass>(
-          (_) => TestClass(),
+          TestClass(),
           instanceName: 'single',
         )
         ..registerFactory<TestClass>(

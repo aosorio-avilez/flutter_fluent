@@ -8,7 +8,7 @@ class TestModule extends FluentModule {
   Future<void> onCreate(Registry registry) async {
     final testClassAsync = await TestClassAsync.build();
     registry
-      ..registerSingleton<TestClass>((it) => TestClass())
-      ..registerSingleton<TestClassAsync>((it) => testClassAsync);
+      ..registerSingleton<TestClass>(TestClass())
+      ..registerSingleton<TestClassAsync>(testClassAsync);
   }
 }

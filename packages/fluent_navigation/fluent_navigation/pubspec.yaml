@@ -1,6 +1,6 @@
 name: fluent_navigation
 description: Package that provides a simple way to navigate within your app
-version: 1.6.7
+version: 1.6.8
 resolution: workspace
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_navigation/fluent_navigation
 

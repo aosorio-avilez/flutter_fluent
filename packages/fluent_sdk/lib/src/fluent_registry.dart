@@ -18,11 +18,11 @@ class FluentRegistry implements Registry {
   @override
   @pragma('vm:prefer-inline')
   void registerFactory<T extends Object>(
-    T Function(Registry i) factoryFunction, {
+    T Function(GetIt i) factoryFunction, {
     String? instanceName,
   }) {
     _getIt.registerFactory<T>(
-      () => factoryFunction(this),
+      () => factoryFunction(_getIt),
       instanceName: instanceName,
     );
   }
@@ -40,11 +40,11 @@ class FluentRegistry implements Registry {
   @override
   @pragma('vm:prefer-inline')
   void registerLazySingleton<T extends Object>(
-    T Function(Registry i) factoryFunction, {
+    T Function(GetIt i) factoryFunction, {
     String? instanceName,
   }) {
     _getIt.registerLazySingleton<T>(
-      () => factoryFunction(this),
+      () => factoryFunction(_getIt),
       instanceName: instanceName,
     );
   }
@@ -52,11 +52,11 @@ class FluentRegistry implements Registry {
   @override
   @pragma('vm:prefer-inline')
   void registerSingleton<T extends Object>(
-    T Function(Registry i) factoryFunction, {
+    T instance, {
     String? instanceName,
   }) {
     _getIt.registerSingleton<T>(
-      factoryFunction(this),
+      instance,
       instanceName: instanceName,
     );
   }
