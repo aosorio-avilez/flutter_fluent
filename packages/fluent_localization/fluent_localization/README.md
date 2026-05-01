@@ -46,10 +46,20 @@ To avoid using strings keys manually, you can generate type-safe keys using the 
 Run this command in your project root:
 
 ```bash
-fvm dart run fluent_localization:generate
+fvm dart run fluent_localization:generate [inputPath] [outputPath] [baseLocale]
 ```
 
-This will create a file at `lib/src/api/localization_keys.g.dart`.
+By default, it uses:
+- `inputPath`: `assets/languages`
+- `outputPath`: `lib/localization_keys.g.dart`
+- `baseLocale`: `en` (uses `en.json` as source)
+
+Example using Spanish as the base language:
+```bash
+fvm dart run fluent_localization:generate assets/languages lib/localization_keys.g.dart es
+```
+
+This will create a file at `lib/localization_keys.g.dart` using `es.json` to generate the keys.
 
 ### 2. Use it in your code
 Import the generated file and use the `context.loc` extension:

@@ -105,13 +105,31 @@ void main() {
       expect(content, contains("'category': category"));
     });
 
-    test('should throw if en.json is missing', () async {
+    test('should throw if base locale file is missing', () async {
       final generator = LocalizationGenerator(
         inputPath: inputPath,
         outputPath: outputPath,
+        baseLocale: 'fr',
       );
 
       expect(generator.generate(), throwsException);
+    });
+
+    test('should generate correct code from a different base locale (es.json)',
+        () async {
+      final file = File('$inputPath/es.json');
+      await file.writeAsString('{"hola": "Hola Mundo"}');
+
+      final generator = LocalizationGenerator(
+        inputPath: inputPath,
+        outputPath: outputPath,
+        baseLocale: 'es',
+      );
+
+      await generator.generate();
+
+      final content = await File(outputPath).readAsString();
+      expect(content, contains("String get hola => _context.tr('hola');"));
     });
   });
 }
