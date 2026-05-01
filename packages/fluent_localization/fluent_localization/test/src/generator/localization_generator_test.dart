@@ -115,21 +115,23 @@ void main() {
       expect(generator.generate(), throwsException);
     });
 
-    test('should generate correct code from a different base locale (es.json)',
-        () async {
-      final file = File('$inputPath/es.json');
-      await file.writeAsString('{"hola": "Hola Mundo"}');
+    test(
+      'should generate correct code from a different base locale (es.json)',
+      () async {
+        final file = File('$inputPath/es.json');
+        await file.writeAsString('{"hola": "Hola Mundo"}');
 
-      final generator = LocalizationGenerator(
-        inputPath: inputPath,
-        outputPath: outputPath,
-        baseLocale: 'es',
-      );
+        final generator = LocalizationGenerator(
+          inputPath: inputPath,
+          outputPath: outputPath,
+          baseLocale: 'es',
+        );
 
-      await generator.generate();
+        await generator.generate();
 
-      final content = await File(outputPath).readAsString();
-      expect(content, contains("String get hola => _context.tr('hola');"));
-    });
+        final content = await File(outputPath).readAsString();
+        expect(content, contains("String get hola => _context.tr('hola');"));
+      },
+    );
   });
 }
