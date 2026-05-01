@@ -49,7 +49,7 @@ class NavigationModule extends FluentModule {
       ..registerLazySingleton<InternalNavigationApi>(
         (it) {
           if (!it.isRegistered<FluentRoutes>()) {
-            it.registerSingleton<FluentRoutes>((_) => <RouteBase>[]);
+            it.registerSingleton<FluentRoutes>(<RouteBase>[]);
           }
           return InternalNavigationApiImpl(it.get<FluentRoutes>());
         },

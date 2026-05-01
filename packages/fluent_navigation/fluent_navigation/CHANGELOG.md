@@ -1,3 +1,8 @@
+## 1.6.7
+
+* **Fix**: Optimized dependency retrieval using static locator for better modular compatibility.
+* **Fix**: Adjusted singleton registration to use direct instances, resolving final compilation hurdles.
+
 ## 1.6.6
 
 * **Fix**: Cleaned up barrel file exports to prevent type conflicts in consumer applications.
