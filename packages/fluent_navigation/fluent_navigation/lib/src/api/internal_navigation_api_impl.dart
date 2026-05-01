@@ -1,13 +1,11 @@
+import 'package:fluent_navigation/fluent_navigation.dart';
 import 'package:fluent_navigation/src/api/internal_navigation_api.dart';
-import 'package:go_router/go_router.dart';
 
 class InternalNavigationApiImpl extends InternalNavigationApi {
-  const InternalNavigationApiImpl(this._routes);
-
-  final List<RouteBase> _routes;
+  const InternalNavigationApiImpl();
 
   @override
   List<RouteBase> getRegisteredRoutes() {
-    return _routes;
+    return Fluent.get<List<RouteBase>>();
   }
 }
