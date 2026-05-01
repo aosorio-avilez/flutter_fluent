@@ -37,6 +37,7 @@ class NetworkingModule extends FluentModule {
               logger: logger,
               sensitiveHeaders: config.sensitiveHeaders,
               sensitiveBodyKeys: config.sensitiveBodyKeys,
+              sensitiveQueryParams: config.sensitiveQueryParams,
             ),
           );
         }

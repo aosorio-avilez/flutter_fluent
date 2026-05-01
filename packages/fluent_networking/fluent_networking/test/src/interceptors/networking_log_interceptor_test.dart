@@ -88,6 +88,63 @@ void main() {
       );
     });
 
+    test('onRequest should redact default sensitive query parameters', () {
+      final options = RequestOptions(
+        path: 'https://api.example.com?api_key=secret-key&token=my-token&q=flutter',
+        method: 'GET',
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(
+            that: allOf(
+              contains('api_key=%2A%2A%2AREDACTED%2A%2A%2A'),
+              contains('token=%2A%2A%2AREDACTED%2A%2A%2A'),
+              contains('q=flutter'),
+            ),
+          ),
+        ),
+      ).called(1);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('secret-key')),
+        ),
+      );
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('my-token')),
+        ),
+      );
+    });
+
+    test('onRequest should redact custom sensitive query parameters', () {
+      final customInterceptor = NetworkingLogInterceptor(
+        logger: mockLoggerApi,
+        sensitiveQueryParams: {'my_param'},
+      );
+      final options = RequestOptions(
+        path: 'https://api.example.com?my_param=secret-value',
+        method: 'GET',
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      customInterceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('my_param=%2A%2A%2AREDACTED%2A%2A%2A')),
+        ),
+      ).called(1);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('secret-value')),
+        ),
+      );
+    });
+
     test('onRequest should log request and sanitize sensitive body keys', () {
       final customInterceptor = NetworkingLogInterceptor(
         logger: mockLoggerApi,
