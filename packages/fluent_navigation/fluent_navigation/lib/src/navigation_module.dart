@@ -1,7 +1,6 @@
 import 'package:fluent_navigation/src/api/internal_navigation_api.dart';
 import 'package:fluent_navigation/src/api/internal_navigation_api_impl.dart';
 import 'package:fluent_navigation/src/api/navigation_api_impl.dart';
-import 'package:fluent_navigation/src/registry_extension.dart';
 import 'package:fluent_navigation_api/fluent_navigation_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/widgets.dart';
@@ -46,18 +45,13 @@ class NavigationModule extends FluentModule {
           );
         },
       )
-      ..registerLazySingleton<InternalNavigationApi>(
-        (it) {
-          if (!it.isRegistered<FluentRoutes>()) {
-            it.registerSingleton<FluentRoutes>((it) => <RouteBase>[]);
-          }
-          return InternalNavigationApiImpl(it<FluentRoutes>());
-        },
+      ..registerSingleton<InternalNavigationApi>(
+        (it) => const InternalNavigationApiImpl(),
       )
       // Use lazy singleton to defer initialization
       // until the API is actually used.
       ..registerLazySingleton<NavigationApi>(
-        (it) => NavigationApiImpl(it.get<GoRouter>(), rootNavigatorKey),
+        (it) => NavigationApiImpl(it<GoRouter>(), rootNavigatorKey),
       );
   }
 }
