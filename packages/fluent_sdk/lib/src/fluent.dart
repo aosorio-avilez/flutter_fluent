@@ -54,7 +54,7 @@ class Fluent {
     try {
       _registry
         ..allowReassignment(allow: true)
-        ..registerSingleton<T>(mock);
+        ..registerSingleton<T>((_) => mock);
     } finally {
       // Always lock the container back, no matter what happens above.
       _registry.allowReassignment(allow: false);

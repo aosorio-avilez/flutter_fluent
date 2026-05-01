@@ -17,9 +17,9 @@ abstract class Registry {
 
   /// Registers a Singleton.
   ///
-  /// The [instance] is registered immediately.
+  /// The [factoryFunction] is invoked immediately upon registration.
   void registerSingleton<T extends Object>(
-    T instance, {
+    T Function(GetIt i) factoryFunction, {
     String? instanceName,
   });
 
@@ -33,11 +33,4 @@ abstract class Registry {
 
   /// Checks if a type [T] is currently registered in the container.
   bool isRegistered<T extends Object>();
-
-  /// Retrieves an instance of a registered object [T].
-  T get<T extends Object>({String? instanceName});
-
-  /// Callable method to retrieve an instance of a registered object [T].
-  /// This allows the syntax `registry<T>()`.
-  T call<T extends Object>();
 }
