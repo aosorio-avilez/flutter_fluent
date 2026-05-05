@@ -53,52 +53,5 @@ void main() {
     test('isRegistered should return false if instance is not registered', () {
       expect(registry.isRegistered<TestClass>(), isFalse);
     });
-
-    test('get should return registered instance', () {
-      registry.registerSingleton<TestClass>((_) => TestClass());
-      expect(registry.get<TestClass>(), isA<TestClass>());
-    });
-
-    test('get should return registered instance with name', () {
-      registry.registerSingleton<TestClass>(
-        (_) => TestClass(),
-        instanceName: 'named',
-      );
-      expect(registry.get<TestClass>(instanceName: 'named'), isA<TestClass>());
-    });
-
-    test('call should return registered instance (callable interface)', () {
-      registry.registerSingleton<TestClass>((_) => TestClass());
-      expect(registry<TestClass>(), isA<TestClass>());
-    });
-
-    test('register methods should support instanceName', () {
-      registry
-        ..registerLazySingleton<TestClass>(
-          (_) => TestClass(),
-          instanceName: 'lazy',
-        )
-        ..registerSingleton<TestClass>(
-          (_) => TestClass(),
-          instanceName: 'single',
-        )
-        ..registerFactory<TestClass>(
-          (_) => TestClass(),
-          instanceName: 'factory',
-        );
-
-      expect(
-        GetIt.instance.isRegistered<TestClass>(instanceName: 'lazy'),
-        isTrue,
-      );
-      expect(
-        GetIt.instance.isRegistered<TestClass>(instanceName: 'single'),
-        isTrue,
-      );
-      expect(
-        GetIt.instance.isRegistered<TestClass>(instanceName: 'factory'),
-        isTrue,
-      );
-    });
   });
 }

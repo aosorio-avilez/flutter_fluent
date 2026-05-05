@@ -1,3 +1,29 @@
+## 1.6.9
+
+* **Fix**: Restored architectural stability by decoupling internal route initialization.
+* **Fix**: Simplified internal navigation API and restored registry contract.
+
+## 1.6.8
+
+* **Fix**: Restored full compatibility with `fluent_sdk` v0.6.0.
+* **Fix**: Standardized on explicit `.get<T>()` and factory patterns for maximum stability across different build environments.
+
+## 1.6.7
+
+* **Fix**: Optimized dependency retrieval using static locator for better modular compatibility.
+* **Fix**: Adjusted singleton registration to use direct instances, resolving final compilation hurdles.
+
+## 1.6.6
+
+* **Fix**: Cleaned up barrel file exports to prevent type conflicts in consumer applications.
+* **Fix**: Normalized internal imports to use relative paths, improving Flutter compiler compatibility.
+
+## 1.6.5
+
+* **Fix**: Resolved critical compilation errors when consuming the package from external apps.
+* **Fix**: Replaced implicit registry calls with explicit `.get<T>()` to ensure compatibility.
+* **Fix**: Corrected `registerSingleton` usage for route registration.
+
 ## 1.6.1
 
 * **Fixes**: Fixed analysis issues on pub.dev by making dependency registration and retrieval more explicit.

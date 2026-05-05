@@ -1,3 +1,9 @@
+## 1.7.0
+
+* **Feature**: Added support for a configurable base locale in the code generator.
+* **Feature**: The CLI tool now accepts an optional third argument to specify the base locale file (e.g., `es` for `es.json`).
+* **Enhancement**: Improved error reporting when the base localization file is missing or invalid.
+
 ## 1.6.1
 
 * **Fix**: Resolved linter warnings in the CLI tool and generator logic.
