@@ -13,6 +13,7 @@ class NetworkingLogInterceptor extends Interceptor {
     required LoggerApi? logger,
     Set<String>? sensitiveHeaders,
     Set<String>? sensitiveBodyKeys,
+    Set<String>? sensitiveQueryParams,
   }) : _logger = logger,
        _sensitiveHeaders = {
          ..._defaultSensitiveHeaders,
@@ -20,17 +21,31 @@ class NetworkingLogInterceptor extends Interceptor {
            ...sensitiveHeaders.map((e) => e.toLowerCase()),
        },
        _sensitiveBodyKeys =
-           sensitiveBodyKeys?.map((e) => e.toLowerCase()).toSet() ?? const {};
+           sensitiveBodyKeys?.map((e) => e.toLowerCase()).toSet() ?? const {},
+       _sensitiveQueryParams = {
+         ..._defaultSensitiveQueryParams,
+         if (sensitiveQueryParams != null)
+           ...sensitiveQueryParams.map((e) => e.toLowerCase()),
+       };
 
   final LoggerApi? _logger;
   final Set<String> _sensitiveHeaders;
   final Set<String> _sensitiveBodyKeys;
+  final Set<String> _sensitiveQueryParams;
 
   static const _defaultSensitiveHeaders = {
     'authorization',
     'cookie',
     'proxy-authorization',
     'set-cookie',
+  };
+
+  static const _defaultSensitiveQueryParams = {
+    'api_key',
+    'apikey',
+    'access_token',
+    'token',
+    'secret',
   };
 
   static const _extraStartTime = 'networking_start_time';
@@ -47,7 +62,7 @@ class NetworkingLogInterceptor extends Interceptor {
   Iterable<String> _yieldRequestLog(RequestOptions options) sync* {
     yield '┌ HTTP REQUEST ───────────────────────────────────────────────────';
     yield '│ Method: ${options.method.toUpperCase()}';
-    yield '│ URI: ${options.uri}';
+    yield '│ URI: ${_sanitizeUri(options.uri)}';
     if (options.headers.isNotEmpty) {
       yield '│ Headers:';
       for (final header in _formatHeaders(options.headers)) {
@@ -79,7 +94,7 @@ class NetworkingLogInterceptor extends Interceptor {
 
     yield '┌ HTTP RESPONSE ──────────────────────────────────────────────────';
     yield '│ Success: [${response.requestOptions.method.toUpperCase()}] '
-        '${response.requestOptions.uri}';
+        '${_sanitizeUri(response.requestOptions.uri)}';
     yield '│ Status: $status $statusName';
     if (duration != null) {
       yield '│ Duration: ${duration}ms';
@@ -112,7 +127,7 @@ class NetworkingLogInterceptor extends Interceptor {
 
     yield '┌ HTTP ERROR ─────────────────────────────────────────────────────';
     yield '│ Failure: [${err.requestOptions.method.toUpperCase()}] '
-        '${err.requestOptions.uri}';
+        '${_sanitizeUri(err.requestOptions.uri)}';
     if (status != null) {
       yield '│ Status: $status';
     }
@@ -159,6 +174,24 @@ class NetworkingLogInterceptor extends Interceptor {
       // Return raw data if it fails to format as JSON
     }
     return data.toString();
+  }
+
+  String _sanitizeUri(Uri uri) {
+    if (uri.queryParameters.isEmpty) return uri.toString();
+
+    final queryParameters = Map<String, dynamic>.from(uri.queryParametersAll);
+    var hasChanges = false;
+
+    for (final key in queryParameters.keys) {
+      if (_sensitiveQueryParams.contains(key.toLowerCase())) {
+        queryParameters[key] = ['***REDACTED***'];
+        hasChanges = true;
+      }
+    }
+
+    if (!hasChanges) return uri.toString();
+
+    return uri.replace(queryParameters: queryParameters).toString();
   }
 
   dynamic _sanitizeBody(dynamic data) {

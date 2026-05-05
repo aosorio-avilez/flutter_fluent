@@ -8,6 +8,7 @@ class NetworkingConfig {
     this.enableLog = false,
     this.sensitiveHeaders = const {},
     this.sensitiveBodyKeys = const {},
+    this.sensitiveQueryParams = const {},
     this.retryConfig,
   });
 
@@ -25,6 +26,9 @@ class NetworkingConfig {
 
   /// Keys in the JSON body to redact in logs
   final Set<String> sensitiveBodyKeys;
+
+  /// Query parameters to redact in logs
+  final Set<String> sensitiveQueryParams;
 
   /// Global retry configuration
   final RetryConfig? retryConfig;
