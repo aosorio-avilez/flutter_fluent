@@ -1,51 +1,7 @@
-## 0.0.1
+## 0.5.0
 
-* Initial version.
-
-## 0.0.2
-
-* Version of `fluent_logger_api` was updated to v0.0.2
-* `flutter` dependency was removed
-* Public APIs was documented
-
-## 0.0.2+1
-
-* Package `fluent_logger_api` was updated to v0.0.2+1
-* Flutter SDK dependency removed
-* Dev dependency `flutter_test` replaced by `test`
-
-## 0.0.3
-
-* Package `fluent_logger_api` was updated to v0.0.3
-* Package `fluent_sdk` was added
-
-## 0.0.4
-
-* Package `fluent_sdk` was updated to v0.2.0
-
-## 0.0.5
-
-* Example android and ios platform updated to latest versions
-* Example web platform enabled
-* Dev dependencies updated
-
-## 0.1.0
-
-* Upgrade package to flutter version v3.35
-
-## 0.2.0
-
-* Upgrade fluent_sdk version to v0.4.0
-
-## 0.2.1
-
-* Add default instantiation of LoggerConfig in the LoggerModule
-
-## 0.3.0
-
-* BREAKING CHANGE: Updated `fluent_sdk` dependency to `^0.5.0`
-* REFACTOR: Renamed `build` method to `onCreate` in `LoggerModule`
-* CHORE: Recreated example platforms and updated READMEs.
+* **Features:**
+  * Implement No-Op pattern for production efficiency. Introduces `NoOpLoggerApiImpl` to eliminate runtime overhead when logging is disabled or in production.
 
 ## 0.4.0
 
@@ -54,3 +10,52 @@
 * lazy initialization
 * vm:prefer-inline optimizations
 * pin CI dependencies and guard sensitive logs in release mode
+
+## 0.3.0
+
+* BREAKING CHANGE: Updated `fluent_sdk` dependency to `^0.5.0`
+* REFACTOR: Renamed `build` method to `onCreate` in `LoggerModule`
+* CHORE: Recreated example platforms and updated READMEs.
+
+## 0.2.1
+
+* Add default instantiation of LoggerConfig in the LoggerModule
+
+## 0.2.0
+
+* Upgrade fluent_sdk version to v0.4.0
+
+## 0.1.0
+
+* Upgrade package to flutter version v3.35
+
+## 0.0.5
+
+* Example android and ios platform updated to latest versions
+* Example web platform enabled
+* Dev dependencies updated
+
+## 0.0.4
+
+* Package `fluent_sdk` was updated to v0.2.0
+
+## 0.0.3
+
+* Package `fluent_logger_api` was updated to v0.0.3
+* Package `fluent_sdk` was added
+
+## 0.0.2+1
+
+* Package `fluent_logger_api` was updated to v0.0.2+1
+* Flutter SDK dependency removed
+* Dev dependency `flutter_test` replaced by `test`
+
+## 0.0.2
+
+* Version of `fluent_logger_api` was updated to v0.0.2
+* `flutter` dependency was removed
+* Public APIs was documented
+
+## 0.0.1
+
+* Initial version.

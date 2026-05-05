@@ -1,6 +1,19 @@
-## 0.0.1
+## 0.0.5
 
-* Initial version.
+* Added `const` constructor to `LoggerApi` to support optimized no-op implementations.
+
+## 0.0.4
+
+* Update version to 0.0.4
+
+## 0.0.3
+
+* Dependency `flutter_sdk` was removed
+
+## 0.0.2+1
+
+* Dev dependency `flutter_test` was removed
+* SDK dlutter dependency was removed
 
 ## 0.0.2
 
@@ -8,15 +21,6 @@
 * Public APIs was documented
 * `flutter` dependency was removed
 
-## 0.0.2+1
+## 0.0.1
 
-* Dev dependency `flutter_test` was removed
-* SDK dlutter dependency was removed
-
-## 0.0.3
-
-* Dependency `flutter_sdk` was removed
-
-## 0.0.4
-
-* Update version to 0.0.4
+* Initial version.
