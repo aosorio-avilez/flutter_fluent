@@ -1,3 +1,8 @@
+## 0.6.0
+
+* CHORE: Updated `fluent_sdk` dependency to `^0.7.0`.
+* REFACTOR: Refactored `LoggerModule` to support the new stable Registry contract.
+
 ## 0.5.0
 
 * **Features:**

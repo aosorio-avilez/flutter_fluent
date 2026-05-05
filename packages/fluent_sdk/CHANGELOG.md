@@ -64,6 +64,14 @@
 * CHORE: Recreated example platforms and updated READMEs.
 * FEAT: Added `onStart` and `onStop` lifecycle methods to `FluentModule`.
 
+## 0.7.0
+
+* FIX: Added missing `call` and `get` methods to `Registry` interface.
+* REFACTOR: Restored stable registry contract and factory patterns.
+* REFACTOR: Improved `Fluent.build` orchestration by using internal registry.
+* CHORE: Restored registry orchestrator and updated internal dependency management.
+* TEST: Increased unit test coverage for the enhanced Registry API.
+
 ## 0.6.0
 
 * Use FutureOr for zero-overhead module initialization
