@@ -1,5 +1,3 @@
-
-
 /// Defines the contract for dependency registration.
 abstract class Registry {
   /// Controls whether registered singletons can be overridden.
