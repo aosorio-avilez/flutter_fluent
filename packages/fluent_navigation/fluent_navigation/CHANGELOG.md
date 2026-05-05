@@ -1,3 +1,7 @@
+## 1.7.0
+
+* **Feature**: Added `replaceWith` method to `NavigationApiImpl` to allow replacing the current route without adding it to the history stack.
+
 ## 1.6.9
 
 * **Fix**: Restored architectural stability by decoupling internal route initialization.
