@@ -90,7 +90,8 @@ void main() {
 
     test('onRequest should redact default sensitive query parameters', () {
       final options = RequestOptions(
-        path: 'https://api.example.com?api_key=secret-key&token=my-token&q=flutter',
+        path:
+            'https://api.example.com?api_key=secret-key&token=my-token&q=flutter',
         method: 'GET',
       );
       final handler = MockRequestInterceptorHandler();
