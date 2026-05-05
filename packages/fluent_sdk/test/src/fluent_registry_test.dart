@@ -53,5 +53,29 @@ void main() {
     test('isRegistered should return false if instance is not registered', () {
       expect(registry.isRegistered<TestClass>(), isFalse);
     });
+
+    test('get and call should retrieve dependencies through registry', () {
+      registry
+        ..registerSingleton<TestClass>((_) => TestClass())
+        ..registerSingleton<TestClass2>((it) {
+          final testClass = it.get<TestClass>();
+          expect(testClass, isA<TestClass>());
+          return TestClass2();
+        });
+
+      expect(GetIt.instance<TestClass2>(), isA<TestClass2>());
+    });
+
+    test('call shorthand should retrieve dependencies through registry', () {
+      registry
+        ..registerSingleton<TestClass>((_) => TestClass())
+        ..registerSingleton<TestClass2>((it) {
+          final testClass = it<TestClass>();
+          expect(testClass, isA<TestClass>());
+          return TestClass2();
+        });
+
+      expect(GetIt.instance<TestClass2>(), isA<TestClass2>());
+    });
   });
 }

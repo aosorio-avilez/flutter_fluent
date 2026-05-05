@@ -1,3 +1,8 @@
+## 1.8.0
+
+* CHORE: Updated `fluent_sdk` dependency to `^0.7.0`.
+* REFACTOR: Refactored `LocalizationModule` to support the new stable Registry contract.
+
 ## 1.7.0
 
 * **Feature**: Added support for a configurable base locale in the code generator.

@@ -1,3 +1,8 @@
+## 0.7.0
+
+* CHORE: Updated `fluent_sdk` dependency to `^0.7.0`.
+* REFACTOR: Refactored `EnvironmentModule` to support the new stable Registry contract.
+
 ## 0.6.0
 
 * **FEAT**: Implement **Environment Inspector** for real-time configuration viewing and copying ([#114](https://github.com/aosorio-avilez/flutter_fluent/pull/114)).

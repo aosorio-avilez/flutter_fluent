@@ -1,4 +1,4 @@
-import 'package:get_it/get_it.dart';
+
 
 /// Defines the contract for dependency registration.
 abstract class Registry {
@@ -11,7 +11,7 @@ abstract class Registry {
   /// The [factoryFunction] is invoked only when the instance
   /// is requested for the first time.
   void registerLazySingleton<T extends Object>(
-    T Function(GetIt i) factoryFunction, {
+    T Function(Registry i) factoryFunction, {
     String? instanceName,
   });
 
@@ -19,7 +19,7 @@ abstract class Registry {
   ///
   /// The [factoryFunction] is invoked immediately upon registration.
   void registerSingleton<T extends Object>(
-    T Function(GetIt i) factoryFunction, {
+    T Function(Registry i) factoryFunction, {
     String? instanceName,
   });
 
@@ -27,10 +27,16 @@ abstract class Registry {
   ///
   /// The [factoryFunction] is invoked every time [Fluent.get] is called.
   void registerFactory<T extends Object>(
-    T Function(GetIt i) factoryFunction, {
+    T Function(Registry i) factoryFunction, {
     String? instanceName,
   });
 
   /// Checks if a type [T] is currently registered in the container.
   bool isRegistered<T extends Object>();
+
+  /// Retrieves an instance of a registered object [T].
+  T get<T extends Object>({String? instanceName});
+
+  /// Retrieves an instance of a registered object [T] (shorthand for [get]).
+  T call<T extends Object>({String? instanceName});
 }

@@ -1,3 +1,10 @@
+## 0.7.0
+
+* FIX: Redact sensitive query parameters in log interceptor.
+* PERF: Optimized `NetworkingLogInterceptor` string processing and allocations.
+* CHORE: Updated `fluent_sdk` dependency to `^0.7.0`.
+* REFACTOR: Refactored `NetworkingModule` to support the new stable Registry contract.
+
 ## 0.6.0
 
 * **FEAT**: Implement caching support using `NetworkingCacheInterceptor`.

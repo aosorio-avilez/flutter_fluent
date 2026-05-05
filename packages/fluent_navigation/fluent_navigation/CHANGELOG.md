@@ -1,3 +1,8 @@
+## 1.8.0
+
+* CHORE: Updated `fluent_sdk` dependency to `^0.7.0`.
+* REFACTOR: Refactored `NavigationModule` to support the new stable Registry contract.
+
 ## 1.7.0
 
 * **Feature**: Added `replaceWith` method to `NavigationApiImpl` to allow replacing the current route without adding it to the history stack.
