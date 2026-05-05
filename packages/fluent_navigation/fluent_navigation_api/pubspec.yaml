@@ -1,6 +1,6 @@
 name: fluent_navigation_api
 description: A common interface for the fluent_navigation package.
-version: 1.1.0
+version: 1.2.0
 resolution: workspace
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_navigation/fluent_navigation_api
 

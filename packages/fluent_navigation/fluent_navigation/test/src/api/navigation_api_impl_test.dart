@@ -18,6 +18,16 @@ void main() {
     expect(find.byKey(const Key('secondPage')), findsOneWidget);
   });
 
+  testWidgets('verify replaceWith', (tester) async {
+    await pumpAppRouter(tester);
+
+    await tester.tap(find.byKey(const Key('replaceButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('secondPage')), findsOneWidget);
+    expect(Fluent.get<NavigationApi>().canPop(), isFalse);
+  });
+
   testWidgets('verify pushTo', (tester) async {
     await pumpAppRouter(tester);
 
@@ -130,6 +140,13 @@ void mockRoutes() {
                   }
                 },
                 child: const Text('Push to second page'),
+              ),
+              ElevatedButton(
+                key: const Key('replaceButton'),
+                onPressed: () async {
+                  await Fluent.get<NavigationApi>().replaceWith('second');
+                },
+                child: const Text('Replace with second page'),
               ),
             ],
           ),

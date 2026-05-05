@@ -29,6 +29,21 @@ class NavigationApiImpl extends NavigationApi {
   }
 
   @override
+  Future<void> replaceWith(
+    String routeName, {
+    Map<String, String> params = const <String, String>{},
+    Map<String, dynamic> queryParams = const <String, dynamic>{},
+    Object? extra,
+  }) async {
+    await _router.replaceNamed<void>(
+      routeName,
+      extra: extra,
+      pathParameters: params,
+      queryParameters: queryParams,
+    );
+  }
+
+  @override
   Future<T?> pushTo<T>(
     String routeName, {
     Map<String, String> params = const <String, String>{},

@@ -1,3 +1,7 @@
+## 1.2.0
+
+*   Added `replaceWith` method to `NavigationApi` interface.
+
 ## 1.1.0
 
 *   Added `navigatorKey` getter to `NavigationApi` interface.
