@@ -11,7 +11,7 @@ void main(List<String> args) async {
   if (args.isNotEmpty) {
     inputPath = args[0];
   }
-  
+
   if (args.length > 1) {
     outputPath = args[1];
   }
