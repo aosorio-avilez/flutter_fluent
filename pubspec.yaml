@@ -26,16 +26,19 @@ dev_dependencies:
   melos: ^7.4.0
 
 melos:
+  command:
+    bootstrap:
+      runPubGetInParallel: true
   scripts:
     format:
-      run: melos exec "dart format --set-exit-if-changed lib test"
-      description: Format dart files in all packages
+      run: dart format . --set-exit-if-changed
+      description: Format dart files in the workspace
     analyze:
-      run: melos exec --dir-exists="test" "flutter analyze --no-pub lib test"
+      run: melos exec -c 4 --dir-exists="lib" -- "flutter analyze --no-pub"
       description: Analyze dart files in all packages
     test:
-      run: melos exec --dir-exists="test" "flutter test -j 4 --coverage --test-randomize-ordering-seed random"
+      run: melos exec -c 3 --dir-exists="test" -- "flutter test --no-pub --coverage --test-randomize-ordering-seed random"
       description: Run tests in all packages
     coverage:
-      run: melos exec --dir-exists="test" "cover check --no-display-files --min-coverage 90"
+      run: melos exec -c 6 --dir-exists="test" -- "cover check --no-display-files --min-coverage 90"
       description: Run code coverage in all packages
