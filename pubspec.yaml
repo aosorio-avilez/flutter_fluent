@@ -34,11 +34,11 @@ melos:
       run: dart format . --set-exit-if-changed
       description: Format dart files in the workspace
     analyze:
-      run: melos exec -c 4 --dir-exists="lib" --ignore="*example*" -- "flutter analyze --no-pub"
+      run: melos exec -c 4 --fail-fast --dir-exists="lib" --ignore="*example*" -- "flutter analyze --no-pub"
       description: Analyze core packages (excluding examples)
     test:
-      run: melos exec -c 3 --dir-exists="test" --ignore="*example*" -- "flutter test --no-pub --coverage --test-randomize-ordering-seed random"
+      run: melos exec -c 2 --fail-fast --dir-exists="test" --ignore="*example*" -- "flutter test --no-pub --coverage --test-randomize-ordering-seed random"
       description: Run core tests
     coverage:
-      run: melos exec -c 6 --dir-exists="test" --ignore="*example*" -- "cover check --no-display-files --min-coverage 90"
+      run: melos exec -c 4 --fail-fast --dir-exists="test" --ignore="*example*" -- "cover check --no-display-files --min-coverage 90"
       description: Run code coverage on core packages
