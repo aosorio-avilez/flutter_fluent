@@ -6,7 +6,7 @@ Package that provide a way to modularize features through a service locator.
 ### Add dependencies
 
 ```yaml
-fluent_sdk: ^0.7.0
+fluent_sdk: ^0.8.0
 ```
 
 ### Create a interface/implementation to access the feature functionalities
@@ -77,6 +77,20 @@ class MainApp extends StatelessWidget {
 }
 
 ```
+
+## Advanced Registry Features
+
+The `Registry` now supports dynamic dependency management, allowing you to reset or unregister services at runtime.
+
+```dart
+// Reset a lazy singleton (it will be recreated on next access)
+registry.resetLazySingleton<HomeApi>();
+
+// Unregister a service completely
+registry.unregister<HomeApi>();
+```
+
+These features are particularly useful for scenarios like user logout (clearing sensitive data) or dynamic environment switching.
 
 ## Example
 

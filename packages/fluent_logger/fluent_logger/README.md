@@ -6,7 +6,7 @@ Package that allows you to print different types of messages in console
 ### Add dependencies
 
 ```yaml
-flutter_fluent_logger: ^0.3.0
+flutter_fluent_logger: ^0.7.0
 ```
 
 ### Build module
@@ -14,7 +14,12 @@ flutter_fluent_logger: ^0.3.0
 ```dart
 void main() async {
   await Fluent.build([
-    LoggerModule(),
+    LoggerModule(
+        config: const LoggerConfig(
+            enableLog: kDebugMode, // Only print logs in debug mode
+            globalLogName: "MyAPP", // Optional tag for all logs
+        ),
+    ),
   ]);
 
   runApp(const MainApp());

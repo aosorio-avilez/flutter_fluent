@@ -6,7 +6,7 @@ Package that allows you to set up and use translations in an easy and quick way.
 ### Add dependencies
 
 ```yaml
-fluent_localization: ^1.6.0
+fluent_localization: ^1.9.0
 ```
 
 ### Add language folder to Flutter assets
@@ -27,14 +27,37 @@ flutter:
 }
 ```
 
-### Build module
-
 ```dart
 void main() async {
   await Fluent.build([
-    LocalizationModule(),
+    LocalizationModule(
+        defaultLocale: const Locale('en'),
+        supportedLocales: [
+            const Locale('en'),
+            const Locale('es'),
+        ],
+    ),
   ]);
-  runApp(App());
+  runApp(const App());
+}
+
+class App extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+        final localizationApi = Fluent.get<LocalizationApi>();
+        
+        return MaterialApp(
+            // Get delegates from the API
+            localizationsDelegates: localizationApi.getDelegates(
+                [const Locale('en'), const Locale('es')],
+            ),
+            supportedLocales: const [
+                Locale('en'),
+                Locale('es'),
+            ],
+            home: const HomePage(),
+        );
+    }
 }
 ```
 

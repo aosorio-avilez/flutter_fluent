@@ -6,7 +6,7 @@ Package that provides a simple way to navigate within your app
 ### Add dependencies
 
 ```yaml
-fluent_navigation: ^1.4.0
+fluent_navigation: ^1.9.0
 ```
 
 ### Create pages
@@ -36,10 +36,22 @@ class PageOne extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // Navigate to page two
-                Fluent.get<NavigationApi>().navigateTo("two");
+                // Navigate with params and query params
+                Fluent.get<NavigationApi>().navigateTo(
+                  "details",
+                  params: {"id": "123"},
+                  queryParams: {"tab": "info"},
+                );
               },
-              child: const Text("Navigate to second page"),
+              child: const Text("Navigate with parameters"),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                // Replace current route (useful for login flows)
+                Fluent.get<NavigationApi>().replaceWith("home");
+              },
+              child: const Text("Replace with Home"),
             ),
           ],
         ),
@@ -59,7 +71,10 @@ class PageTwo extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            Fluent.get<NavigationApi>().pop(true);
+            // Check if can pop before popping
+            if (Fluent.get<NavigationApi>().canPop()) {
+              Fluent.get<NavigationApi>().pop(true);
+            }
           },
           child: const Text("Go back to previous page"),
         ),
@@ -83,11 +98,15 @@ class ExampleModule extends FluentModule {
           path: "/one",
           builder: (context, state) => const PageOne(),
         ))
-        // Second route
+        // Route with parameters
         ..registerRoute(GoRoute(
-          name: "two",
-          path: "/two",
-          builder: (context, state) => const PageTwo(),
+          name: "details",
+          path: "/details/:id",
+          builder: (context, state) {
+            final id = state.pathParameters["id"];
+            final tab = state.uri.queryParameters["tab"];
+            return DetailsPage(id: id, tab: tab);
+          },
         ));
   }
 }
@@ -113,12 +132,17 @@ class App extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {    
-        // Get router config
-        final router = Fluent.get<NavigationApi>().router;
+        final navigationApi = Fluent.get<NavigationApi>();
         
         return MaterialApp.router(
             title: "Fluent Navigation Demo",
-            routerConfig: router,
+            // The router configuration
+            routerConfig: navigationApi.router,
+            // Access the GlobalKey<NavigatorState> if needed
+            // builder: (context, child) => MyWrapper(
+            //    navigatorKey: navigationApi.navigatorKey,
+            //    child: child!,
+            // ),
         );
     }
 }
