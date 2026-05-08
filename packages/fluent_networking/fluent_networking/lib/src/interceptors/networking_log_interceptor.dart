@@ -182,11 +182,14 @@ class NetworkingLogInterceptor extends Interceptor {
     Map<String, dynamic>? queryParameters;
 
     for (final key in uri.queryParametersAll.keys) {
-      final isSensitive = _sensitiveQueryParams.contains(key) ||
+      final isSensitive =
+          _sensitiveQueryParams.contains(key) ||
           _sensitiveQueryParams.contains(key.toLowerCase());
 
       if (isSensitive) {
-        queryParameters ??= Map<String, List<String>>.of(uri.queryParametersAll);
+        queryParameters ??= Map<String, List<String>>.of(
+          uri.queryParametersAll,
+        );
         queryParameters[key] = ['***REDACTED***'];
       }
     }
