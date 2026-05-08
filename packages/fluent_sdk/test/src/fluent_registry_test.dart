@@ -88,9 +88,9 @@ void main() {
       final instance1 = registry.get<TestClass>();
       expect(count, 1);
 
-      registry.resetLazySingleton<TestClass>(instance: instance1);
-
-      registry.get<TestClass>();
+      registry
+        ..resetLazySingleton<TestClass>(instance: instance1)
+        ..get<TestClass>();
       expect(count, 2);
     });
 
@@ -98,18 +98,19 @@ void main() {
       registry.registerSingleton<TestClass>((_) => TestClass());
       expect(registry.isRegistered<TestClass>(), isTrue);
 
-      registry.unregister<TestClass>();
-
+      registry
+        ..unregister<TestClass>()
+        ..isRegistered<TestClass>();
       expect(registry.isRegistered<TestClass>(), isFalse);
     });
 
     test('resetLazySingleton should handle async disposing function', () async {
-      registry.registerLazySingleton<TestClass>((_) => TestClass());
-      registry.get<TestClass>();
-
-      registry.resetLazySingleton<TestClass>(
-        disposingFunction: (_) => Future.delayed(Duration.zero),
-      );
+      registry
+        ..registerLazySingleton<TestClass>((_) => TestClass())
+        ..get<TestClass>()
+        ..resetLazySingleton<TestClass>(
+          disposingFunction: (_) => Future<void>.delayed(Duration.zero),
+        );
     });
 
     test('resetLazySingleton and unregister with instanceName', () {
@@ -120,18 +121,19 @@ void main() {
 
       expect(registry.isRegistered<TestClass>(instanceName: 'test'), isTrue);
 
-      registry.resetLazySingleton<TestClass>(instanceName: 'test');
-      registry.unregister<TestClass>(instanceName: 'test');
+      registry
+        ..resetLazySingleton<TestClass>(instanceName: 'test')
+        ..unregister<TestClass>(instanceName: 'test');
 
       expect(registry.isRegistered<TestClass>(instanceName: 'test'), isFalse);
     });
 
     test('unregister should handle async disposing function', () async {
-      registry.registerSingleton<TestClass>((_) => TestClass());
-
-      registry.unregister<TestClass>(
-        disposingFunction: (_) => Future.delayed(Duration.zero),
-      );
+      registry
+        ..registerSingleton<TestClass>((_) => TestClass())
+        ..unregister<TestClass>(
+          disposingFunction: (_) => Future<void>.delayed(Duration.zero),
+        );
     });
   });
 }
