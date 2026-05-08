@@ -1,3 +1,7 @@
+## 0.9.0
+
+* CHORE: Updated `fluent_sdk` dependency to `^0.8.0`.
+
 ## 0.8.0
 
 * FEAT: Add support for `FormData` sanitization in log interceptor.

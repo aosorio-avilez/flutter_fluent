@@ -6,16 +6,34 @@ import 'package:fluent_sdk/fluent_sdk.dart';
 class EnvironmentModule extends FluentModule {
   const EnvironmentModule({
     required this.environment,
+    this.availableEnvironments = const [],
+    this.resetServices = const [],
   });
 
   final Environment environment;
+  final List<Environment> availableEnvironments;
+  final List<void Function(EnvironmentApi)> resetServices;
 
   @override
   void onCreate(Registry registry) {
     registry
-      ..registerLazySingleton<Environment>((_) => environment)
       ..registerLazySingleton<EnvironmentApi>(
-        (it) => EnvironmentApiImpl(it<Environment>()),
-      );
+        (it) {
+          final api = EnvironmentApiImpl(
+            environment,
+            availableEnvironments.isEmpty
+                ? [environment]
+                : availableEnvironments,
+            it,
+          );
+
+          for (final resetService in resetServices) {
+            resetService(api);
+          }
+
+          return api;
+        },
+      )
+      ..registerFactory<Environment>((it) => it<EnvironmentApi>().environment);
   }
 }

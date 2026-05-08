@@ -21,6 +21,9 @@ void main() {
     mockEnv = MockEnvironment();
     mockEnvApi = EnvironmentApiMock();
 
+    when(() => mockEnvApi.environmentNotifier).thenReturn(
+      ValueNotifier(mockEnv),
+    );
     Fluent.mock<EnvironmentApi>(mockEnvApi);
   });
 
@@ -94,11 +97,13 @@ void main() {
     expect(bannerWidget.location, BannerLocation.topStart);
   });
 
-  testWidgets('should NOT display banner when environment IS prod', (
+  testWidgets('should display banner when environment IS prod in debug mode', (
     tester,
   ) async {
     // Arrange
     when(() => mockEnv.type).thenReturn(EnvironmentType.prod);
+    when(() => mockEnv.name).thenReturn('PROD');
+    when(() => mockEnv.color).thenReturn(Colors.black);
 
     // Act
     await tester.pumpWidget(
@@ -114,7 +119,7 @@ void main() {
     );
 
     // Assert
-    expect(find.byType(Banner), findsNothing);
+    expect(find.byType(Banner), findsOneWidget);
     expect(find.text('Content'), findsOneWidget);
   });
 
@@ -235,5 +240,41 @@ void main() {
     final bannerWidget = tester.widget<Banner>(find.byType(Banner));
     expect(bannerWidget.textDirection, TextDirection.rtl);
     expect(bannerWidget.layoutDirection, TextDirection.rtl);
+  });
+
+  testWidgets('should update when environment changes', (tester) async {
+    // Arrange
+    final notifier = ValueNotifier<Environment>(mockEnv);
+    when(() => mockEnvApi.environmentNotifier).thenReturn(notifier);
+    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+    when(() => mockEnv.name).thenReturn('DEV');
+    when(() => mockEnv.color).thenReturn(Colors.red);
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: EnvironmentBanner(
+            child: Text('Content'),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.widget<Banner>(find.byType(Banner)).message, 'DEV');
+
+    // Act
+    final mockEnv2 = MockEnvironment();
+    when(() => mockEnv2.type).thenReturn(EnvironmentType.stg);
+    when(() => mockEnv2.name).thenReturn('STG');
+    when(() => mockEnv2.color).thenReturn(Colors.orange);
+
+    notifier.value = mockEnv2;
+    await tester.pump();
+
+    // Assert
+    expect(tester.widget<Banner>(find.byType(Banner)).message, 'STG');
+    final bannerWidget = tester.widget<Banner>(find.byType(Banner));
+    expect(bannerWidget.color, Colors.orange);
   });
 }

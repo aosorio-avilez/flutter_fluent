@@ -1,4 +1,5 @@
 import 'package:fluent_environment_api/src/environment.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Interface defined to use the fluent environment functionalities
@@ -7,6 +8,21 @@ abstract class EnvironmentApi {
   ///
   /// A [AssertionError] maybe thrown if there is no any registered environment
   Environment get environment;
+
+  /// The list of available environments.
+  List<Environment> get availableEnvironments;
+
+  /// A notifier that emits the current environment whenever it changes.
+  ValueListenable<Environment> get environmentNotifier;
+
+  /// Updates the current environment.
+  void updateEnvironment(Environment environment);
+
+  /// Registers a service to be reset whenever the environment changes.
+  ///
+  /// This is useful for services that depend on environment values (like Dio)
+  /// and need to be reconstructed to pick up the new values.
+  void registerResetService<T extends Object>();
 
   /// Shows the environment inspector.
   Future<void> showInspector(

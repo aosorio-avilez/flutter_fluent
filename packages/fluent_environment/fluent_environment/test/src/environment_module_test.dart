@@ -17,8 +17,30 @@ void main() {
     expect(Fluent.get<Environment>(), isA<Environment>());
     expect(Fluent.get<EnvironmentApi>(), isA<EnvironmentApiImpl>());
 
-    // Verificamos que la instancia inyectada sea la misma
     expect(Fluent.get<EnvironmentApi>().environment, equals(mockEnv));
+  });
+
+  test('environment module with multiple environments', () async {
+    final mockEnv1 = MockEnvironment();
+    final mockEnv2 = MockEnvironment();
+
+    await Fluent.build([
+      EnvironmentModule(
+        environment: mockEnv1,
+        availableEnvironments: [mockEnv1, mockEnv2],
+      ),
+    ]);
+    addTearDown(Fluent.reset);
+
+    final api = Fluent.get<EnvironmentApi>();
+    expect(api.availableEnvironments, containsAll([mockEnv1, mockEnv2]));
+    expect(api.environment, equals(mockEnv1));
+    expect(Fluent.get<Environment>(), equals(mockEnv1));
+
+    api.updateEnvironment(mockEnv2);
+
+    expect(api.environment, equals(mockEnv2));
+    expect(Fluent.get<Environment>(), equals(mockEnv2));
   });
 
   test('EnvironmentModule can be instantiated as const', () {
@@ -32,14 +54,14 @@ class TestEnvironment extends Environment {
   const TestEnvironment();
 
   @override
-  String get name => throw UnimplementedError();
+  String get name => 'Test';
 
   @override
-  Color get color => throw UnimplementedError();
+  Color get color => const Color(0xFF000000);
 
   @override
-  EnvironmentType get type => throw UnimplementedError();
+  EnvironmentType get type => EnvironmentType.dev;
 
   @override
-  Map<String, String> get values => throw UnimplementedError();
+  Map<String, String> get values => {};
 }

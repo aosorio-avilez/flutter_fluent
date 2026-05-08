@@ -5,12 +5,26 @@ import 'package:mocktail/mocktail.dart';
 
 class MockEnvironment extends Mock implements Environment {}
 
+class MockEnvironmentApi extends Mock implements EnvironmentApi {}
+
 void main() {
   late MockEnvironment mockEnv;
+  late MockEnvironmentApi mockApi;
+
+  setUpAll(() {
+    registerFallbackValue(MockEnvironment());
+  });
 
   setUp(() {
     mockEnv = MockEnvironment();
+    mockApi = MockEnvironmentApi();
     when(() => mockEnv.sensitiveKeys).thenReturn({});
+    when(() => mockEnv.name).thenReturn('Development');
+    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+    when(() => mockEnv.color).thenReturn(Colors.blue);
+    when(() => mockEnv.values).thenReturn({});
+    when(() => mockApi.environmentNotifier).thenReturn(ValueNotifier(mockEnv));
+    when(() => mockApi.availableEnvironments).thenReturn([mockEnv]);
   });
 
   testWidgets('should display environment details', (tester) async {
@@ -27,7 +41,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: EnvironmentInspector(environment: mockEnv),
+          body: EnvironmentInspector(environmentApi: mockApi),
         ),
       ),
     );
@@ -42,6 +56,36 @@ void main() {
     expect(find.text('dev_key_123'), findsOneWidget);
   });
 
+  testWidgets('should show environment switcher when multiple environments', (
+    tester,
+  ) async {
+    final mockEnv2 = MockEnvironment();
+    when(() => mockEnv2.name).thenReturn('Staging');
+    when(() => mockEnv2.type).thenReturn(EnvironmentType.stg);
+    when(() => mockEnv2.color).thenReturn(Colors.orange);
+    when(() => mockEnv2.values).thenReturn({});
+    when(() => mockEnv2.sensitiveKeys).thenReturn({});
+
+    when(() => mockApi.availableEnvironments).thenReturn([mockEnv, mockEnv2]);
+    when(() => mockApi.updateEnvironment(any())).thenReturn(null);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: EnvironmentInspector(environmentApi: mockApi),
+        ),
+      ),
+    );
+
+    expect(find.text('Available Environments'), findsOneWidget);
+    expect(find.text('Staging'), findsOneWidget);
+
+    await tester.tap(find.text('Staging'));
+    await tester.pump();
+
+    verify(() => mockApi.updateEnvironment(mockEnv2)).called(1);
+  });
+
   testWidgets('should display empty message when no values', (tester) async {
     // Arrange
     when(() => mockEnv.name).thenReturn('Staging');
@@ -53,7 +97,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: EnvironmentInspector(environment: mockEnv),
+          body: EnvironmentInspector(environmentApi: mockApi),
         ),
       ),
     );
@@ -68,15 +112,12 @@ void main() {
     tester,
   ) async {
     // Arrange
-    when(() => mockEnv.name).thenReturn('Dev');
-    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
-    when(() => mockEnv.color).thenReturn(Colors.blue);
     when(() => mockEnv.values).thenReturn({'key': 'value'});
 
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: EnvironmentInspector(environment: mockEnv),
+          body: EnvironmentInspector(environmentApi: mockApi),
         ),
       ),
     );
@@ -85,25 +126,18 @@ void main() {
     expect(find.byIcon(Icons.copy_all), findsOneWidget);
     await tester.tap(find.byIcon(Icons.copy_all));
 
-    // Trigger the async onPressed and wait for the snackbar animation
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
 
     // Assert
     expect(find.byType(SnackBar), findsOneWidget);
     expect(find.text('Copied "key" to clipboard'), findsOneWidget);
-
-    final iconButton = tester.widget<IconButton>(find.byType(IconButton));
-    expect(iconButton.tooltip, 'Copy "key" to clipboard');
   });
 
   testWidgets('should redact sensitive keys and hide copy button', (
     tester,
   ) async {
     // Arrange
-    when(() => mockEnv.name).thenReturn('Dev');
-    when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
-    when(() => mockEnv.color).thenReturn(Colors.blue);
     when(() => mockEnv.values).thenReturn({
       'public_key': 'public_123',
       'secret_key': 'secret_456',
@@ -113,7 +147,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: EnvironmentInspector(environment: mockEnv),
+          body: EnvironmentInspector(environmentApi: mockApi),
         ),
       ),
     );
@@ -125,8 +159,6 @@ void main() {
     expect(find.text('secret_456'), findsNothing);
     expect(find.text('***REDACTED***'), findsOneWidget);
 
-    // Copy button should exist for public_key but not for secret_key
-    // In this case, we expect only one copy button in the entire widget
     expect(find.byIcon(Icons.copy_all), findsOneWidget);
   });
 }

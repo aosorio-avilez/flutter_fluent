@@ -1,3 +1,9 @@
+## 0.5.0
+
+* FEAT: Added `environmentNotifier` (ValueListenable) to `EnvironmentApi` for reactive UI updates.
+* FEAT: Added `updateEnvironment` and `availableEnvironments` to support runtime environment switching.
+* FEAT: Added `registerResetService` to allow automatic reconstruction of dependent services (e.g., Networking) when the environment changes.
+
 ## 0.4.0
 
 * **FEAT**: Add `sensitiveKeys` support to `Environment` model.

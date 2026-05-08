@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:get_it/get_it.dart';
 
@@ -13,7 +15,8 @@ class FluentRegistry implements Registry {
 
   @override
   @pragma('vm:prefer-inline')
-  bool isRegistered<T extends Object>() => _getIt.isRegistered<T>();
+  bool isRegistered<T extends Object>({String? instanceName}) =>
+      _getIt.isRegistered<T>(instanceName: instanceName);
 
   @override
   @pragma('vm:prefer-inline')
@@ -59,5 +62,39 @@ class FluentRegistry implements Registry {
       factoryFunction(this),
       instanceName: instanceName,
     );
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  void resetLazySingleton<T extends Object>({
+    T? instance,
+    String? instanceName,
+    void Function(T)? disposingFunction,
+  }) {
+    final result = _getIt.resetLazySingleton<T>(
+      instance: instance,
+      instanceName: instanceName,
+      disposingFunction: disposingFunction,
+    );
+    if (result is Future<void>) {
+      unawaited(result);
+    }
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  void unregister<T extends Object>({
+    T? instance,
+    String? instanceName,
+    void Function(T)? disposingFunction,
+  }) {
+    final result = _getIt.unregister<T>(
+      instance: instance,
+      instanceName: instanceName,
+      disposingFunction: disposingFunction,
+    );
+    if (result is Future<void>) {
+      unawaited(result);
+    }
   }
 }

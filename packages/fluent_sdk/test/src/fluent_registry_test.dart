@@ -77,5 +77,63 @@ void main() {
 
       expect(GetIt.instance<TestClass2>(), isA<TestClass2>());
     });
+
+    test('resetLazySingleton should reset the instance', () {
+      var count = 0;
+      registry.registerLazySingleton<TestClass>((_) {
+        count++;
+        return TestClass();
+      });
+
+      final instance1 = registry.get<TestClass>();
+      expect(count, 1);
+
+      registry
+        ..resetLazySingleton<TestClass>(instance: instance1)
+        ..get<TestClass>();
+      expect(count, 2);
+    });
+
+    test('unregister should remove the registration', () {
+      registry.registerSingleton<TestClass>((_) => TestClass());
+      expect(registry.isRegistered<TestClass>(), isTrue);
+
+      registry
+        ..unregister<TestClass>()
+        ..isRegistered<TestClass>();
+      expect(registry.isRegistered<TestClass>(), isFalse);
+    });
+
+    test('resetLazySingleton should handle async disposing function', () async {
+      registry
+        ..registerLazySingleton<TestClass>((_) => TestClass())
+        ..get<TestClass>()
+        ..resetLazySingleton<TestClass>(
+          disposingFunction: (_) => Future<void>.delayed(Duration.zero),
+        );
+    });
+
+    test('resetLazySingleton and unregister with instanceName', () {
+      registry.registerLazySingleton<TestClass>(
+        (_) => TestClass(),
+        instanceName: 'test',
+      );
+
+      expect(registry.isRegistered<TestClass>(instanceName: 'test'), isTrue);
+
+      registry
+        ..resetLazySingleton<TestClass>(instanceName: 'test')
+        ..unregister<TestClass>(instanceName: 'test');
+
+      expect(registry.isRegistered<TestClass>(instanceName: 'test'), isFalse);
+    });
+
+    test('unregister should handle async disposing function', () async {
+      registry
+        ..registerSingleton<TestClass>((_) => TestClass())
+        ..unregister<TestClass>(
+          disposingFunction: (_) => Future<void>.delayed(Duration.zero),
+        );
+    });
   });
 }

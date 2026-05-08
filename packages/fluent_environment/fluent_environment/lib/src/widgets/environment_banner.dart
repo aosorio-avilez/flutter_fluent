@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fluent_environment_api/fluent_environment_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// A widget that displays an environment banner if
@@ -65,62 +66,73 @@ class EnvironmentBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final envApi = Fluent.get<EnvironmentApi>();
-    final env = environment ?? envApi.environment;
 
-    if (env.isProduction) {
-      return child;
-    }
+    return ValueListenableBuilder<Environment>(
+      valueListenable: envApi.environmentNotifier,
+      builder: (context, currentEnvironment, _) {
+        final env = environment ?? currentEnvironment;
 
-    Widget content = Banner(
-      color: env.color,
-      message: env.name,
-      location: location,
-      textDirection: Directionality.maybeOf(context) ?? TextDirection.ltr,
-      layoutDirection: Directionality.maybeOf(context) ?? TextDirection.ltr,
-      textStyle:
-          textStyle ??
-          const TextStyle(
-            fontSize: 10.2,
-            fontWeight: FontWeight.w900,
-            height: 1,
-          ),
-      child: child,
-    );
+        if (kReleaseMode && env.isProduction && !enableInspector) {
+          return child;
+        }
 
-    if (enableInspector) {
-      content = Stack(
-        children: [
-          content,
-          Positioned.fill(
-            child: Align(
-              alignment: _getAlignmentFromLocation(location),
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onLongPress: () {
-                  unawaited(
-                    envApi.showInspector(
-                      context,
-                      configValuesLabel: configValuesLabel,
-                      noValuesLabel: noValuesLabel,
-                      navigatorKey: navigatorKey,
+        var content = child;
+
+        if (!kReleaseMode || !env.isProduction) {
+          content = Banner(
+            color: env.color,
+            message: env.name,
+            location: location,
+            textDirection: Directionality.maybeOf(context) ?? TextDirection.ltr,
+            layoutDirection:
+                Directionality.maybeOf(context) ?? TextDirection.ltr,
+            textStyle:
+                textStyle ??
+                const TextStyle(
+                  fontSize: 10.2,
+                  fontWeight: FontWeight.w900,
+                  height: 1,
+                ),
+            child: child,
+          );
+        }
+
+        if (enableInspector) {
+          content = Stack(
+            children: [
+              content,
+              Positioned.fill(
+                child: Align(
+                  alignment: _getAlignmentFromLocation(location),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onLongPress: () {
+                      unawaited(
+                        envApi.showInspector(
+                          context,
+                          configValuesLabel: configValuesLabel,
+                          noValuesLabel: noValuesLabel,
+                          navigatorKey: navigatorKey,
+                        ),
+                      );
+                    },
+                    child: const SizedBox(
+                      width: 80,
+                      height: 80,
                     ),
-                  );
-                },
-                child: const SizedBox(
-                  width: 80,
-                  height: 80,
+                  ),
                 ),
               ),
-            ),
-          ),
-        ],
-      );
-    }
+            ],
+          );
+        }
 
-    return Semantics(
-      label: 'Environment: ${env.name}',
-      container: true,
-      child: content,
+        return Semantics(
+          label: 'Environment: ${env.name}',
+          container: true,
+          child: content,
+        );
+      },
     );
   }
 
