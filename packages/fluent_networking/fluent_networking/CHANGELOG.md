@@ -4,6 +4,7 @@
 * SECURITY: Expanded default sensitive keys for headers, query params, and body (including email, phone_number, and credit_card).
 * PERF: Optimized sensitive key checking for `FormData` fields.
 * PERF: Further optimized `NetworkingLogInterceptor` map processing and reduced allocations.
+* CHORE: Updated `fluent_sdk` dependency to `^0.8.0`.
 
 ## 0.7.0
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fluent_environment/src/api/environment_api_impl.dart';
 import 'package:fluent_environment/src/widgets/environment_inspector.dart';
 import 'package:fluent_environment_api/fluent_environment_api.dart';
@@ -5,12 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../mocks/registry_mock.dart';
+
 class MockEnvironment extends Mock implements Environment {}
 
 void main() {
   test('verify environment getter returns the injected instance', () {
     final mockEnv = MockEnvironment();
-    final api = EnvironmentApiImpl(mockEnv, [mockEnv]);
+    final mockRegistry = MockRegistry();
+    final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
 
     expect(api.environment, equals(mockEnv));
   });
@@ -18,7 +23,12 @@ void main() {
   test('updateEnvironment should update the current environment', () {
     final mockEnv1 = MockEnvironment();
     final mockEnv2 = MockEnvironment();
-    final api = EnvironmentApiImpl(mockEnv1, [mockEnv1, mockEnv2]);
+    final mockRegistry = MockRegistry();
+    final api = EnvironmentApiImpl(
+      mockEnv1,
+      [mockEnv1, mockEnv2],
+      mockRegistry,
+    );
 
     expect(api.environment, equals(mockEnv1));
 
@@ -30,7 +40,12 @@ void main() {
   test('environmentNotifier should emit new environment on update', () {
     final mockEnv1 = MockEnvironment();
     final mockEnv2 = MockEnvironment();
-    final api = EnvironmentApiImpl(mockEnv1, [mockEnv1, mockEnv2]);
+    final mockRegistry = MockRegistry();
+    final api = EnvironmentApiImpl(
+      mockEnv1,
+      [mockEnv1, mockEnv2],
+      mockRegistry,
+    );
     var notified = false;
 
     api.environmentNotifier.addListener(() {
@@ -43,6 +58,22 @@ void main() {
     expect(api.environmentNotifier.value, equals(mockEnv2));
   });
 
+  test('registerResetService should call registry.resetLazySingleton on update',
+      () {
+    final mockEnv1 = MockEnvironment();
+    final mockEnv2 = MockEnvironment();
+    final mockRegistry = MockRegistry();
+    EnvironmentApiImpl(
+      mockEnv1,
+      [mockEnv1, mockEnv2],
+      mockRegistry,
+    )
+      ..registerResetService<String>()
+      ..updateEnvironment(mockEnv2);
+
+    verify(() => mockRegistry.resetLazySingleton<String>()).called(1);
+  });
+
   testWidgets(
     'showInspector should display EnvironmentInspector in bottom sheet',
     (tester) async {
@@ -53,7 +84,8 @@ void main() {
       when(() => mockEnv.values).thenReturn({});
       when(() => mockEnv.sensitiveKeys).thenReturn({});
 
-      final api = EnvironmentApiImpl(mockEnv, [mockEnv]);
+      final mockRegistry = MockRegistry();
+      final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
 
       await tester.pumpWidget(
         MaterialApp(
@@ -88,7 +120,8 @@ void main() {
     when(() => mockEnv.sensitiveKeys).thenReturn({});
 
     final navigatorKey = GlobalKey<NavigatorState>();
-    final api = EnvironmentApiImpl(mockEnv, [mockEnv]);
+    final mockRegistry = MockRegistry();
+    final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
 
     await tester.pumpWidget(
       MaterialApp(
@@ -97,10 +130,13 @@ void main() {
       ),
     );
 
-    // ignore: unawaited_futures
-    api.showInspector(
-      navigatorKey.currentContext!,
-      navigatorKey: navigatorKey,
+    // The inspector is shown asynchronously, but we don't need to await it
+    // here as we pump the tester afterwards.
+    unawaited(
+      api.showInspector(
+        navigatorKey.currentContext!,
+        navigatorKey: navigatorKey,
+      ),
     );
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));

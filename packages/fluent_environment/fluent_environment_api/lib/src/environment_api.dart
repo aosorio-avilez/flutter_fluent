@@ -18,6 +18,12 @@ abstract class EnvironmentApi {
   /// Updates the current environment.
   void updateEnvironment(Environment environment);
 
+  /// Registers a service to be reset whenever the environment changes.
+  ///
+  /// This is useful for services that depend on environment values (like Dio)
+  /// and need to be reconstructed to pick up the new values.
+  void registerResetService<T extends Object>();
+
   /// Shows the environment inspector.
   Future<void> showInspector(
     BuildContext context, {

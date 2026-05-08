@@ -289,12 +289,7 @@ class NetworkingLogInterceptor extends Interceptor {
 
   void _log(Iterable<String> lines) {
     if (_logger == null) return;
-    // Using for-in to avoid closure allocation, although linter prefers forEach
-    // with tear-offs.
-    // ignore: prefer_foreach
-    for (final line in lines) {
-      _logger.logInfo(line);
-    }
+    lines.forEach(_logger.logInfo);
   }
 
   void _logError(Iterable<String> lines, {StackTrace? stackTrace}) {

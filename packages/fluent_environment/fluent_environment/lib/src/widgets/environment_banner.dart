@@ -71,24 +71,29 @@ class EnvironmentBanner extends StatelessWidget {
       builder: (context, currentEnvironment, _) {
         final env = environment ?? currentEnvironment;
 
-        if (env.isProduction) {
+        if (env.isProduction && !enableInspector) {
           return child;
         }
 
-        Widget content = Banner(
-          color: env.color,
-          message: env.name,
-          location: location,
-          textDirection: Directionality.maybeOf(context) ?? TextDirection.ltr,
-          layoutDirection: Directionality.maybeOf(context) ?? TextDirection.ltr,
-          textStyle: textStyle ??
-              const TextStyle(
-                fontSize: 10.2,
-                fontWeight: FontWeight.w900,
-                height: 1,
-              ),
-          child: child,
-        );
+        var content = child;
+
+        if (!env.isProduction) {
+          content = Banner(
+            color: env.color,
+            message: env.name,
+            location: location,
+            textDirection: Directionality.maybeOf(context) ?? TextDirection.ltr,
+            layoutDirection:
+                Directionality.maybeOf(context) ?? TextDirection.ltr,
+            textStyle: textStyle ??
+                const TextStyle(
+                  fontSize: 10.2,
+                  fontWeight: FontWeight.w900,
+                  height: 1,
+                ),
+            child: child,
+          );
+        }
 
         if (enableInspector) {
           content = Stack(

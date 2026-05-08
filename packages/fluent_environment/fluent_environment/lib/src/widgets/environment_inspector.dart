@@ -41,101 +41,102 @@ class EnvironmentInspector extends StatelessWidget {
 
           return Container(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: environment.color,
-                        shape: BoxShape.circle,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: environment.color,
+                          shape: BoxShape.circle,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      environment.name,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: colorScheme.surfaceContainerHighest,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        environment.type.name.toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: colorScheme.onSurfaceVariant,
+                      const SizedBox(width: 8),
+                      Text(
+                        environment.name,
+                        style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          environment.type.name.toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(height: 24),
+                  if (environmentApi.availableEnvironments.length > 1) ...[
+                    Text(
+                      'Available Environments',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      height: 40,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: environmentApi.availableEnvironments.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(width: 8),
+                        itemBuilder: (context, index) {
+                          final env =
+                              environmentApi.availableEnvironments[index];
+                          final isSelected = env == environment;
+
+                          return ChoiceChip(
+                            label: Text(env.name),
+                            selected: isSelected,
+                            onSelected: (selected) {
+                              if (selected) {
+                                environmentApi.updateEnvironment(env);
+                              }
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    const Divider(height: 24),
                   ],
-                ),
-                const Divider(height: 24),
-                if (environmentApi.availableEnvironments.length > 1) ...[
                   Text(
-                    'Available Environments',
+                    configValuesLabel,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    height: 40,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: environmentApi.availableEnvironments.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(width: 8),
-                      itemBuilder: (context, index) {
-                        final env =
-                            environmentApi.availableEnvironments[index];
-                        final isSelected = env == environment;
-
-                        return ChoiceChip(
-                          label: Text(env.name),
-                          selected: isSelected,
-                          onSelected: (selected) {
-                            if (selected) {
-                              environmentApi.updateEnvironment(env);
-                            }
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  const Divider(height: 24),
-                ],
-                Text(
-                  configValuesLabel,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                if (environment.values.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24),
-                    child: Center(
-                      child: Text(noValuesLabel),
-                    ),
-                  )
-                else
-                  Flexible(
-                    child: ListView.separated(
+                  const SizedBox(height: 16),
+                  if (environment.values.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24),
+                      child: Center(
+                        child: Text(noValuesLabel),
+                      ),
+                    )
+                  else
+                    ListView.separated(
                       shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: environment.values.length,
                       separatorBuilder: (context, index) =>
                           const Divider(height: 1),
@@ -204,8 +205,8 @@ class EnvironmentInspector extends StatelessWidget {
                         );
                       },
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           );
         },

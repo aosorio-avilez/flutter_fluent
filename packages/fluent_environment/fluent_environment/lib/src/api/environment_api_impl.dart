@@ -1,5 +1,6 @@
 import 'package:fluent_environment/src/widgets/environment_inspector.dart';
 import 'package:fluent_environment_api/fluent_environment_api.dart';
+import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -7,9 +8,12 @@ class EnvironmentApiImpl extends EnvironmentApi {
   EnvironmentApiImpl(
     Environment environment,
     this.availableEnvironments,
+    this.registry,
   ) : _environmentNotifier = ValueNotifier(environment);
 
   final ValueNotifier<Environment> _environmentNotifier;
+  final Registry registry;
+  final List<void Function()> _resetters = [];
 
   @override
   final List<Environment> availableEnvironments;
@@ -23,6 +27,14 @@ class EnvironmentApiImpl extends EnvironmentApi {
   @override
   void updateEnvironment(Environment environment) {
     _environmentNotifier.value = environment;
+    for (final reset in _resetters) {
+      reset();
+    }
+  }
+
+  @override
+  void registerResetService<T extends Object>() {
+    _resetters.add(() => registry.resetLazySingleton<T>());
   }
 
   @override

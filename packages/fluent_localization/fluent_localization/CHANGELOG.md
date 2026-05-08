@@ -1,3 +1,7 @@
+## 1.8.2
+
+* CHORE: Updated `fluent_sdk` dependency to `^0.8.0`.
+
 ## 1.8.1
 
 * PERF: Optimized recursive string flattening and map processing.

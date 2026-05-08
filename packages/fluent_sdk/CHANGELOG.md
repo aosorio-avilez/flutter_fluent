@@ -64,6 +64,10 @@
 * CHORE: Recreated example platforms and updated READMEs.
 * FEAT: Added `onStart` and `onStop` lifecycle methods to `FluentModule`.
 
+## 0.8.0
+
+* FEAT: Added `resetLazySingleton` and `unregister` methods to `Registry` interface to support dynamic dependency management.
+
 ## 0.7.0
 
 * FIX: Added missing `call` and `get` methods to `Registry` interface.

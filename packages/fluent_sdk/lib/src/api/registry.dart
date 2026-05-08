@@ -37,4 +37,18 @@ abstract class Registry {
 
   /// Retrieves an instance of a registered object [T] (shorthand for [get]).
   T call<T extends Object>({String? instanceName});
+
+  /// Resets a Lazy Singleton, allowing it to be recreated on the next request.
+  void resetLazySingleton<T extends Object>({
+    T? instance,
+    String? instanceName,
+    void Function(T)? disposingFunction,
+  });
+
+  /// Unregisters an instance of a registered object [T].
+  void unregister<T extends Object>({
+    T? instance,
+    String? instanceName,
+    void Function(T)? disposingFunction,
+  });
 }
