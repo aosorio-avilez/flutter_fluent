@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockEnvironment extends Mock implements Environment {}
+
 class MockEnvironmentApi extends Mock implements EnvironmentApi {}
 
 void main() {
@@ -55,8 +56,9 @@ void main() {
     expect(find.text('dev_key_123'), findsOneWidget);
   });
 
-  testWidgets('should show environment switcher when multiple environments',
-      (tester) async {
+  testWidgets('should show environment switcher when multiple environments', (
+    tester,
+  ) async {
     final mockEnv2 = MockEnvironment();
     when(() => mockEnv2.name).thenReturn('Staging');
     when(() => mockEnv2.type).thenReturn(EnvironmentType.stg);

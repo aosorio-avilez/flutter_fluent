@@ -28,7 +28,7 @@ void main() {
       EnvironmentModule(
         environment: mockEnv1,
         availableEnvironments: [mockEnv1, mockEnv2],
-      )
+      ),
     ]);
     addTearDown(Fluent.reset);
 

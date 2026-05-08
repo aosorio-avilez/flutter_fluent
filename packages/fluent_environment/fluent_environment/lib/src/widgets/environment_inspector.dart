@@ -162,17 +162,17 @@ class EnvironmentInspector extends StatelessWidget {
                                       key,
                                       style: theme.textTheme.bodySmall
                                           ?.copyWith(
-                                        color: colorScheme.secondary,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                            color: colorScheme.secondary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                     ),
                                     const SizedBox(height: 2),
                                     SelectableText(
                                       stringValue,
-                                      style:
-                                          theme.textTheme.bodyMedium?.copyWith(
-                                        fontFamily: 'monospace',
-                                      ),
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            fontFamily: 'monospace',
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -188,8 +188,9 @@ class EnvironmentInspector extends StatelessWidget {
                                       ),
                                     );
                                     if (context.mounted) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         SnackBar(
                                           content: Text(
                                             'Copied "$key" to clipboard',

@@ -58,21 +58,23 @@ void main() {
     expect(api.environmentNotifier.value, equals(mockEnv2));
   });
 
-  test('registerResetService should call registry.resetLazySingleton on update',
-      () {
-    final mockEnv1 = MockEnvironment();
-    final mockEnv2 = MockEnvironment();
-    final mockRegistry = MockRegistry();
-    EnvironmentApiImpl(
-      mockEnv1,
-      [mockEnv1, mockEnv2],
-      mockRegistry,
-    )
-      ..registerResetService<String>()
-      ..updateEnvironment(mockEnv2);
+  test(
+    'registerResetService should call registry.resetLazySingleton on update',
+    () {
+      final mockEnv1 = MockEnvironment();
+      final mockEnv2 = MockEnvironment();
+      final mockRegistry = MockRegistry();
+      EnvironmentApiImpl(
+          mockEnv1,
+          [mockEnv1, mockEnv2],
+          mockRegistry,
+        )
+        ..registerResetService<String>()
+        ..updateEnvironment(mockEnv2);
 
-    verify(() => mockRegistry.resetLazySingleton<String>()).called(1);
-  });
+      verify(() => mockRegistry.resetLazySingleton<String>()).called(1);
+    },
+  );
 
   testWidgets(
     'showInspector should display EnvironmentInspector in bottom sheet',

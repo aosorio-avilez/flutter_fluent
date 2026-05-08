@@ -86,7 +86,8 @@ class EnvironmentBanner extends StatelessWidget {
             textDirection: Directionality.maybeOf(context) ?? TextDirection.ltr,
             layoutDirection:
                 Directionality.maybeOf(context) ?? TextDirection.ltr,
-            textStyle: textStyle ??
+            textStyle:
+                textStyle ??
                 const TextStyle(
                   fontSize: 10.2,
                   fontWeight: FontWeight.w900,

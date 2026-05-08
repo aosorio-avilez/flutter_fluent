@@ -10,10 +10,10 @@ class DevEnvironment extends Environment {
 
   @override
   Map<String, String> get values => {
-        'url': 'https://dev-api.example.com',
-        'api_key': 'dev-key-123',
-        'debug_mode': 'true',
-      };
+    'url': 'https://dev-api.example.com',
+    'api_key': 'dev-key-123',
+    'debug_mode': 'true',
+  };
 
   @override
   EnvironmentType get type => EnvironmentType.dev;
@@ -28,10 +28,10 @@ class StagingEnvironment extends Environment {
 
   @override
   Map<String, String> get values => {
-        'url': 'https://stg-api.example.com',
-        'api_key': 'stg-key-456',
-        'debug_mode': 'true',
-      };
+    'url': 'https://stg-api.example.com',
+    'api_key': 'stg-key-456',
+    'debug_mode': 'true',
+  };
 
   @override
   EnvironmentType get type => EnvironmentType.stg;
@@ -46,10 +46,10 @@ class ProdEnvironment extends Environment {
 
   @override
   Map<String, String> get values => {
-        'url': 'https://api.example.com',
-        'api_key': 'prod-key-789',
-        'debug_mode': 'false',
-      };
+    'url': 'https://api.example.com',
+    'api_key': 'prod-key-789',
+    'debug_mode': 'false',
+  };
 
   @override
   EnvironmentType get type => EnvironmentType.prod;

@@ -12,7 +12,7 @@ void main() async {
         StagingEnvironment(),
         ProdEnvironment(),
       ],
-    )
+    ),
   ]);
 
   runApp(const MainApp());
