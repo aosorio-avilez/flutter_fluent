@@ -179,19 +179,18 @@ class NetworkingLogInterceptor extends Interceptor {
   String _sanitizeUri(Uri uri) {
     if (uri.queryParameters.isEmpty) return uri.toString();
 
-    final queryParameters = Map<String, dynamic>.from(uri.queryParametersAll);
-    var hasChanges = false;
+    Map<String, dynamic>? queryParameters;
 
-    for (final key in queryParameters.keys) {
+    for (final key in uri.queryParametersAll.keys) {
       if (_sensitiveQueryParams.contains(key.toLowerCase())) {
+        queryParameters ??= Map<String, dynamic>.from(uri.queryParametersAll);
         queryParameters[key] = ['***REDACTED***'];
-        hasChanges = true;
       }
     }
 
-    if (!hasChanges) return uri.toString();
-
-    return uri.replace(queryParameters: queryParameters).toString();
+    return queryParameters != null
+        ? uri.replace(queryParameters: queryParameters).toString()
+        : uri.toString();
   }
 
   dynamic _sanitizeBody(dynamic data) {
@@ -199,21 +198,24 @@ class NetworkingLogInterceptor extends Interceptor {
 
     if (data is Map) {
       Map<dynamic, dynamic>? result;
-      data.forEach((key, value) {
+
+      for (final entry in data.entries) {
+        final key = entry.key;
+        final value = entry.value;
         final isSensitive = _sensitiveBodyKeys.contains(
           key.toString().toLowerCase(),
         );
         if (isSensitive) {
           result ??= Map<dynamic, dynamic>.from(data);
-          result![key] = '***REDACTED***';
+          result[key] = '***REDACTED***';
         } else {
           final sanitizedValue = _sanitizeBody(value);
           if (!identical(sanitizedValue, value)) {
             result ??= Map<dynamic, dynamic>.from(data);
-            result![key] = sanitizedValue;
+            result[key] = sanitizedValue;
           }
         }
-      });
+      }
       return result ?? data;
     } else if (data is List) {
       List<dynamic>? result;

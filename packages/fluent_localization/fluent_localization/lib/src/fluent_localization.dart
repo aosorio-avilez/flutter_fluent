@@ -181,7 +181,9 @@ void flattenStringsRecursive(
   Map<String, String> result, [
   String prefix = '',
 ]) {
-  data.forEach((key, value) {
+  for (final entry in data.entries) {
+    final key = entry.key;
+    final value = entry.value;
     final newKey = prefix.isEmpty ? key : '$prefix.$key';
 
     if (value is Map<String, dynamic>) {
@@ -189,5 +191,5 @@ void flattenStringsRecursive(
     } else if (value != null) {
       result[newKey] = value.toString();
     }
-  });
+  }
 }
