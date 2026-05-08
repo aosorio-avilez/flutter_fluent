@@ -20,8 +20,11 @@ class NetworkingLogInterceptor extends Interceptor {
          if (sensitiveHeaders != null)
            ...sensitiveHeaders.map((e) => e.toLowerCase()),
        },
-       _sensitiveBodyKeys =
-           sensitiveBodyKeys?.map((e) => e.toLowerCase()).toSet() ?? const {},
+       _sensitiveBodyKeys = {
+         ..._defaultSensitiveBodyKeys,
+         if (sensitiveBodyKeys != null)
+           ...sensitiveBodyKeys.map((e) => e.toLowerCase()),
+       },
        _sensitiveQueryParams = {
          ..._defaultSensitiveQueryParams,
          if (sensitiveQueryParams != null)
@@ -38,6 +41,8 @@ class NetworkingLogInterceptor extends Interceptor {
     'cookie',
     'proxy-authorization',
     'set-cookie',
+    'x-api-key',
+    'api-key',
   };
 
   static const _defaultSensitiveQueryParams = {
@@ -46,6 +51,26 @@ class NetworkingLogInterceptor extends Interceptor {
     'access_token',
     'token',
     'secret',
+    'password',
+    'pass',
+    'pwd',
+  };
+
+  static const _defaultSensitiveBodyKeys = {
+    'password',
+    'pass',
+    'pwd',
+    'token',
+    'secret',
+    'api_key',
+    'apikey',
+    'access_token',
+    'refresh_token',
+    'credit_card',
+    'cvv',
+    'cvc',
+    'email',
+    'phone_number',
   };
 
   static const _extraStartTime = 'networking_start_time';
@@ -202,7 +227,19 @@ class NetworkingLogInterceptor extends Interceptor {
   dynamic _sanitizeBody(dynamic data) {
     if (_sensitiveBodyKeys.isEmpty) return data;
 
-    if (data is Map) {
+    if (data is FormData) {
+      final fields = <String, dynamic>{};
+      for (final entry in data.fields) {
+        final isSensitive =
+            _sensitiveBodyKeys.contains(entry.key) ||
+            _sensitiveBodyKeys.contains(entry.key.toLowerCase());
+        fields[entry.key] = isSensitive ? '***REDACTED***' : entry.value;
+      }
+      for (final entry in data.files) {
+        fields[entry.key] = '[FILE: ${entry.value.filename}]';
+      }
+      return fields;
+    } else if (data is Map) {
       Map<dynamic, dynamic>? result;
 
       for (final entry in data.entries) {

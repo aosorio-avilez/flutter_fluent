@@ -63,6 +63,30 @@ void main() {
       verify(() => handler.next(options)).called(1);
     });
 
+    test('onRequest should sanitize default sensitive headers (x-api-key)', () {
+      final options = RequestOptions(
+        path: 'https://api.example.com',
+        method: 'GET',
+        headers: {
+          'x-api-key': 'my-secret-key',
+        },
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('***REDACTED***')),
+        ),
+      ).called(1);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('my-secret-key')),
+        ),
+      );
+    });
+
     test('onRequest should log request and sanitize custom header', () {
       final customInterceptor = NetworkingLogInterceptor(
         logger: mockLoggerApi,
@@ -91,7 +115,7 @@ void main() {
     test('onRequest should redact default sensitive query parameters', () {
       final options = RequestOptions(
         path:
-            'https://api.example.com?api_key=secret-key&token=my-token&q=flutter',
+            'https://api.example.com?api_key=secret-key&token=my-token&password=my-password&q=flutter',
         method: 'GET',
       );
       final handler = MockRequestInterceptorHandler();
@@ -104,6 +128,7 @@ void main() {
             that: allOf(
               contains('api_key=%2A%2A%2AREDACTED%2A%2A%2A'),
               contains('token=%2A%2A%2AREDACTED%2A%2A%2A'),
+              contains('password=%2A%2A%2AREDACTED%2A%2A%2A'),
               contains('q=flutter'),
             ),
           ),
@@ -119,6 +144,12 @@ void main() {
           any<String>(that: contains('my-token')),
         ),
       );
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('my-password')),
+        ),
+      );
+      verify(() => handler.next(options)).called(1);
     });
 
     test('onRequest should redact custom sensitive query parameters', () {
@@ -146,20 +177,53 @@ void main() {
       );
     });
 
-    test('onRequest should log request and sanitize sensitive body keys', () {
-      final customInterceptor = NetworkingLogInterceptor(
-        logger: mockLoggerApi,
-        sensitiveBodyKeys: {'password', 'token'},
-      );
+    test('onRequest should redact default sensitive body keys', () {
       final options = RequestOptions(
         path: 'https://api.example.com',
         method: 'POST',
         data: {
           'email': 'test@example.com',
           'password': 'secret-password',
-          'nested': {
-            'token': 'secret-token',
-          },
+          'credit_card': '1234-5678-9012-3456',
+        },
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('***REDACTED***')),
+        ),
+      ).called(3);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('test@example.com')),
+        ),
+      );
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('secret-password')),
+        ),
+      );
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('1234-5678-9012-3456')),
+        ),
+      );
+    });
+
+    test('onRequest should log request and sanitize sensitive body keys', () {
+      final customInterceptor = NetworkingLogInterceptor(
+        logger: mockLoggerApi,
+        sensitiveBodyKeys: {'custom_key'},
+      );
+      final options = RequestOptions(
+        path: 'https://api.example.com',
+        method: 'POST',
+        data: {
+          'password': 'secret-password',
+          'custom_key': 'secret-custom',
         },
       );
       final handler = MockRequestInterceptorHandler();
@@ -178,7 +242,7 @@ void main() {
       );
       verifyNever(
         () => mockLoggerApi.logInfo(
-          any<String>(that: contains('secret-token')),
+          any<String>(that: contains('secret-custom')),
         ),
       );
     });
@@ -246,6 +310,37 @@ void main() {
         ),
       );
       verify(() => handler.next(response)).called(1);
+    });
+
+    test('onRequest should redact sensitive fields in FormData', () {
+      final options = RequestOptions(
+        path: 'https://api.example.com',
+        method: 'POST',
+        data: FormData.fromMap({
+          'email': 'test@example.com',
+          'password': 'secret-password',
+          'file': MultipartFile.fromString('hello', filename: 'test.txt'),
+        }),
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('***REDACTED***')),
+        ),
+      ).called(2); // email and password
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('[FILE: test.txt]')),
+        ),
+      ).called(1);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('secret-password')),
+        ),
+      );
     });
 
     test('onRequest should log request with body', () {
