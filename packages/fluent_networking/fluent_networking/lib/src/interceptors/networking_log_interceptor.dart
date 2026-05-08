@@ -230,9 +230,9 @@ class NetworkingLogInterceptor extends Interceptor {
     if (data is FormData) {
       final fields = <String, dynamic>{};
       for (final entry in data.fields) {
-        final isSensitive = _sensitiveBodyKeys.contains(
-          entry.key.toLowerCase(),
-        );
+        final isSensitive =
+            _sensitiveBodyKeys.contains(entry.key) ||
+            _sensitiveBodyKeys.contains(entry.key.toLowerCase());
         fields[entry.key] = isSensitive ? '***REDACTED***' : entry.value;
       }
       for (final entry in data.files) {
