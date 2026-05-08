@@ -97,11 +97,13 @@ void main() {
     expect(bannerWidget.location, BannerLocation.topStart);
   });
 
-  testWidgets('should NOT display banner when environment IS prod', (
+  testWidgets('should display banner when environment IS prod in debug mode', (
     tester,
   ) async {
     // Arrange
     when(() => mockEnv.type).thenReturn(EnvironmentType.prod);
+    when(() => mockEnv.name).thenReturn('PROD');
+    when(() => mockEnv.color).thenReturn(Colors.black);
 
     // Act
     await tester.pumpWidget(
@@ -117,7 +119,7 @@ void main() {
     );
 
     // Assert
-    expect(find.byType(Banner), findsNothing);
+    expect(find.byType(Banner), findsOneWidget);
     expect(find.text('Content'), findsOneWidget);
   });
 

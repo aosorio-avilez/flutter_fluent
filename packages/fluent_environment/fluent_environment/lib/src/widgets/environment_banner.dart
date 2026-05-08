@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fluent_environment_api/fluent_environment_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// A widget that displays an environment banner if
@@ -71,13 +72,13 @@ class EnvironmentBanner extends StatelessWidget {
       builder: (context, currentEnvironment, _) {
         final env = environment ?? currentEnvironment;
 
-        if (env.isProduction && !enableInspector) {
+        if (kReleaseMode && env.isProduction && !enableInspector) {
           return child;
         }
 
         var content = child;
 
-        if (!env.isProduction) {
+        if (!kReleaseMode || !env.isProduction) {
           content = Banner(
             color: env.color,
             message: env.name,

@@ -3,7 +3,7 @@
 * FEAT: Implemented runtime environment switching in `EnvironmentInspector`.
 * FEAT: Integrated automatic service reconstruction when the environment changes via `registerResetService`.
 * FEAT: Updated `EnvironmentBanner` to reactively update its text and color.
-* FIX: Ensured `EnvironmentInspector` remains accessible via long press even in production environment when `enableInspector` is true.
+* FIX: Ensured `EnvironmentBanner` and its inspector trigger remain visible in debug mode even for production environment, hiding them only in release mode.
 * PERF: Improved `EnvironmentInspector` scrollability and layout.
 * CHORE: Updated `fluent_sdk` dependency to `^0.8.0`.
 
