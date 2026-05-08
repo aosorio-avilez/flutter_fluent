@@ -30,7 +30,7 @@ abstract class Registry {
   });
 
   /// Checks if a type [T] is currently registered in the container.
-  bool isRegistered<T extends Object>();
+  bool isRegistered<T extends Object>({String? instanceName});
 
   /// Retrieves an instance of a registered object [T].
   T get<T extends Object>({String? instanceName});

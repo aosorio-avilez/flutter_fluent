@@ -15,7 +15,8 @@ class FluentRegistry implements Registry {
 
   @override
   @pragma('vm:prefer-inline')
-  bool isRegistered<T extends Object>() => _getIt.isRegistered<T>();
+  bool isRegistered<T extends Object>({String? instanceName}) =>
+      _getIt.isRegistered<T>(instanceName: instanceName);
 
   @override
   @pragma('vm:prefer-inline')
