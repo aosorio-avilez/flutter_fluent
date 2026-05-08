@@ -179,19 +179,24 @@ class NetworkingLogInterceptor extends Interceptor {
   String _sanitizeUri(Uri uri) {
     if (uri.queryParameters.isEmpty) return uri.toString();
 
-    final queryParameters = Map<String, dynamic>.from(uri.queryParametersAll);
-    var hasChanges = false;
+    Map<String, dynamic>? queryParameters;
 
-    for (final key in queryParameters.keys) {
-      if (_sensitiveQueryParams.contains(key.toLowerCase())) {
+    for (final key in uri.queryParametersAll.keys) {
+      final isSensitive =
+          _sensitiveQueryParams.contains(key) ||
+          _sensitiveQueryParams.contains(key.toLowerCase());
+
+      if (isSensitive) {
+        queryParameters ??= Map<String, List<String>>.of(
+          uri.queryParametersAll,
+        );
         queryParameters[key] = ['***REDACTED***'];
-        hasChanges = true;
       }
     }
 
-    if (!hasChanges) return uri.toString();
-
-    return uri.replace(queryParameters: queryParameters).toString();
+    return queryParameters != null
+        ? uri.replace(queryParameters: queryParameters).toString()
+        : uri.toString();
   }
 
   dynamic _sanitizeBody(dynamic data) {
@@ -199,30 +204,39 @@ class NetworkingLogInterceptor extends Interceptor {
 
     if (data is Map) {
       Map<dynamic, dynamic>? result;
-      data.forEach((key, value) {
-        final isSensitive = _sensitiveBodyKeys.contains(
-          key.toString().toLowerCase(),
-        );
+
+      for (final entry in data.entries) {
+        final key = entry.key;
+        final value = entry.value;
+
+        // Optimized sensitive key check: direct match first, then normalized
+        final isSensitive =
+            (key is String && _sensitiveBodyKeys.contains(key)) ||
+            _sensitiveBodyKeys.contains(key.toString().toLowerCase());
+
         if (isSensitive) {
-          result ??= Map<dynamic, dynamic>.from(data);
-          result![key] = '***REDACTED***';
-        } else {
+          result ??= Map<dynamic, dynamic>.of(data);
+          result[key] = '***REDACTED***';
+        } else if (value is Map || value is List) {
+          // Only recurse for nested structures
           final sanitizedValue = _sanitizeBody(value);
           if (!identical(sanitizedValue, value)) {
-            result ??= Map<dynamic, dynamic>.from(data);
-            result![key] = sanitizedValue;
+            result ??= Map<dynamic, dynamic>.of(data);
+            result[key] = sanitizedValue;
           }
         }
-      });
+      }
       return result ?? data;
     } else if (data is List) {
       List<dynamic>? result;
       for (var i = 0; i < data.length; i++) {
         final value = data[i];
-        final sanitizedValue = _sanitizeBody(value);
-        if (!identical(sanitizedValue, value)) {
-          result ??= List<dynamic>.from(data);
-          result[i] = sanitizedValue;
+        if (value is Map || value is List) {
+          final sanitizedValue = _sanitizeBody(value);
+          if (!identical(sanitizedValue, value)) {
+            result ??= List<dynamic>.of(data);
+            result[i] = sanitizedValue;
+          }
         }
       }
       return result ?? data;
