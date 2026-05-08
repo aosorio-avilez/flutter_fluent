@@ -182,8 +182,11 @@ class NetworkingLogInterceptor extends Interceptor {
     Map<String, dynamic>? queryParameters;
 
     for (final key in uri.queryParametersAll.keys) {
-      if (_sensitiveQueryParams.contains(key.toLowerCase())) {
-        queryParameters ??= Map<String, dynamic>.from(uri.queryParametersAll);
+      final isSensitive = _sensitiveQueryParams.contains(key) ||
+          _sensitiveQueryParams.contains(key.toLowerCase());
+
+      if (isSensitive) {
+        queryParameters ??= Map<String, List<String>>.of(uri.queryParametersAll);
         queryParameters[key] = ['***REDACTED***'];
       }
     }
@@ -202,16 +205,20 @@ class NetworkingLogInterceptor extends Interceptor {
       for (final entry in data.entries) {
         final key = entry.key;
         final value = entry.value;
-        final isSensitive = _sensitiveBodyKeys.contains(
-          key.toString().toLowerCase(),
-        );
+
+        // Optimized sensitive key check: direct match first, then normalized
+        final isSensitive =
+            (key is String && _sensitiveBodyKeys.contains(key)) ||
+            _sensitiveBodyKeys.contains(key.toString().toLowerCase());
+
         if (isSensitive) {
-          result ??= Map<dynamic, dynamic>.from(data);
+          result ??= Map<dynamic, dynamic>.of(data);
           result[key] = '***REDACTED***';
-        } else {
+        } else if (value is Map || value is List) {
+          // Only recurse for nested structures
           final sanitizedValue = _sanitizeBody(value);
           if (!identical(sanitizedValue, value)) {
-            result ??= Map<dynamic, dynamic>.from(data);
+            result ??= Map<dynamic, dynamic>.of(data);
             result[key] = sanitizedValue;
           }
         }
@@ -221,10 +228,12 @@ class NetworkingLogInterceptor extends Interceptor {
       List<dynamic>? result;
       for (var i = 0; i < data.length; i++) {
         final value = data[i];
-        final sanitizedValue = _sanitizeBody(value);
-        if (!identical(sanitizedValue, value)) {
-          result ??= List<dynamic>.from(data);
-          result[i] = sanitizedValue;
+        if (value is Map || value is List) {
+          final sanitizedValue = _sanitizeBody(value);
+          if (!identical(sanitizedValue, value)) {
+            result ??= List<dynamic>.of(data);
+            result[i] = sanitizedValue;
+          }
         }
       }
       return result ?? data;

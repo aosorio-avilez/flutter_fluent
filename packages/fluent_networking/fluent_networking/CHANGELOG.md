@@ -1,3 +1,7 @@
+## 0.7.1
+
+* PERF: Further optimized `NetworkingLogInterceptor` map processing and reduced allocations.
+
 ## 0.7.0
 
 * FIX: Redact sensitive query parameters in log interceptor.
