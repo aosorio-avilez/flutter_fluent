@@ -1,14 +1,29 @@
 import 'package:fluent_environment/src/widgets/environment_inspector.dart';
 import 'package:fluent_environment_api/fluent_environment_api.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class EnvironmentApiImpl extends EnvironmentApi {
-  EnvironmentApiImpl(this._environment);
+  EnvironmentApiImpl(
+    Environment environment,
+    this.availableEnvironments,
+  ) : _environmentNotifier = ValueNotifier(environment);
 
-  final Environment _environment;
+  final ValueNotifier<Environment> _environmentNotifier;
 
   @override
-  Environment get environment => _environment;
+  final List<Environment> availableEnvironments;
+
+  @override
+  Environment get environment => _environmentNotifier.value;
+
+  @override
+  ValueListenable<Environment> get environmentNotifier => _environmentNotifier;
+
+  @override
+  void updateEnvironment(Environment environment) {
+    _environmentNotifier.value = environment;
+  }
 
   @override
   Future<void> showInspector(
@@ -25,7 +40,7 @@ class EnvironmentApiImpl extends EnvironmentApi {
       showDragHandle: true,
       builder: (context) {
         return EnvironmentInspector(
-          environment: _environment,
+          environmentApi: this,
           configValuesLabel: configValuesLabel ?? 'Configuration Values',
           noValuesLabel: noValuesLabel ?? 'No configuration values defined.',
         );

@@ -11,14 +11,14 @@ import 'package:flutter/services.dart';
 class EnvironmentInspector extends StatelessWidget {
   /// Creates an [EnvironmentInspector].
   const EnvironmentInspector({
-    required this.environment,
+    required this.environmentApi,
     this.configValuesLabel = 'Configuration Values',
     this.noValuesLabel = 'No configuration values defined.',
     super.key,
   });
 
-  /// The environment to inspect.
-  final Environment environment;
+  /// The environment API to use.
+  final EnvironmentApi environmentApi;
 
   /// The label for the configuration values section.
   final String configValuesLabel;
@@ -30,142 +30,185 @@ class EnvironmentInspector extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final sensitiveKeys = environment.sensitiveKeys
-        .map((e) => e.toLowerCase())
-        .toSet();
 
     return SafeArea(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: ValueListenableBuilder<Environment>(
+        valueListenable: environmentApi.environmentNotifier,
+        builder: (context, environment, _) {
+          final sensitiveKeys = environment.sensitiveKeys
+              .map((e) => e.toLowerCase())
+              .toSet();
+
+          return Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    color: environment.color,
-                    shape: BoxShape.circle,
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: environment.color,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      environment.name,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        environment.type.name.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  environment.name,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    environment.type.name.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: colorScheme.onSurfaceVariant,
+                const Divider(height: 24),
+                if (environmentApi.availableEnvironments.length > 1) ...[
+                  Text(
+                    'Available Environments',
+                    style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    height: 40,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: environmentApi.availableEnvironments.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(width: 8),
+                      itemBuilder: (context, index) {
+                        final env =
+                            environmentApi.availableEnvironments[index];
+                        final isSelected = env == environment;
+
+                        return ChoiceChip(
+                          label: Text(env.name),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            if (selected) {
+                              environmentApi.updateEnvironment(env);
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  const Divider(height: 24),
+                ],
+                Text(
+                  configValuesLabel,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                const SizedBox(height: 16),
+                if (environment.values.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    child: Center(
+                      child: Text(noValuesLabel),
+                    ),
+                  )
+                else
+                  Flexible(
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: environment.values.length,
+                      separatorBuilder: (context, index) =>
+                          const Divider(height: 1),
+                      itemBuilder: (context, index) {
+                        final key = environment.values.keys.elementAt(index);
+                        final value = environment.values[key];
+                        final isSensitive = sensitiveKeys.contains(
+                          key.toLowerCase(),
+                        );
+                        final stringValue = isSensitive
+                            ? '***REDACTED***'
+                            : (value ?? 'N/A');
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      key,
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                        color: colorScheme.secondary,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    SelectableText(
+                                      stringValue,
+                                      style:
+                                          theme.textTheme.bodyMedium?.copyWith(
+                                        fontFamily: 'monospace',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              if (value != null && !isSensitive)
+                                IconButton(
+                                  icon: const Icon(Icons.copy_all, size: 20),
+                                  tooltip: 'Copy "$key" to clipboard',
+                                  onPressed: () {
+                                    unawaited(
+                                      Clipboard.setData(
+                                        ClipboardData(text: stringValue),
+                                      ),
+                                    );
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Copied "$key" to clipboard',
+                                          ),
+                                          duration: const Duration(seconds: 2),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
               ],
             ),
-            const Divider(height: 24),
-            Text(
-              configValuesLabel,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            if (environment.values.isEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24),
-                child: Center(
-                  child: Text(noValuesLabel),
-                ),
-              )
-            else
-              Flexible(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: environment.values.length,
-                  separatorBuilder: (context, index) =>
-                      const Divider(height: 1),
-                  itemBuilder: (context, index) {
-                    final key = environment.values.keys.elementAt(index);
-                    final value = environment.values[key];
-                    final isSensitive = sensitiveKeys.contains(
-                      key.toLowerCase(),
-                    );
-                    final stringValue = isSensitive
-                        ? '***REDACTED***'
-                        : (value ?? 'N/A');
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  key,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: colorScheme.secondary,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                SelectableText(
-                                  stringValue,
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    fontFamily: 'monospace',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (value != null && !isSensitive)
-                            IconButton(
-                              icon: const Icon(Icons.copy_all, size: 20),
-                              tooltip: 'Copy "$key" to clipboard',
-                              onPressed: () {
-                                unawaited(
-                                  Clipboard.setData(
-                                    ClipboardData(text: stringValue),
-                                  ),
-                                );
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Copied "$key" to clipboard',
-                                      ),
-                                      duration: const Duration(seconds: 2),
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

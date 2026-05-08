@@ -6,16 +6,23 @@ import 'package:fluent_sdk/fluent_sdk.dart';
 class EnvironmentModule extends FluentModule {
   const EnvironmentModule({
     required this.environment,
+    this.availableEnvironments = const [],
   });
 
   final Environment environment;
+  final List<Environment> availableEnvironments;
 
   @override
   void onCreate(Registry registry) {
     registry
-      ..registerLazySingleton<Environment>((_) => environment)
       ..registerLazySingleton<EnvironmentApi>(
-        (it) => EnvironmentApiImpl(it<Environment>()),
-      );
+        (it) => EnvironmentApiImpl(
+          environment,
+          availableEnvironments.isEmpty
+              ? [environment]
+              : availableEnvironments,
+        ),
+      )
+      ..registerFactory<Environment>((it) => it<EnvironmentApi>().environment);
   }
 }

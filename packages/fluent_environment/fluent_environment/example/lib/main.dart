@@ -4,7 +4,16 @@ import 'package:flutter/material.dart';
 import 'app_environment.dart';
 
 void main() async {
-  await Fluent.build([EnvironmentModule(environment: AppEnvironment())]);
+  await Fluent.build([
+    EnvironmentModule(
+      environment: DevEnvironment(),
+      availableEnvironments: [
+        DevEnvironment(),
+        StagingEnvironment(),
+        ProdEnvironment(),
+      ],
+    )
+  ]);
 
   runApp(const MainApp());
 }
@@ -36,19 +45,27 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final environment = Fluent.get<EnvironmentApi>().environment;
-
     return Scaffold(
       appBar: AppBar(title: const Text('Fluent Environment')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Environment: ${environment.name}"),
+            ValueListenableBuilder<Environment>(
+              valueListenable: Fluent.get<EnvironmentApi>().environmentNotifier,
+              builder: (context, environment, _) {
+                return Text("Current Environment: ${environment.name}");
+              },
+            ),
             const SizedBox(height: 16),
             const Text(
               "Long press the environment banner to see the inspector",
               style: TextStyle(color: Colors.grey),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              "You can now switch environments inside the inspector!",
+              style: TextStyle(color: Colors.blue),
             ),
             const SizedBox(height: 32),
             ElevatedButton(
