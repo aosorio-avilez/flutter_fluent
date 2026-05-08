@@ -1,4 +1,4 @@
-## 0.6.1
+## 0.7.0
 
 * CHORE: Updated `fluent_sdk` dependency to `^0.8.0`.
 
