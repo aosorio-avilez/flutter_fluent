@@ -464,5 +464,118 @@ void main() {
         returnsNormally,
       );
     });
+
+    test('onRequest should redact userInfo password in URI', () {
+      final options = RequestOptions(
+        path: 'https://user:password123@api.example.com/data',
+        method: 'GET',
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(
+            that: allOf(
+              contains('URI: https://user:***REDACTED***@api.example.com/data'),
+            ),
+          ),
+        ),
+      ).called(1);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('password123')),
+        ),
+      );
+    });
+
+    test('onRequest should redact sensitive keys in URI fragment', () {
+      final options = RequestOptions(
+        path: 'https://api.example.com/auth#access_token=secret&state=123',
+        method: 'GET',
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(
+            that: allOf(
+              contains('access_token=***REDACTED***'),
+              contains('state=123'),
+            ),
+          ),
+        ),
+      ).called(1);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('secret')),
+        ),
+      );
+    });
+
+    test('onRequest should redact new default sensitive headers', () {
+      final options = RequestOptions(
+        path: 'https://api.example.com',
+        method: 'GET',
+        headers: {
+          'authentication': 'Bearer token',
+          'x-auth-token': 'auth-token',
+          'xsrf-token': 'xsrf',
+          'csrf-token': 'csrf',
+          'session-id': 'session',
+          'sid': 'sid-value',
+        },
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('***REDACTED***')),
+        ),
+      ).called(6);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(
+            that: anyOf([
+              contains('Bearer token'),
+              contains('auth-token'),
+              contains('xsrf'),
+              contains('csrf'),
+              contains('session'),
+              contains('sid-value'),
+            ]),
+          ),
+        ),
+      );
+    });
+
+    test('onRequest should redact new default sensitive query params', () {
+      final options = RequestOptions(
+        path:
+            'https://api.example.com?session_id=s123&sid=s456&csrf_token=c789&xsrf_token=x012',
+        method: 'GET',
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(
+            that: allOf(
+              contains('session_id=%2A%2A%2AREDACTED%2A%2A%2A'),
+              contains('sid=%2A%2A%2AREDACTED%2A%2A%2A'),
+              contains('csrf_token=%2A%2A%2AREDACTED%2A%2A%2A'),
+              contains('xsrf_token=%2A%2A%2AREDACTED%2A%2A%2A'),
+            ),
+          ),
+        ),
+      ).called(1);
+    });
   });
 }

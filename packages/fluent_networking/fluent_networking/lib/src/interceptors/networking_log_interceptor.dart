@@ -38,11 +38,17 @@ class NetworkingLogInterceptor extends Interceptor {
 
   static const _defaultSensitiveHeaders = {
     'authorization',
+    'authentication',
     'cookie',
     'proxy-authorization',
     'set-cookie',
     'x-api-key',
     'api-key',
+    'x-auth-token',
+    'xsrf-token',
+    'csrf-token',
+    'session-id',
+    'sid',
   };
 
   static const _defaultSensitiveQueryParams = {
@@ -54,6 +60,10 @@ class NetworkingLogInterceptor extends Interceptor {
     'password',
     'pass',
     'pwd',
+    'session_id',
+    'sid',
+    'csrf_token',
+    'xsrf_token',
   };
 
   static const _defaultSensitiveBodyKeys = {
@@ -71,6 +81,10 @@ class NetworkingLogInterceptor extends Interceptor {
     'cvc',
     'email',
     'phone_number',
+    'session_id',
+    'sid',
+    'csrf_token',
+    'xsrf_token',
   };
 
   static const _extraStartTime = 'networking_start_time';
@@ -202,26 +216,66 @@ class NetworkingLogInterceptor extends Interceptor {
   }
 
   String _sanitizeUri(Uri uri) {
-    if (uri.queryParameters.isEmpty) return uri.toString();
+    var sanitizedUri = uri;
+
+    // Redact userInfo password if present
+    if (sanitizedUri.userInfo.contains(':')) {
+      final userInfoParts = sanitizedUri.userInfo.split(':');
+      final user = userInfoParts.first;
+      sanitizedUri = sanitizedUri.replace(userInfo: '$user:***REDACTED***');
+    }
+
+    // Redact fragment if it contains sensitive keys
+    if (sanitizedUri.hasFragment) {
+      final fragmentParams = Uri.splitQueryString(sanitizedUri.fragment);
+      if (fragmentParams.isNotEmpty) {
+        final sanitizedFragmentParams = <String, String>{};
+        var fragmentChanged = false;
+
+        for (final entry in fragmentParams.entries) {
+          final key = entry.key;
+          final value = entry.value;
+          final isSensitive =
+              _sensitiveQueryParams.contains(key) ||
+              _sensitiveQueryParams.contains(key.toLowerCase());
+
+          if (isSensitive) {
+            sanitizedFragmentParams[key] = '***REDACTED***';
+            fragmentChanged = true;
+          } else {
+            sanitizedFragmentParams[key] = value;
+          }
+        }
+
+        if (fragmentChanged) {
+          final newFragment = sanitizedFragmentParams.entries
+              .map((e) => '${e.key}=${e.value}')
+              .join('&');
+          sanitizedUri = sanitizedUri.replace(fragment: newFragment);
+        }
+      }
+    }
+
+    if (sanitizedUri.queryParameters.isEmpty) return sanitizedUri.toString();
 
     Map<String, dynamic>? queryParameters;
 
-    for (final key in uri.queryParametersAll.keys) {
+    for (final key in sanitizedUri.queryParametersAll.keys) {
       final isSensitive =
           _sensitiveQueryParams.contains(key) ||
           _sensitiveQueryParams.contains(key.toLowerCase());
 
       if (isSensitive) {
         queryParameters ??= Map<String, List<String>>.of(
-          uri.queryParametersAll,
+          sanitizedUri.queryParametersAll,
         );
         queryParameters[key] = ['***REDACTED***'];
       }
     }
 
     return queryParameters != null
-        ? uri.replace(queryParameters: queryParameters).toString()
-        : uri.toString();
+        ? sanitizedUri.replace(queryParameters: queryParameters).toString()
+        : sanitizedUri.toString();
   }
 
   dynamic _sanitizeBody(dynamic data) {
@@ -288,8 +342,12 @@ class NetworkingLogInterceptor extends Interceptor {
   }
 
   void _log(Iterable<String> lines) {
-    if (_logger == null) return;
-    lines.forEach(_logger.logInfo);
+    final logger = _logger;
+    if (logger == null) return;
+    // ignore: prefer_foreach, Performance: Use for-in to avoid closure allocation.
+    for (final line in lines) {
+      logger.logInfo(line);
+    }
   }
 
   void _logError(Iterable<String> lines, {StackTrace? stackTrace}) {
