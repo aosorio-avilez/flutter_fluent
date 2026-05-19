@@ -1,3 +1,8 @@
+## 0.6.0
+
+* FEAT: Added Feature Flags capability to `Environment` and `EnvironmentApi`.
+* FEAT: Added `isFeatureEnabled` and `setFeatureFlag` to `EnvironmentApi`.
+
 ## 0.5.0
 
 * FEAT: Added `environmentNotifier` (ValueListenable) to `EnvironmentApi` for reactive UI updates.

@@ -31,4 +31,10 @@ abstract class EnvironmentApi {
     String? noValuesLabel,
     GlobalKey<NavigatorState>? navigatorKey,
   });
+
+  /// Checks if a feature is enabled.
+  bool isFeatureEnabled(String key);
+
+  /// Sets a feature flag value at runtime.
+  void setFeatureFlag(String key, {required bool value});
 }

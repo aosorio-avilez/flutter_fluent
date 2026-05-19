@@ -9,11 +9,12 @@ class EnvironmentApiImpl extends EnvironmentApi {
     Environment environment,
     this.availableEnvironments,
     this.registry,
-  ) : _environmentNotifier = ValueNotifier(environment);
+  ) : _environmentNotifier = _EnvironmentNotifier(environment);
 
-  final ValueNotifier<Environment> _environmentNotifier;
+  final _EnvironmentNotifier _environmentNotifier;
   final Registry registry;
   final List<void Function()> _resetters = [];
+  final Map<String, bool> _featureOverrides = {};
 
   @override
   final List<Environment> availableEnvironments;
@@ -26,6 +27,7 @@ class EnvironmentApiImpl extends EnvironmentApi {
 
   @override
   void updateEnvironment(Environment environment) {
+    _featureOverrides.clear();
     _environmentNotifier.value = environment;
     for (final reset in _resetters) {
       reset();
@@ -35,6 +37,17 @@ class EnvironmentApiImpl extends EnvironmentApi {
   @override
   void registerResetService<T extends Object>() {
     _resetters.add(() => registry.resetLazySingleton<T>());
+  }
+
+  @override
+  bool isFeatureEnabled(String key) {
+    return _featureOverrides[key] ?? environment.features[key] ?? false;
+  }
+
+  @override
+  void setFeatureFlag(String key, {required bool value}) {
+    _featureOverrides[key] = value;
+    _environmentNotifier.refresh();
   }
 
   @override
@@ -59,4 +72,10 @@ class EnvironmentApiImpl extends EnvironmentApi {
       },
     );
   }
+}
+
+class _EnvironmentNotifier extends ValueNotifier<Environment> {
+  _EnvironmentNotifier(super._value);
+
+  void refresh() => notifyListeners();
 }

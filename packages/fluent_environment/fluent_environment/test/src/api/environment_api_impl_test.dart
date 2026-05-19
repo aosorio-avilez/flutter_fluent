@@ -84,6 +84,7 @@ void main() {
       when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
       when(() => mockEnv.color).thenReturn(Colors.red);
       when(() => mockEnv.values).thenReturn({});
+      when(() => mockEnv.features).thenReturn({});
       when(() => mockEnv.sensitiveKeys).thenReturn({});
 
       final mockRegistry = MockRegistry();
@@ -119,6 +120,7 @@ void main() {
     when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
     when(() => mockEnv.color).thenReturn(Colors.red);
     when(() => mockEnv.values).thenReturn({});
+    when(() => mockEnv.features).thenReturn({});
     when(() => mockEnv.sensitiveKeys).thenReturn({});
 
     final navigatorKey = GlobalKey<NavigatorState>();
@@ -144,5 +146,68 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     expect(find.byType(EnvironmentInspector), findsOneWidget);
+  });
+
+  group('Feature Flags', () {
+    test('isFeatureEnabled returns value from environment if no override', () {
+      final mockEnv = MockEnvironment();
+      when(() => mockEnv.features).thenReturn({
+        'feature1': true,
+        'feature2': false,
+      });
+      final mockRegistry = MockRegistry();
+      final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
+
+      expect(api.isFeatureEnabled('feature1'), isTrue);
+      expect(api.isFeatureEnabled('feature2'), isFalse);
+      expect(api.isFeatureEnabled('unknown'), isFalse);
+    });
+
+    test('isFeatureEnabled returns value from override if present', () {
+      final mockEnv = MockEnvironment();
+      when(() => mockEnv.features).thenReturn({'feature1': true});
+      final mockRegistry = MockRegistry();
+      final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry)
+        ..setFeatureFlag('feature1', value: false)
+        ..setFeatureFlag('feature2', value: true);
+
+      expect(api.isFeatureEnabled('feature1'), isFalse);
+      expect(api.isFeatureEnabled('feature2'), isTrue);
+    });
+
+    test('setFeatureFlag notifies listeners', () {
+      final mockEnv = MockEnvironment();
+      when(() => mockEnv.features).thenReturn({});
+      final mockRegistry = MockRegistry();
+      final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
+      var notified = false;
+
+      api.environmentNotifier.addListener(() {
+        notified = true;
+      });
+
+      api.setFeatureFlag('feature1', value: true);
+
+      expect(notified, isTrue);
+    });
+
+    test('updateEnvironment clears feature overrides', () {
+      final mockEnv1 = MockEnvironment();
+      final mockEnv2 = MockEnvironment();
+      when(() => mockEnv1.features).thenReturn({'feature1': true});
+      when(() => mockEnv2.features).thenReturn({'feature1': true});
+      final mockRegistry = MockRegistry();
+      final api = EnvironmentApiImpl(
+        mockEnv1,
+        [mockEnv1, mockEnv2],
+        mockRegistry,
+      )..setFeatureFlag('feature1', value: false);
+
+      expect(api.isFeatureEnabled('feature1'), isFalse);
+
+      api.updateEnvironment(mockEnv2);
+
+      expect(api.isFeatureEnabled('feature1'), isTrue);
+    });
   });
 }

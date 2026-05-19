@@ -16,6 +16,9 @@ class DevEnvironment extends Environment {
   };
 
   @override
+  Map<String, bool> get features => {'search_v2': true, 'payment_v2': false};
+
+  @override
   EnvironmentType get type => EnvironmentType.dev;
 }
 
@@ -34,6 +37,9 @@ class StagingEnvironment extends Environment {
   };
 
   @override
+  Map<String, bool> get features => {'search_v2': true, 'payment_v2': false};
+
+  @override
   EnvironmentType get type => EnvironmentType.stg;
 }
 
@@ -50,6 +56,9 @@ class ProdEnvironment extends Environment {
     'api_key': 'prod-key-789',
     'debug_mode': 'false',
   };
+
+  @override
+  Map<String, bool> get features => {'search_v2': false, 'payment_v2': false};
 
   @override
   EnvironmentType get type => EnvironmentType.prod;

@@ -19,6 +19,7 @@ void main() {
     mockEnv = MockEnvironment();
     mockApi = MockEnvironmentApi();
     when(() => mockEnv.sensitiveKeys).thenReturn({});
+    when(() => mockEnv.features).thenReturn({});
     when(() => mockEnv.name).thenReturn('Development');
     when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
     when(() => mockEnv.color).thenReturn(Colors.blue);
@@ -78,6 +79,7 @@ void main() {
     when(() => mockEnv2.type).thenReturn(EnvironmentType.stg);
     when(() => mockEnv2.color).thenReturn(Colors.orange);
     when(() => mockEnv2.values).thenReturn({});
+    when(() => mockEnv2.features).thenReturn({});
     when(() => mockEnv2.sensitiveKeys).thenReturn({});
 
     when(() => mockApi.availableEnvironments).thenReturn([mockEnv, mockEnv2]);
@@ -192,5 +194,57 @@ void main() {
     final tooltip = tester.widget<IconButton>(copyIconButton).tooltip;
     expect(tooltip, contains('public_key'));
     expect(tooltip, isNot(contains('secret_key')));
+  });
+
+  testWidgets('should display and toggle feature flags', (tester) async {
+    // Arrange
+    when(() => mockEnv.features).thenReturn({
+      'feature1': true,
+      'feature2': false,
+    });
+    when(() => mockApi.isFeatureEnabled('feature1')).thenReturn(true);
+    when(() => mockApi.isFeatureEnabled('feature2')).thenReturn(false);
+    when(
+      () => mockApi.setFeatureFlag(
+        any(),
+        value: any(named: 'value'),
+      ),
+    ).thenReturn(null);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: EnvironmentInspector(environmentApi: mockApi),
+        ),
+      ),
+    );
+
+    // Assert
+    expect(find.text('Features'), findsOneWidget);
+    expect(find.text('feature1'), findsOneWidget);
+    expect(find.text('feature2'), findsOneWidget);
+
+    final switch1 = tester.widget<Switch>(
+      find.descendant(
+        of: find.widgetWithText(SwitchListTile, 'feature1'),
+        matching: find.byType(Switch),
+      ),
+    );
+    expect(switch1.value, isTrue);
+
+    final switch2 = tester.widget<Switch>(
+      find.descendant(
+        of: find.widgetWithText(SwitchListTile, 'feature2'),
+        matching: find.byType(Switch),
+      ),
+    );
+    expect(switch2.value, isFalse);
+
+    // Act
+    await tester.tap(find.text('feature1'));
+    await tester.pump();
+
+    // Assert
+    verify(() => mockApi.setFeatureFlag('feature1', value: false)).called(1);
   });
 }
