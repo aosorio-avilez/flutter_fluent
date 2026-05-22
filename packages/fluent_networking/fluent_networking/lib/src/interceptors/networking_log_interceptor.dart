@@ -178,13 +178,15 @@ class NetworkingLogInterceptor extends Interceptor {
     yield '└──────────────────────────────────────────────────────────────────';
   }
 
-  Iterable<String> _formatHeaders(Map<String, dynamic> headers) {
-    return headers.entries.map((entry) {
+  Iterable<String> _formatHeaders(Map<String, dynamic> headers) sync* {
+    for (final entry in headers.entries) {
       final key = entry.key;
-      final isSensitive = _sensitiveHeaders.contains(key.toLowerCase());
+      final isSensitive =
+          _sensitiveHeaders.contains(key) ||
+          _sensitiveHeaders.contains(key.toLowerCase());
       final value = isSensitive ? '***REDACTED***' : entry.value.toString();
-      return '$key: $value';
-    });
+      yield '$key: $value';
+    }
   }
 
   String _formatData(dynamic data) {
@@ -202,19 +204,19 @@ class NetworkingLogInterceptor extends Interceptor {
   }
 
   String _sanitizeUri(Uri uri) {
-    if (uri.queryParameters.isEmpty) return uri.toString();
+    final queryParametersAll = uri.queryParametersAll;
+    if (queryParametersAll.isEmpty) return uri.toString();
 
     Map<String, dynamic>? queryParameters;
 
-    for (final key in uri.queryParametersAll.keys) {
+    for (final entry in queryParametersAll.entries) {
+      final key = entry.key;
       final isSensitive =
           _sensitiveQueryParams.contains(key) ||
           _sensitiveQueryParams.contains(key.toLowerCase());
 
       if (isSensitive) {
-        queryParameters ??= Map<String, List<String>>.of(
-          uri.queryParametersAll,
-        );
+        queryParameters ??= Map<String, List<String>>.of(queryParametersAll);
         queryParameters[key] = ['***REDACTED***'];
       }
     }
@@ -289,7 +291,10 @@ class NetworkingLogInterceptor extends Interceptor {
 
   void _log(Iterable<String> lines) {
     if (_logger == null) return;
-    lines.forEach(_logger.logInfo);
+    // ignore: prefer_foreach, Performance: avoiding closure allocation in loop
+    for (final line in lines) {
+      _logger.logInfo(line);
+    }
   }
 
   void _logError(Iterable<String> lines, {StackTrace? stackTrace}) {
