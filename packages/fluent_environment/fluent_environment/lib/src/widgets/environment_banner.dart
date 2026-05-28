@@ -130,6 +130,9 @@ class EnvironmentBanner extends StatelessWidget {
         return Semantics(
           label: 'Environment: ${env.name}',
           container: true,
+          onLongPressHint: enableInspector
+              ? 'Long press to open environment inspector'
+              : null,
           child: content,
         );
       },
