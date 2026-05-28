@@ -1,3 +1,8 @@
+## 0.9.1
+
+* PERF: Optimized `NetworkingLogInterceptor` header formatting to use a lazy `sync*` generator and avoided closure allocation overhead in the logging path.
+* PERF: Cached `queryParametersAll` lookup in URI sanitization to reduce getter invocations.
+
 ## 0.9.0
 
 * CHORE: Updated `fluent_sdk` dependency to `^0.8.0`.
