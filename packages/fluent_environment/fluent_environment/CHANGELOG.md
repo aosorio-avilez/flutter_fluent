@@ -1,5 +1,8 @@
-## 0.8.1
+## 0.9.0
 
+* FEAT: Integrated Feature Flags support in `EnvironmentInspector` with interactive toggles.
+* FEAT: Implemented runtime feature flag overrides in `EnvironmentApiImpl`.
+* FEAT: Updated `example` to demonstrate feature flag usage and reactivity.
 * FEAT: Added standard Close button (`IconButton` with cross icon) to `EnvironmentInspector`.
 * FEAT: Added accessibility semantics (`onLongPressHint`, labels, and `Sensitive configuration value` semantics) to both `EnvironmentBanner` and `EnvironmentInspector`.
 * FEAT: Colored sensitive configurations with the theme's error color in the inspector.

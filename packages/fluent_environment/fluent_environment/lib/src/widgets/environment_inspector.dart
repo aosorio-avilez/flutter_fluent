@@ -128,6 +128,40 @@ class EnvironmentInspector extends StatelessWidget {
                     ),
                     const Divider(height: 24),
                   ],
+                  if (environment.features.isNotEmpty) ...[
+                    Text(
+                      'Features',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: environment.features.length,
+                      itemBuilder: (context, index) {
+                        final key = environment.features.keys.elementAt(index);
+                        final isEnabled = environmentApi.isFeatureEnabled(key);
+
+                        return SwitchListTile(
+                          title: Text(
+                            key,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          value: isEnabled,
+                          onChanged: (value) {
+                            environmentApi.setFeatureFlag(key, value: value);
+                          },
+                          contentPadding: EdgeInsets.zero,
+                          dense: true,
+                        );
+                      },
+                    ),
+                    const Divider(height: 24),
+                  ],
                   Text(
                     configValuesLabel,
                     style: theme.textTheme.titleMedium?.copyWith(

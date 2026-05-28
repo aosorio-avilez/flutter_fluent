@@ -6,7 +6,7 @@ Package that provides a way to register your environment and display it
 ### Add dependencies
 
 ```yaml
-fluent_environment: ^0.8.0
+fluent_environment: ^0.9.0
 ```
 
 ### Define environment
@@ -19,6 +19,11 @@ class DevEnvironment extends Environment {
     Color get color => Colors.blue;
     @override
     EnvironmentType get type => EnvironmentType.dev;
+    @override
+    Map<String, bool> get features => {
+        'new_payment_flow': true,
+        'beta_features': false,
+    };
 }
 
 class ProdEnvironment extends Environment {
@@ -98,7 +103,30 @@ class MainApp extends StatelessWidget {
 The inspector allows you to:
 1. **Switch Environments**: Instantly change the current environment.
 2. **View Config**: Inspect the current environment's configuration values.
-3. **Reactive UI**: The UI and reconstructed services will update automatically.
+3. **Toggle Feature Flags**: Instantly toggle any environment features at runtime.
+4. **Reactive UI**: The UI, feature flag overrides, and reconstructed services will update automatically.
+
+## Feature Flags
+
+Define a map of feature flags for each environment to check their status and override them at runtime within the inspector.
+
+### 1. Check Feature Status
+
+```dart
+final api = Fluent.get<EnvironmentApi>();
+
+// Check if a feature is enabled
+final isEnabled = api.isFeatureEnabled('new_payment_flow');
+```
+
+### 2. Override at Runtime
+
+```dart
+// Override the feature flag value at runtime
+api.setFeatureFlag('new_payment_flow', value: false);
+```
+
+Whenever a feature flag is overridden, the `environmentNotifier` will automatically trigger notifications so that your UI reactively rebuilds with the new state.
 
 ## Example
 

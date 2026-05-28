@@ -54,7 +54,31 @@ class HomePage extends StatelessWidget {
             ValueListenableBuilder<Environment>(
               valueListenable: Fluent.get<EnvironmentApi>().environmentNotifier,
               builder: (context, environment, _) {
-                return Text("Current Environment: ${environment.name}");
+                final api = Fluent.get<EnvironmentApi>();
+                final isSearchV2 = api.isFeatureEnabled('search_v2');
+                final isPaymentV2 = api.isFeatureEnabled('payment_v2');
+
+                return Column(
+                  children: [
+                    Text("Current Environment: ${environment.name}"),
+                    const SizedBox(height: 16),
+                    Text(
+                      "Search V2 Feature: ${isSearchV2 ? 'ENABLED' : 'DISABLED'}",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: isSearchV2 ? Colors.green : Colors.red,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Payment V2 Feature: ${isPaymentV2 ? 'ENABLED' : 'DISABLED'}",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: isPaymentV2 ? Colors.green : Colors.red,
+                      ),
+                    ),
+                  ],
+                );
               },
             ),
             const SizedBox(height: 16),
