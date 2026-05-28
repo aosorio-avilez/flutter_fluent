@@ -178,10 +178,15 @@ class NetworkingLogInterceptor extends Interceptor {
     yield '└──────────────────────────────────────────────────────────────────';
   }
 
+  /// Formats request or response headers.
+  ///
+  /// Note: [headers] can be `Map<String, dynamic>` (from requests) or
+  /// `Map<String, List<String>>` (from response/error).
   Iterable<String> _formatHeaders(Map<String, dynamic> headers) sync* {
     for (final entry in headers.entries) {
       final key = entry.key;
-      final isSensitive = _sensitiveHeaders.contains(key) ||
+      final isSensitive =
+          _sensitiveHeaders.contains(key) ||
           _sensitiveHeaders.contains(key.toLowerCase());
       final value = isSensitive ? '***REDACTED***' : entry.value.toString();
       yield '$key: $value';
