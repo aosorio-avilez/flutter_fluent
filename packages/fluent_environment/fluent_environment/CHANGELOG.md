@@ -1,3 +1,10 @@
+## 0.8.1
+
+* FEAT: Added standard Close button (`IconButton` with cross icon) to `EnvironmentInspector`.
+* FEAT: Added accessibility semantics (`onLongPressHint`, labels, and `Sensitive configuration value` semantics) to both `EnvironmentBanner` and `EnvironmentInspector`.
+* FEAT: Colored sensitive configurations with the theme's error color in the inspector.
+* TEST: Enhanced tests for semantic elements and copy buttons under sensitive configurations.
+
 ## 0.8.0
 
 * FEAT: Implemented runtime environment switching in `EnvironmentInspector`.

@@ -64,7 +64,9 @@ void main() {
     // Check Semantics
     final semanticsFinder = find.byWidgetPredicate(
       (widget) =>
-          widget is Semantics && widget.properties.label == 'Environment: DEV',
+          widget is Semantics &&
+          widget.properties.label == 'Environment: DEV' &&
+          widget.properties.hintOverrides?.onLongPressHint == null,
     );
     expect(semanticsFinder, findsOneWidget);
   });
@@ -152,6 +154,15 @@ void main() {
 
       // Assert
       verify(() => mockEnvApi.showInspector(any())).called(1);
+
+      // Check Semantics
+      final semanticsFinder = find.byWidgetPredicate(
+        (widget) =>
+            widget is Semantics &&
+            widget.properties.hintOverrides?.onLongPressHint ==
+                'Long press to open environment inspector',
+      );
+      expect(semanticsFinder, findsOneWidget);
     },
   );
 

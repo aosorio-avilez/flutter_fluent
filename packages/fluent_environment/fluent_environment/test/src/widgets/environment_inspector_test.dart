@@ -54,6 +54,20 @@ void main() {
     expect(find.text('https://api.dev.example.com'), findsOneWidget);
     expect(find.text('api_key'), findsOneWidget);
     expect(find.text('dev_key_123'), findsOneWidget);
+
+    // Check Close button
+    expect(find.widgetWithIcon(IconButton, Icons.close), findsOneWidget);
+    expect(find.byTooltip('Close'), findsOneWidget);
+
+    // Check color indicator semantics
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Semantics &&
+            widget.properties.label == 'Environment color indicator',
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('should show environment switcher when multiple environments', (
@@ -158,7 +172,25 @@ void main() {
     expect(find.text('secret_key'), findsOneWidget);
     expect(find.text('secret_456'), findsNothing);
     expect(find.text('***REDACTED***'), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Semantics &&
+            widget.properties.label == 'Sensitive configuration value',
+      ),
+      findsOneWidget,
+    );
 
+    // Assert exactly one copy button exists (associated with public_key)
     expect(find.byIcon(Icons.copy_all), findsOneWidget);
+
+    // Verify that the copy button matches the non-sensitive key
+    final copyIconButton = find.ancestor(
+      of: find.byIcon(Icons.copy_all),
+      matching: find.byType(IconButton),
+    );
+    final tooltip = tester.widget<IconButton>(copyIconButton).tooltip;
+    expect(tooltip, contains('public_key'));
+    expect(tooltip, isNot(contains('secret_key')));
   });
 }

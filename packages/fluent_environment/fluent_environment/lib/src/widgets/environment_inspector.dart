@@ -48,12 +48,15 @@ class EnvironmentInspector extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        width: 12,
-                        height: 12,
-                        decoration: BoxDecoration(
-                          color: environment.color,
-                          shape: BoxShape.circle,
+                      Semantics(
+                        label: 'Environment color indicator',
+                        child: Container(
+                          width: 12,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: environment.color,
+                            shape: BoxShape.circle,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -81,6 +84,12 @@ class EnvironmentInspector extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                      ),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(Icons.close),
+                        tooltip: 'Close',
                       ),
                     ],
                   ),
@@ -167,12 +176,20 @@ class EnvironmentInspector extends StatelessWidget {
                                           ),
                                     ),
                                     const SizedBox(height: 2),
-                                    SelectableText(
-                                      stringValue,
-                                      style: theme.textTheme.bodyMedium
-                                          ?.copyWith(
-                                            fontFamily: 'monospace',
-                                          ),
+                                    Semantics(
+                                      label: isSensitive
+                                          ? 'Sensitive configuration value'
+                                          : null,
+                                      child: SelectableText(
+                                        stringValue,
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                              fontFamily: 'monospace',
+                                              color: isSensitive
+                                                  ? theme.colorScheme.error
+                                                  : null,
+                                            ),
+                                      ),
                                     ),
                                   ],
                                 ),
