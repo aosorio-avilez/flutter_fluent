@@ -181,6 +181,16 @@ void main() {
       findsOneWidget,
     );
 
+    // Assert exactly one copy button exists (associated with public_key)
     expect(find.byIcon(Icons.copy_all), findsOneWidget);
+
+    // Verify that the copy button matches the non-sensitive key
+    final copyIconButton = find.ancestor(
+      of: find.byIcon(Icons.copy_all),
+      matching: find.byType(IconButton),
+    );
+    final tooltip = tester.widget<IconButton>(copyIconButton).tooltip;
+    expect(tooltip, contains('public_key'));
+    expect(tooltip, isNot(contains('secret_key')));
   });
 }
