@@ -99,7 +99,10 @@ class NetworkingApiImpl extends NetworkingApi {
     if (retryConfig == null && cacheConfig == null) return options ?? Options();
 
     final effectiveOptions = options ?? Options();
-    final extra = Map<String, dynamic>.from(effectiveOptions.extra ?? {});
+    final effectiveExtra = effectiveOptions.extra;
+    final extra = effectiveExtra != null
+        ? Map<String, dynamic>.from(effectiveExtra)
+        : <String, dynamic>{};
 
     if (retryConfig != null) {
       extra[NetworkingRetryInterceptor.extraRetryConfig] = retryConfig;
@@ -134,8 +137,11 @@ class NetworkingApiImpl extends NetworkingApi {
     var msg = e.message ?? 'Unknown network error';
     final dynamic errorData = e.response?.data;
 
-    if (errorData is Map && errorData.containsKey('message')) {
-      msg = errorData['message'].toString();
+    if (errorData is Map) {
+      final msgData = errorData['message'];
+      if (msgData != null) {
+        msg = msgData.toString();
+      }
     }
 
     return HttpError(

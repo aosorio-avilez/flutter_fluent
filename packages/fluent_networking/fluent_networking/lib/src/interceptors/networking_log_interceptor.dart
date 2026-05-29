@@ -185,8 +185,7 @@ class NetworkingLogInterceptor extends Interceptor {
   Iterable<String> _formatHeaders(Map<String, dynamic> headers) sync* {
     for (final entry in headers.entries) {
       final key = entry.key;
-      final isSensitive =
-          _sensitiveHeaders.contains(key) ||
+      final isSensitive = _sensitiveHeaders.contains(key) ||
           _sensitiveHeaders.contains(key.toLowerCase());
       final value = isSensitive ? '***REDACTED***' : entry.value.toString();
       yield '$key: $value';
@@ -195,11 +194,11 @@ class NetworkingLogInterceptor extends Interceptor {
 
   String _formatData(dynamic data) {
     try {
-      final sanitized = _sanitizeBody(data);
-      if (sanitized is String) {
-        final decoded = json.decode(sanitized);
+      if (data is String) {
+        final decoded = json.decode(data);
         return _encoder.convert(_sanitizeBody(decoded));
       }
+      final sanitized = _sanitizeBody(data);
       return _encoder.convert(sanitized);
     } on Object catch (_) {
       // Return raw data if it fails to format as JSON
@@ -208,14 +207,13 @@ class NetworkingLogInterceptor extends Interceptor {
   }
 
   String _sanitizeUri(Uri uri) {
-    if (uri.queryParameters.isEmpty) return uri.toString();
+    if (!uri.hasQuery) return uri.toString();
 
     Map<String, dynamic>? queryParameters;
     final queryParametersAll = uri.queryParametersAll;
 
     for (final key in queryParametersAll.keys) {
-      final isSensitive =
-          _sensitiveQueryParams.contains(key) ||
+      final isSensitive = _sensitiveQueryParams.contains(key) ||
           _sensitiveQueryParams.contains(key.toLowerCase());
 
       if (isSensitive) {
