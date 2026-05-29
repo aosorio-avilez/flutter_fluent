@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fluent_environment/src/api/environment_api_impl.dart';
+import 'package:fluent_environment/src/registry_extension.dart';
 import 'package:fluent_environment/src/widgets/environment_inspector.dart';
 import 'package:fluent_environment_api/fluent_environment_api.dart';
 import 'package:flutter/material.dart';
@@ -88,6 +89,8 @@ void main() {
       when(() => mockEnv.sensitiveKeys).thenReturn({});
 
       final mockRegistry = MockRegistry();
+      when(() => mockRegistry.isRegistered<FluentEnvironmentActions>())
+          .thenReturn(false);
       final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
 
       await tester.pumpWidget(
@@ -125,6 +128,8 @@ void main() {
 
     final navigatorKey = GlobalKey<NavigatorState>();
     final mockRegistry = MockRegistry();
+    when(() => mockRegistry.isRegistered<FluentEnvironmentActions>())
+        .thenReturn(false);
     final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
 
     await tester.pumpWidget(
@@ -208,6 +213,49 @@ void main() {
       api.updateEnvironment(mockEnv2);
 
       expect(api.isFeatureEnabled('feature1'), isTrue);
+    });
+  });
+
+  group('Actions', () {
+    test('registerAction adds to internal actions and notifies', () {
+      final mockEnv = MockEnvironment();
+      final mockRegistry = MockRegistry();
+      when(() => mockRegistry.isRegistered<FluentEnvironmentActions>())
+          .thenReturn(false);
+      final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
+      var notified = false;
+      api.environmentNotifier.addListener(() => notified = true);
+
+      final action = EnvironmentAction(label: 'Action', onTap: (_) {});
+      api.registerAction(action);
+
+      expect(api.registeredActions, contains(action));
+      expect(notified, isTrue);
+    });
+
+    test('registeredActions combines internal and registry actions', () {
+      final mockEnv = MockEnvironment();
+      final mockRegistry = MockRegistry();
+      final registryAction = EnvironmentAction(
+        label: 'Registry',
+        onTap: (_) {},
+      );
+      when(() => mockRegistry.isRegistered<FluentEnvironmentActions>())
+          .thenReturn(true);
+      when(() => mockRegistry.get<FluentEnvironmentActions>())
+          .thenReturn([registryAction]);
+
+      final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
+      final internalAction = EnvironmentAction(
+        label: 'Internal',
+        onTap: (_) {},
+      );
+
+      api.registerAction(internalAction);
+
+      expect(api.registeredActions, contains(registryAction));
+      expect(api.registeredActions, contains(internalAction));
+      expect(api.registeredActions.length, equals(2));
     });
   });
 }

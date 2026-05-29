@@ -1,3 +1,4 @@
+import 'package:fluent_environment/src/registry_extension.dart';
 import 'package:fluent_environment/src/widgets/environment_inspector.dart';
 import 'package:fluent_environment_api/fluent_environment_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
@@ -15,6 +16,7 @@ class EnvironmentApiImpl extends EnvironmentApi {
   final Registry registry;
   final List<void Function()> _resetters = [];
   final Map<String, bool> _featureOverrides = {};
+  final List<EnvironmentAction> _actions = [];
 
   @override
   final List<Environment> availableEnvironments;
@@ -32,6 +34,22 @@ class EnvironmentApiImpl extends EnvironmentApi {
     for (final reset in _resetters) {
       reset();
     }
+  }
+
+  @override
+  void registerAction(EnvironmentAction action) {
+    _actions.add(action);
+    _environmentNotifier.refresh();
+  }
+
+  @override
+  List<EnvironmentAction> get registeredActions {
+    final actions = <EnvironmentAction>[];
+    if (registry.isRegistered<FluentEnvironmentActions>()) {
+      actions.addAll(registry.get<FluentEnvironmentActions>());
+    }
+    actions.addAll(_actions);
+    return actions;
   }
 
   @override

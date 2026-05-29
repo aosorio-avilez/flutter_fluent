@@ -15,6 +15,31 @@ void main() async {
     ),
   ]);
 
+  // Register some custom actions
+  Fluent.get<EnvironmentApi>()
+    ..registerAction(
+      EnvironmentAction(
+        label: 'Clear Cache',
+        icon: Icons.delete_sweep,
+        onTap: (context) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Cache cleared!')),
+          );
+        },
+      ),
+    )
+    ..registerAction(
+      EnvironmentAction(
+        label: 'Reset Onboarding',
+        icon: Icons.restart_alt,
+        onTap: (context) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Onboarding reset!')),
+          );
+        },
+      ),
+    );
+
   runApp(const MainApp());
 }
 

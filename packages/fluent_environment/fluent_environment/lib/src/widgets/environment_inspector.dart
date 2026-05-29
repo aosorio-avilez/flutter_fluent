@@ -176,6 +176,51 @@ class EnvironmentInspector extends StatelessWidget {
                     ),
                     const Divider(height: 24),
                   ],
+                  if (environmentApi.registeredActions.isNotEmpty) ...[
+                    Text(
+                      'Actions',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                            mainAxisExtent: 48,
+                          ),
+                      itemCount: environmentApi.registeredActions.length,
+                      itemBuilder: (context, index) {
+                        final action = environmentApi.registeredActions[index];
+
+                        return OutlinedButton.icon(
+                          onPressed: () {
+                            unawaited(HapticFeedback.lightImpact());
+                            action.onTap(context);
+                          },
+                          icon: Icon(action.icon ?? Icons.play_arrow, size: 18),
+                          label: Text(
+                            action.label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const Divider(height: 24),
+                  ],
                   Text(
                     configValuesLabel,
                     style: theme.textTheme.titleMedium?.copyWith(
