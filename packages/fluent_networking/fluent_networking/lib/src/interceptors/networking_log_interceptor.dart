@@ -43,6 +43,12 @@ class NetworkingLogInterceptor extends Interceptor {
     'set-cookie',
     'x-api-key',
     'api-key',
+    'authentication',
+    'xsrf-token',
+    'csrf-token',
+    'x-xsrf-token',
+    'x-csrf-token',
+    'x-auth-token',
   };
 
   static const _defaultSensitiveQueryParams = {
@@ -54,6 +60,8 @@ class NetworkingLogInterceptor extends Interceptor {
     'password',
     'pass',
     'pwd',
+    'sid',
+    'session_id',
   };
 
   static const _defaultSensitiveBodyKeys = {
@@ -71,6 +79,8 @@ class NetworkingLogInterceptor extends Interceptor {
     'cvc',
     'email',
     'phone_number',
+    'ssn',
+    'otp',
   };
 
   static const _extraStartTime = 'networking_start_time';
@@ -208,27 +218,64 @@ class NetworkingLogInterceptor extends Interceptor {
   }
 
   String _sanitizeUri(Uri uri) {
-    if (uri.queryParameters.isEmpty) return uri.toString();
+    String? userInfo;
+    if (uri.userInfo.isNotEmpty && uri.userInfo.contains(':')) {
+      final parts = uri.userInfo.split(':');
+      userInfo = '${parts[0]}:***REDACTED***';
+    }
 
     Map<String, dynamic>? queryParameters;
-    final queryParametersAll = uri.queryParametersAll;
+    if (uri.hasQuery) {
+      final queryParametersAll = uri.queryParametersAll;
+      for (final key in queryParametersAll.keys) {
+        final isSensitive =
+            _sensitiveQueryParams.contains(key) ||
+            _sensitiveQueryParams.contains(key.toLowerCase());
 
-    for (final key in queryParametersAll.keys) {
-      final isSensitive =
-          _sensitiveQueryParams.contains(key) ||
-          _sensitiveQueryParams.contains(key.toLowerCase());
-
-      if (isSensitive) {
-        queryParameters ??= Map<String, List<String>>.of(
-          queryParametersAll,
-        );
-        queryParameters[key] = ['***REDACTED***'];
+        if (isSensitive) {
+          queryParameters ??= Map<String, List<String>>.of(queryParametersAll);
+          queryParameters[key] = ['***REDACTED***'];
+        }
       }
     }
 
-    return queryParameters != null
-        ? uri.replace(queryParameters: queryParameters).toString()
-        : uri.toString();
+    String? fragment;
+    if (uri.hasFragment && uri.fragment.contains('=')) {
+      final parts = uri.fragment.split('&');
+      final sanitizedParts = <String>[];
+      var mutated = false;
+
+      for (final part in parts) {
+        final keyValue = part.split('=');
+        if (keyValue.length == 2) {
+          final key = keyValue[0];
+          final isSensitive =
+              _sensitiveQueryParams.contains(key) ||
+              _sensitiveQueryParams.contains(key.toLowerCase());
+          if (isSensitive) {
+            sanitizedParts.add('$key=***REDACTED***');
+            mutated = true;
+            continue;
+          }
+        }
+        sanitizedParts.add(part);
+      }
+      if (mutated) {
+        fragment = sanitizedParts.join('&');
+      }
+    }
+
+    if (userInfo != null || queryParameters != null || fragment != null) {
+      return uri
+          .replace(
+            userInfo: userInfo,
+            queryParameters: queryParameters,
+            fragment: fragment,
+          )
+          .toString();
+    }
+
+    return uri.toString();
   }
 
   dynamic _sanitizeBody(dynamic data) {

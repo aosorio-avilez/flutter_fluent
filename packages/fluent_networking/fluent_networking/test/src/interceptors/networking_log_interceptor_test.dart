@@ -464,5 +464,107 @@ void main() {
         returnsNormally,
       );
     });
+
+    test('onRequest should redact password in userInfo', () {
+      final options = RequestOptions(
+        path: 'https://user:password@example.com',
+        method: 'GET',
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('https://user:***REDACTED***@example.com')),
+        ),
+      ).called(1);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('password')),
+        ),
+      );
+    });
+
+    test('onRequest should redact sensitive keys in fragment', () {
+      final options = RequestOptions(
+        path: 'https://example.com/#token=my-secret-token&public=data',
+        method: 'GET',
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(
+            that: allOf(
+              contains('token=***REDACTED***'),
+              contains('public=data'),
+            ),
+          ),
+        ),
+      ).called(1);
+    });
+
+    test('onRequest should redact new default sensitive headers', () {
+      final options = RequestOptions(
+        path: 'https://api.example.com',
+        headers: {
+          'authentication': 'secret-auth',
+          'csrf-token': 'secret-csrf',
+          'x-auth-token': 'secret-xauth',
+        },
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('***REDACTED***')),
+        ),
+      ).called(3);
+    });
+
+    test('onRequest should redact new default sensitive query parameters', () {
+      final options = RequestOptions(
+        path: 'https://api.example.com?session_id=my-session&sid=my-sid',
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(
+            that: allOf(
+              contains('session_id=%2A%2A%2AREDACTED%2A%2A%2A'),
+              contains('sid=%2A%2A%2AREDACTED%2A%2A%2A'),
+            ),
+          ),
+        ),
+      ).called(1);
+    });
+
+    test('onRequest should redact new default sensitive body keys', () {
+      final options = RequestOptions(
+        path: 'https://api.example.com',
+        method: 'POST',
+        data: {
+          'ssn': '123-456-789',
+          'otp': '123456',
+        },
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('***REDACTED***')),
+        ),
+      ).called(2);
+    });
   });
 }
