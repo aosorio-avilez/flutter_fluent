@@ -1,3 +1,9 @@
+## 0.9.2
+
+* PERF: Optimized `NetworkingApiImpl` to avoid redundant map allocations during option merging.
+* PERF: Reduced map lookups in Dio error mapping for better efficiency.
+* PERF: Optimized `NetworkingLogInterceptor` data formatting and URI sanitization to skip redundant processing and use faster property checks.
+
 ## 0.9.1
 
 * PERF: Optimized `NetworkingLogInterceptor` header formatting to use a lazy `sync*` generator and avoided closure allocation overhead in the logging path.
