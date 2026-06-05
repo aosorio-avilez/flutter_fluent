@@ -60,13 +60,16 @@ class EnvironmentInspector extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        environment.name,
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Text(
+                          environment.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      const Spacer(),
+                      const SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
@@ -119,6 +122,7 @@ class EnvironmentInspector extends StatelessWidget {
                             selected: isSelected,
                             onSelected: (selected) {
                               if (selected) {
+                                unawaited(HapticFeedback.lightImpact());
                                 environmentApi.updateEnvironment(env);
                               }
                             },
@@ -153,6 +157,7 @@ class EnvironmentInspector extends StatelessWidget {
                           ),
                           value: isEnabled,
                           onChanged: (value) {
+                            unawaited(HapticFeedback.lightImpact());
                             environmentApi.setFeatureFlag(key, value: value);
                           },
                           contentPadding: EdgeInsets.zero,
@@ -233,6 +238,7 @@ class EnvironmentInspector extends StatelessWidget {
                                   icon: const Icon(Icons.copy_all, size: 20),
                                   tooltip: 'Copy "$key" to clipboard',
                                   onPressed: () {
+                                    unawaited(HapticFeedback.lightImpact());
                                     unawaited(
                                       Clipboard.setData(
                                         ClipboardData(text: stringValue),
