@@ -26,6 +26,7 @@ void main() {
     when(() => mockEnv.values).thenReturn({});
     when(() => mockApi.environmentNotifier).thenReturn(ValueNotifier(mockEnv));
     when(() => mockApi.availableEnvironments).thenReturn([mockEnv]);
+    when(() => mockApi.actions).thenReturn([]);
   });
 
   testWidgets('should display environment details', (tester) async {
@@ -246,5 +247,39 @@ void main() {
 
     // Assert
     verify(() => mockApi.setFeatureFlag('feature1', value: false)).called(1);
+  });
+
+  testWidgets('should display and trigger environment actions', (
+    tester,
+  ) async {
+    // Arrange
+    var triggered = false;
+    final action = EnvironmentAction(
+      label: 'Clear Cache',
+      icon: Icons.delete,
+      onTap: (_) => triggered = true,
+    );
+
+    when(() => mockApi.actions).thenReturn([action]);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: EnvironmentInspector(environmentApi: mockApi),
+        ),
+      ),
+    );
+
+    // Assert
+    expect(find.text('Actions'), findsOneWidget);
+    expect(find.text('Clear Cache'), findsOneWidget);
+    expect(find.byIcon(Icons.delete), findsOneWidget);
+
+    // Act
+    await tester.tap(find.text('Clear Cache'));
+    await tester.pump();
+
+    // Assert
+    expect(triggered, isTrue);
   });
 }

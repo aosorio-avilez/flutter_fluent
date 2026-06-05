@@ -210,4 +210,34 @@ void main() {
       expect(api.isFeatureEnabled('feature1'), isTrue);
     });
   });
+
+  group('Environment Actions', () {
+    test('registerAction adds action and notifies listeners', () {
+      final mockEnv = MockEnvironment();
+      final mockRegistry = MockRegistry();
+      final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
+      var notified = false;
+
+      api.environmentNotifier.addListener(() {
+        notified = true;
+      });
+
+      final action = EnvironmentAction(label: 'Test', onTap: (_) {});
+      api.registerAction(action);
+
+      expect(api.actions, contains(action));
+      expect(notified, isTrue);
+    });
+
+    test('actions returns unmodifiable list', () {
+      final mockEnv = MockEnvironment();
+      final mockRegistry = MockRegistry();
+      final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
+
+      expect(
+        () => api.actions.add(EnvironmentAction(label: 'Test', onTap: (_) {})),
+        throwsUnsupportedError,
+      );
+    });
+  });
 }

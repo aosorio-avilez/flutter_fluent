@@ -15,6 +15,41 @@ void main() async {
     ),
   ]);
 
+  // Register custom environment actions
+  Fluent.get<EnvironmentApi>()
+    ..registerAction(
+      EnvironmentAction(
+        label: 'Clear Cache',
+        icon: Icons.delete_outline,
+        onTap: (context) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Cache cleared!')),
+          );
+        },
+      ),
+    )
+    ..registerAction(
+      EnvironmentAction(
+        label: 'Show Log',
+        icon: Icons.terminal,
+        onTap: (context) {
+          showDialog<void>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Environment Log'),
+              content: const Text('This is a simulated environment log.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Close'),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
   runApp(const MainApp());
 }
 
