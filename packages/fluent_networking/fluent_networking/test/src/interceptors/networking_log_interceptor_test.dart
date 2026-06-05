@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:fluent_environment_api/fluent_environment_api.dart';
 import 'package:fluent_logger_api/fluent_logger_api.dart';
 import 'package:fluent_networking/src/interceptors/networking_log_interceptor.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
@@ -6,6 +7,10 @@ import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
 class MockLoggerApi extends Mock implements LoggerApi {}
+
+class MockEnvironmentApi extends Mock implements EnvironmentApi {}
+
+class MockEnvironment extends Mock implements Environment {}
 
 class MockRequestInterceptorHandler extends Mock
     implements RequestInterceptorHandler {}
@@ -462,6 +467,51 @@ void main() {
       expect(
         () => noLoggerInterceptor.onRequest(options, handler),
         returnsNormally,
+      );
+    });
+
+    test('onRequest should redact sensitive keys from Environment', () {
+      final mockEnvironmentApi = MockEnvironmentApi();
+      final mockEnvironment = MockEnvironment();
+      when(() => mockEnvironmentApi.environment).thenReturn(mockEnvironment);
+      when(() => mockEnvironment.sensitiveKeys).thenReturn({'env_secret'});
+
+      final customInterceptor = NetworkingLogInterceptor(
+        logger: mockLoggerApi,
+        environmentApi: mockEnvironmentApi,
+      );
+
+      final options = RequestOptions(
+        path: 'https://api.example.com?env_secret=value',
+        method: 'POST',
+        headers: {'env_secret': 'header-value'},
+        data: {'env_secret': 'body-value'},
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      customInterceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('env_secret=%2A%2A%2AREDACTED%2A%2A%2A')),
+        ),
+      ).called(1);
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('env_secret: ***REDACTED***')),
+        ),
+      ).called(1);
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('"env_secret": "***REDACTED***"')),
+        ),
+      ).called(1);
+
+      verifyNever(
+        () => mockLoggerApi.logInfo(any<String>(that: contains('header-value'))),
+      );
+      verifyNever(
+        () => mockLoggerApi.logInfo(any<String>(that: contains('body-value'))),
       );
     });
   });

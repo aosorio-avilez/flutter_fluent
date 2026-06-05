@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:fluent_environment_api/fluent_environment_api.dart';
 import 'package:fluent_logger_api/fluent_logger_api.dart';
 
 /// A secure networking interceptor that logs requests and responses.
@@ -11,10 +12,12 @@ class NetworkingLogInterceptor extends Interceptor {
   /// Creates a [NetworkingLogInterceptor].
   NetworkingLogInterceptor({
     required LoggerApi? logger,
+    EnvironmentApi? environmentApi,
     Set<String>? sensitiveHeaders,
     Set<String>? sensitiveBodyKeys,
     Set<String>? sensitiveQueryParams,
   }) : _logger = logger,
+       _environmentApi = environmentApi,
        _sensitiveHeaders = {
          ..._defaultSensitiveHeaders,
          if (sensitiveHeaders != null)
@@ -32,6 +35,7 @@ class NetworkingLogInterceptor extends Interceptor {
        };
 
   final LoggerApi? _logger;
+  final EnvironmentApi? _environmentApi;
   final Set<String> _sensitiveHeaders;
   final Set<String> _sensitiveBodyKeys;
   final Set<String> _sensitiveQueryParams;
@@ -183,11 +187,15 @@ class NetworkingLogInterceptor extends Interceptor {
   /// Note: [headers] can be `Map<String, dynamic>` (from requests) or
   /// `Map<String, List<String>>` (from response/error).
   Iterable<String> _formatHeaders(Map<String, dynamic> headers) sync* {
+    final envSensitiveKeys = _environmentApi?.environment.sensitiveKeys;
+
     for (final entry in headers.entries) {
       final key = entry.key;
-      final isSensitive =
-          _sensitiveHeaders.contains(key) ||
-          _sensitiveHeaders.contains(key.toLowerCase());
+      final lowerKey = key.toLowerCase();
+      final isSensitive = _sensitiveHeaders.contains(key) ||
+          _sensitiveHeaders.contains(lowerKey) ||
+          (envSensitiveKeys?.contains(key) ?? false) ||
+          (envSensitiveKeys?.contains(lowerKey) ?? false);
       final value = isSensitive ? '***REDACTED***' : entry.value.toString();
       yield '$key: $value';
     }
@@ -212,11 +220,14 @@ class NetworkingLogInterceptor extends Interceptor {
 
     Map<String, dynamic>? queryParameters;
     final queryParametersAll = uri.queryParametersAll;
+    final envSensitiveKeys = _environmentApi?.environment.sensitiveKeys;
 
     for (final key in queryParametersAll.keys) {
-      final isSensitive =
-          _sensitiveQueryParams.contains(key) ||
-          _sensitiveQueryParams.contains(key.toLowerCase());
+      final lowerKey = key.toLowerCase();
+      final isSensitive = _sensitiveQueryParams.contains(key) ||
+          _sensitiveQueryParams.contains(lowerKey) ||
+          (envSensitiveKeys?.contains(key) ?? false) ||
+          (envSensitiveKeys?.contains(lowerKey) ?? false);
 
       if (isSensitive) {
         queryParameters ??= Map<String, List<String>>.of(
@@ -232,15 +243,22 @@ class NetworkingLogInterceptor extends Interceptor {
   }
 
   dynamic _sanitizeBody(dynamic data) {
-    if (_sensitiveBodyKeys.isEmpty) return data;
+    final envSensitiveKeys = _environmentApi?.environment.sensitiveKeys;
+
+    if (_sensitiveBodyKeys.isEmpty && (envSensitiveKeys?.isEmpty ?? true)) {
+      return data;
+    }
 
     if (data is FormData) {
       final fields = <String, dynamic>{};
       for (final entry in data.fields) {
-        final isSensitive =
-            _sensitiveBodyKeys.contains(entry.key) ||
-            _sensitiveBodyKeys.contains(entry.key.toLowerCase());
-        fields[entry.key] = isSensitive ? '***REDACTED***' : entry.value;
+        final key = entry.key;
+        final lowerKey = key.toLowerCase();
+        final isSensitive = _sensitiveBodyKeys.contains(key) ||
+            _sensitiveBodyKeys.contains(lowerKey) ||
+            (envSensitiveKeys?.contains(key) ?? false) ||
+            (envSensitiveKeys?.contains(lowerKey) ?? false);
+        fields[key] = isSensitive ? '***REDACTED***' : entry.value;
       }
       for (final entry in data.files) {
         fields[entry.key] = '[FILE: ${entry.value.filename}]';
@@ -252,11 +270,15 @@ class NetworkingLogInterceptor extends Interceptor {
       for (final entry in data.entries) {
         final key = entry.key;
         final value = entry.value;
+        final stringKey = key.toString();
+        final lowerKey = stringKey.toLowerCase();
 
         // Optimized sensitive key check: direct match first, then normalized
         final isSensitive =
             (key is String && _sensitiveBodyKeys.contains(key)) ||
-            _sensitiveBodyKeys.contains(key.toString().toLowerCase());
+            _sensitiveBodyKeys.contains(lowerKey) ||
+            (envSensitiveKeys?.contains(stringKey) ?? false) ||
+            (envSensitiveKeys?.contains(lowerKey) ?? false);
 
         if (isSensitive) {
           result ??= Map<dynamic, dynamic>.of(data);

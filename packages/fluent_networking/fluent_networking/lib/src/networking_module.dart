@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:fluent_environment_api/fluent_environment_api.dart';
 import 'package:fluent_logger_api/fluent_logger_api.dart';
 import 'package:fluent_networking/fluent_networking.dart';
 import 'package:fluent_networking/src/interceptors/networking_cache_interceptor.dart';
@@ -32,9 +33,13 @@ class NetworkingModule extends FluentModule {
         if (config.enableLog &&
             !const bool.fromEnvironment('dart.vm.product')) {
           final logger = it.isRegistered<LoggerApi>() ? it<LoggerApi>() : null;
+          final environmentApi =
+              it.isRegistered<EnvironmentApi>() ? it<EnvironmentApi>() : null;
+
           dio.interceptors.add(
             NetworkingLogInterceptor(
               logger: logger,
+              environmentApi: environmentApi,
               sensitiveHeaders: config.sensitiveHeaders,
               sensitiveBodyKeys: config.sensitiveBodyKeys,
               sensitiveQueryParams: config.sensitiveQueryParams,
