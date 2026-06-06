@@ -1,0 +1,75 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to push tags and create releases
+
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Fetch all history and tags
+
+      - name: 🏷️ Detect and Publish New Tags
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          # Set up git identity
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          echo "Scanning workspace for packages..."
+          
+          # Find all pubspec.yaml files under packages/
+          find packages -name pubspec.yaml | while read -r pubspec; do
+            # Skip example folders
+            if [[ "$pubspec" == *"/example/"* ]]; then
+              continue
+            fi
+            
+            # Skip if publish_to is 'none'
+            if grep -q "publish_to:.*none" "$pubspec"; then
+              echo "Skipping non-publishable package: $pubspec"
+              continue
+            fi
+            
+            # Parse package name and version
+            pkg_name=$(grep "^name:" "$pubspec" | head -n1 | awk '{print $2}' | sed "s/['\"]//g")
+            pkg_version=$(grep "^version:" "$pubspec" | head -n1 | awk '{print $2}' | sed "s/['\"]//g")
+            
+            if [ -z "$pkg_name" ] || [ -z "$pkg_version" ]; then
+              echo "Warning: Could not parse name or version for $pubspec"
+              continue
+            fi
+            
+            TAG="${pkg_name}-v${pkg_version}"
+            
+            # Check if tag already exists in remote/local git history
+            if git rev-parse "refs/tags/$TAG" >/dev/null 2>&1; then
+              echo "Tag $TAG already exists. Skipping."
+            else
+              echo "New version detected! Creating tag and release for $TAG..."
+              
+              # Create the tag locally
+              git tag -a "$TAG" -m "Release $TAG"
+              
+              # Push the tag using RELEASE_TOKEN if present, fallback to default token.
+              # Note: Pushing with default GITHUB_TOKEN won't trigger downstream workflows.
+              if [ -n "${{ secrets.RELEASE_TOKEN }}" ]; then
+                git push https://x-access-token:${{ secrets.RELEASE_TOKEN }}@github.com/${{ github.repository }} "refs/tags/$TAG"
+              else
+                echo "Warning: secrets.RELEASE_TOKEN not found. Pushing tag using GITHUB_TOKEN. (Downstream actions will NOT be triggered)"
+                git push origin "refs/tags/$TAG"
+              fi
+              
+              # Create a GitHub Release
+              gh release create "$TAG" --title "$TAG" --generate-notes
+            fi
+          done
