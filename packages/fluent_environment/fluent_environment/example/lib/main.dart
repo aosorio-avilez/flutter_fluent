@@ -15,6 +15,19 @@ void main() async {
     ),
   ]);
 
+  Fluent.get<Registry>().registerEnvironmentAction(
+    EnvironmentAction(
+      label: 'Clear Cache',
+      icon: Icons.delete,
+      onTap: (context) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Cache Cleared!')));
+        Navigator.of(context).pop();
+      },
+    ),
+  );
+
   runApp(const MainApp());
 }
 

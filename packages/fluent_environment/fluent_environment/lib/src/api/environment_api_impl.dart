@@ -15,6 +15,7 @@ class EnvironmentApiImpl extends EnvironmentApi {
   final Registry registry;
   final List<void Function()> _resetters = [];
   final Map<String, bool> _featureOverrides = {};
+  final List<EnvironmentAction> _customActions = [];
 
   @override
   final List<Environment> availableEnvironments;
@@ -32,6 +33,16 @@ class EnvironmentApiImpl extends EnvironmentApi {
     for (final reset in _resetters) {
       reset();
     }
+  }
+
+  @override
+  List<EnvironmentAction> get customActions =>
+      List.unmodifiable(_customActions);
+
+  @override
+  void registerAction(EnvironmentAction action) {
+    _customActions.add(action);
+    _environmentNotifier.refresh();
   }
 
   @override

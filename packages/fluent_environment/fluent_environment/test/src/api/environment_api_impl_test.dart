@@ -76,6 +76,31 @@ void main() {
     },
   );
 
+  test(
+    'registerAction should add action to customActions and trigger update',
+    () {
+      final mockEnv = MockEnvironment();
+      final mockRegistry = MockRegistry();
+      final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
+
+      var notified = false;
+      api.environmentNotifier.addListener(() {
+        notified = true;
+      });
+
+      final action = EnvironmentAction(
+        label: 'Test Action',
+        onTap: (_) {},
+      );
+
+      api.registerAction(action);
+
+      expect(api.customActions.length, 1);
+      expect(api.customActions.first, equals(action));
+      expect(notified, isTrue);
+    },
+  );
+
   testWidgets(
     'showInspector should display EnvironmentInspector in bottom sheet',
     (tester) async {

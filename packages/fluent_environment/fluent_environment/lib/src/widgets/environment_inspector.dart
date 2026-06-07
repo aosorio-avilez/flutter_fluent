@@ -162,6 +162,68 @@ class EnvironmentInspector extends StatelessWidget {
                     ),
                     const Divider(height: 24),
                   ],
+                  if (environmentApi.customActions.isNotEmpty) ...[
+                    Text(
+                      'Actions',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                            childAspectRatio: 3,
+                          ),
+                      itemCount: environmentApi.customActions.length,
+                      itemBuilder: (context, index) {
+                        final action = environmentApi.customActions[index];
+                        return Material(
+                          color: colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(8),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(8),
+                            onTap: () {
+                              unawaited(HapticFeedback.lightImpact());
+                              action.onTap(context);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                              ),
+                              child: Row(
+                                children: [
+                                  if (action.icon != null) ...[
+                                    Icon(
+                                      action.icon,
+                                      size: 18,
+                                      color: colorScheme.primary,
+                                    ),
+                                    const SizedBox(width: 8),
+                                  ],
+                                  Expanded(
+                                    child: Text(
+                                      action.label,
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const Divider(height: 24),
+                  ],
                   Text(
                     configValuesLabel,
                     style: theme.textTheme.titleMedium?.copyWith(

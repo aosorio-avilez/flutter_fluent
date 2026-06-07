@@ -1,4 +1,5 @@
 import 'package:fluent_environment_api/src/environment.dart';
+import 'package:fluent_environment_api/src/environment_action.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -37,4 +38,10 @@ abstract class EnvironmentApi {
 
   /// Sets a feature flag value at runtime.
   void setFeatureFlag(String key, {required bool value});
+
+  /// The list of registered custom developer actions.
+  List<EnvironmentAction> get customActions;
+
+  /// Registers a custom developer action.
+  void registerAction(EnvironmentAction action);
 }

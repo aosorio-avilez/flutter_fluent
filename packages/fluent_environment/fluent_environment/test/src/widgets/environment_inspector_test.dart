@@ -26,6 +26,7 @@ void main() {
     when(() => mockEnv.values).thenReturn({});
     when(() => mockApi.environmentNotifier).thenReturn(ValueNotifier(mockEnv));
     when(() => mockApi.availableEnvironments).thenReturn([mockEnv]);
+    when(() => mockApi.customActions).thenReturn([]);
   });
 
   testWidgets('should display environment details', (tester) async {
@@ -246,5 +247,39 @@ void main() {
 
     // Assert
     verify(() => mockApi.setFeatureFlag('feature1', value: false)).called(1);
+  });
+
+  testWidgets('should render custom actions and handle tap', (tester) async {
+    // Arrange
+    var tapCount = 0;
+    final action = EnvironmentAction(
+      label: 'Test Action',
+      icon: Icons.bug_report,
+      onTap: (_) {
+        tapCount++;
+      },
+    );
+
+    when(() => mockApi.customActions).thenReturn([action]);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: EnvironmentInspector(environmentApi: mockApi),
+        ),
+      ),
+    );
+
+    // Assert grid renders
+    expect(find.text('Actions'), findsOneWidget);
+    expect(find.text('Test Action'), findsOneWidget);
+    expect(find.byIcon(Icons.bug_report), findsOneWidget);
+
+    // Act
+    await tester.tap(find.text('Test Action'));
+    await tester.pump();
+
+    // Assert tap handled
+    expect(tapCount, 1);
   });
 }
