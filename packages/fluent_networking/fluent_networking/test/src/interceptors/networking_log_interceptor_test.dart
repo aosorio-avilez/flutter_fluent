@@ -152,6 +152,37 @@ void main() {
       verify(() => handler.next(options)).called(1);
     });
 
+    test('onRequest should redact sensitive keys in userInfo and fragment', () {
+      final options = RequestOptions(
+        path:
+            'https://user:secret-password@api.example.com/path?query=val#access_token=secret-token&other=1',
+        method: 'GET',
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      interceptor.onRequest(options, handler);
+
+      verify(
+        () => mockLoggerApi.logInfo(
+          any<String>(
+            that: contains(
+              'https://user:***REDACTED***@api.example.com/path?query=val#access_token=***REDACTED***&other=1',
+            ),
+          ),
+        ),
+      ).called(1);
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('secret-password')),
+        ),
+      );
+      verifyNever(
+        () => mockLoggerApi.logInfo(
+          any<String>(that: contains('secret-token')),
+        ),
+      );
+    });
+
     test('onRequest should redact custom sensitive query parameters', () {
       final customInterceptor = NetworkingLogInterceptor(
         logger: mockLoggerApi,
