@@ -116,8 +116,14 @@ class EnvironmentInspector extends StatelessWidget {
 
                           return ChoiceChip(
                             label: Text(env.name),
+                            tooltip: 'Switch to ${env.name}',
+                            avatar: CircleAvatar(
+                              backgroundColor: env.color,
+                              radius: 8,
+                            ),
                             selected: isSelected,
                             onSelected: (selected) {
+                              unawaited(HapticFeedback.lightImpact());
                               if (selected) {
                                 environmentApi.updateEnvironment(env);
                               }
@@ -153,6 +159,7 @@ class EnvironmentInspector extends StatelessWidget {
                           ),
                           value: isEnabled,
                           onChanged: (value) {
+                            unawaited(HapticFeedback.lightImpact());
                             environmentApi.setFeatureFlag(key, value: value);
                           },
                           contentPadding: EdgeInsets.zero,
@@ -233,6 +240,7 @@ class EnvironmentInspector extends StatelessWidget {
                                   icon: const Icon(Icons.copy_all, size: 20),
                                   tooltip: 'Copy "$key" to clipboard',
                                   onPressed: () {
+                                    unawaited(HapticFeedback.lightImpact());
                                     unawaited(
                                       Clipboard.setData(
                                         ClipboardData(text: stringValue),
