@@ -22,9 +22,9 @@ void main() async {
         label: 'Clear Cache',
         icon: Icons.delete_sweep,
         onTap: (context) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Cache cleared!')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Cache cleared!')));
         },
       ),
     )
@@ -33,9 +33,9 @@ void main() async {
         label: 'Reset Onboarding',
         icon: Icons.restart_alt,
         onTap: (context) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Onboarding reset!')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Onboarding reset!')));
         },
       ),
     );

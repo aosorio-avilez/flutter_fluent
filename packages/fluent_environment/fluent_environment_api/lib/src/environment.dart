@@ -28,9 +28,7 @@ abstract class Environment {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is Environment &&
-        other.name == name &&
-        other.type == type;
+    return other is Environment && other.name == name && other.type == type;
   }
 
   @override

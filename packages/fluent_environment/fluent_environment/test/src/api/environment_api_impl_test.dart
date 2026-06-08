@@ -89,8 +89,9 @@ void main() {
       when(() => mockEnv.sensitiveKeys).thenReturn({});
 
       final mockRegistry = MockRegistry();
-      when(() => mockRegistry.isRegistered<FluentEnvironmentActions>())
-          .thenReturn(false);
+      when(
+        () => mockRegistry.isRegistered<FluentEnvironmentActions>(),
+      ).thenReturn(false);
       final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
 
       await tester.pumpWidget(
@@ -128,8 +129,9 @@ void main() {
 
     final navigatorKey = GlobalKey<NavigatorState>();
     final mockRegistry = MockRegistry();
-    when(() => mockRegistry.isRegistered<FluentEnvironmentActions>())
-        .thenReturn(false);
+    when(
+      () => mockRegistry.isRegistered<FluentEnvironmentActions>(),
+    ).thenReturn(false);
     final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
 
     await tester.pumpWidget(
@@ -220,8 +222,9 @@ void main() {
     test('registerAction adds to internal actions and notifies', () {
       final mockEnv = MockEnvironment();
       final mockRegistry = MockRegistry();
-      when(() => mockRegistry.isRegistered<FluentEnvironmentActions>())
-          .thenReturn(false);
+      when(
+        () => mockRegistry.isRegistered<FluentEnvironmentActions>(),
+      ).thenReturn(false);
       final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
       var notified = false;
       api.environmentNotifier.addListener(() => notified = true);
@@ -240,10 +243,12 @@ void main() {
         label: 'Registry',
         onTap: (_) {},
       );
-      when(() => mockRegistry.isRegistered<FluentEnvironmentActions>())
-          .thenReturn(true);
-      when(() => mockRegistry.get<FluentEnvironmentActions>())
-          .thenReturn([registryAction]);
+      when(
+        () => mockRegistry.isRegistered<FluentEnvironmentActions>(),
+      ).thenReturn(true);
+      when(
+        () => mockRegistry.get<FluentEnvironmentActions>(),
+      ).thenReturn([registryAction]);
 
       final api = EnvironmentApiImpl(mockEnv, [mockEnv], mockRegistry);
       final internalAction = EnvironmentAction(
