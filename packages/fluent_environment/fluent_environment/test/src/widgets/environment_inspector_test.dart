@@ -27,6 +27,7 @@ void main() {
     when(() => mockEnv.values).thenReturn({});
     when(() => mockApi.environmentNotifier).thenReturn(ValueNotifier(mockEnv));
     when(() => mockApi.availableEnvironments).thenReturn([mockEnv]);
+    when(() => mockApi.registeredActions).thenReturn([]);
   });
 
   testWidgets('should display environment details', (tester) async {
@@ -283,4 +284,35 @@ void main() {
       expect(hapticCall.arguments, 'HapticFeedbackType.lightImpact');
     },
   );
+
+  testWidgets('should display and trigger custom actions', (tester) async {
+    // Arrange
+    var actionTapped = false;
+    final action = EnvironmentAction(
+      label: 'Custom Action',
+      icon: Icons.settings,
+      onTap: (_) => actionTapped = true,
+    );
+    when(() => mockApi.registeredActions).thenReturn([action]);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: EnvironmentInspector(environmentApi: mockApi),
+        ),
+      ),
+    );
+
+    // Assert
+    expect(find.text('Actions'), findsOneWidget);
+    expect(find.text('Custom Action'), findsOneWidget);
+    expect(find.byIcon(Icons.settings), findsOneWidget);
+
+    // Act
+    await tester.tap(find.text('Custom Action'));
+    await tester.pump();
+
+    // Assert
+    expect(actionTapped, isTrue);
+  });
 }

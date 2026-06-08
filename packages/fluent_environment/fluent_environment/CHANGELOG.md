@@ -1,4 +1,11 @@
+## 0.10.0
+
+* FEAT: Added custom environment actions section and UI grid to the inspector.
+* FEAT: Implemented `RegistryExtension` to enable registering environment actions directly on the service registry.
+* PERF: Stored available environments and registered actions in local variables within the inspector build method to avoid redundant list allocations.
+
 ## 0.9.1
+
 
 * FEAT: Added haptic feedback (`HapticFeedback.lightImpact` and `HapticFeedback.mediumImpact`) to environment switching, feature flag toggles, copy actions, and long-press inspector triggers.
 * STYLE: Wrapped environment name with `Expanded` and `TextOverflow.ellipsis` to prevent overflow in layout header.

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 /// Abstract definition of an Application Environment.
 /// Clients must extend this class to provide specific configuration values.
+@immutable
 abstract class Environment {
   const Environment();
 
@@ -23,6 +24,15 @@ abstract class Environment {
 
   /// A set of keys that should be redacted in logs or UI.
   Set<String> get sensitiveKeys => const {};
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Environment && other.name == name && other.type == type;
+  }
+
+  @override
+  int get hashCode => name.hashCode ^ type.hashCode;
 }
 
 /// Convenience extensions to avoid verbose type checks.

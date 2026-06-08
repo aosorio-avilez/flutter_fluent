@@ -38,6 +38,8 @@ class EnvironmentInspector extends StatelessWidget {
           final sensitiveKeys = environment.sensitiveKeys
               .map((e) => e.toLowerCase())
               .toSet();
+          final availableEnvironments = environmentApi.availableEnvironments;
+          final registeredActions = environmentApi.registeredActions;
 
           return Container(
             padding: const EdgeInsets.all(16),
@@ -97,7 +99,7 @@ class EnvironmentInspector extends StatelessWidget {
                     ],
                   ),
                   const Divider(height: 24),
-                  if (environmentApi.availableEnvironments.length > 1) ...[
+                  if (availableEnvironments.length > 1) ...[
                     Text(
                       'Available Environments',
                       style: theme.textTheme.titleMedium?.copyWith(
@@ -109,12 +111,11 @@ class EnvironmentInspector extends StatelessWidget {
                       height: 40,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
-                        itemCount: environmentApi.availableEnvironments.length,
+                        itemCount: availableEnvironments.length,
                         separatorBuilder: (context, index) =>
                             const SizedBox(width: 8),
                         itemBuilder: (context, index) {
-                          final env =
-                              environmentApi.availableEnvironments[index];
+                          final env = availableEnvironments[index];
                           final isSelected = env == environment;
 
                           return ChoiceChip(
@@ -171,6 +172,51 @@ class EnvironmentInspector extends StatelessWidget {
                           },
                           contentPadding: EdgeInsets.zero,
                           dense: true,
+                        );
+                      },
+                    ),
+                    const Divider(height: 24),
+                  ],
+                  if (registeredActions.isNotEmpty) ...[
+                    Text(
+                      'Actions',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                            mainAxisExtent: 48,
+                          ),
+                      itemCount: registeredActions.length,
+                      itemBuilder: (context, index) {
+                        final action = registeredActions[index];
+
+                        return OutlinedButton.icon(
+                          onPressed: () {
+                            unawaited(HapticFeedback.lightImpact());
+                            action.onTap(context);
+                          },
+                          icon: Icon(action.icon ?? Icons.play_arrow, size: 18),
+                          label: Text(
+                            action.label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
                         );
                       },
                     ),

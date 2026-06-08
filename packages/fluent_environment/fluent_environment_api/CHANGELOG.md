@@ -1,4 +1,9 @@
+## 0.7.0
+
+* FEAT: Added custom actions contract (`EnvironmentAction` and `registerAction` / `registeredActions` declarations) to `EnvironmentApi`.
+
 ## 0.6.0
+
 
 * FEAT: Added Feature Flags capability to `Environment` and `EnvironmentApi`.
 * FEAT: Added `isFeatureEnabled` and `setFeatureFlag` to `EnvironmentApi`.
