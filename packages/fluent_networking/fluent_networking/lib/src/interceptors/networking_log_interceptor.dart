@@ -185,8 +185,7 @@ class NetworkingLogInterceptor extends Interceptor {
   Iterable<String> _formatHeaders(Map<String, dynamic> headers) sync* {
     for (final entry in headers.entries) {
       final key = entry.key;
-      final isSensitive = _sensitiveHeaders.contains(key) ||
-          _sensitiveHeaders.contains(key.toLowerCase());
+      final isSensitive = _sensitiveHeaders.contains(key.toLowerCase());
       final value = isSensitive ? '***REDACTED***' : entry.value.toString();
       yield '$key: $value';
     }
@@ -213,8 +212,7 @@ class NetworkingLogInterceptor extends Interceptor {
     final queryParametersAll = uri.queryParametersAll;
 
     for (final key in queryParametersAll.keys) {
-      final isSensitive = _sensitiveQueryParams.contains(key) ||
-          _sensitiveQueryParams.contains(key.toLowerCase());
+      final isSensitive = _sensitiveQueryParams.contains(key.toLowerCase());
 
       if (isSensitive) {
         queryParameters ??= Map<String, List<String>>.of(
@@ -251,9 +249,8 @@ class NetworkingLogInterceptor extends Interceptor {
         final key = entry.key;
         final value = entry.value;
 
-        // Optimized sensitive key check: direct match first, then normalized
+        // Optimized sensitive key check
         final isSensitive =
-            (key is String && _sensitiveBodyKeys.contains(key)) ||
             _sensitiveBodyKeys.contains(key.toString().toLowerCase());
 
         if (isSensitive) {
