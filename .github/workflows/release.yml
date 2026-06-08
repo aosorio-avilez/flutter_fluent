@@ -15,7 +15,8 @@ jobs:
       - name: 📚 Git Checkout
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Fetch all history and tags
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: 🏷️ Detect and Publish New Tags
         env:
@@ -60,14 +61,9 @@ jobs:
               # Create the tag locally
               git tag -a "$TAG" -m "Release $TAG"
               
-              # Push the tag using RELEASE_TOKEN if present, fallback to default token.
-              # Note: Pushing with default GITHUB_TOKEN won't trigger downstream workflows.
-              if [ -n "${{ secrets.RELEASE_TOKEN }}" ]; then
-                git push https://x-access-token:${{ secrets.RELEASE_TOKEN }}@github.com/${{ github.repository }} "refs/tags/$TAG"
-              else
-                echo "Warning: secrets.RELEASE_TOKEN not found. Pushing tag using GITHUB_TOKEN. (Downstream actions will NOT be triggered)"
-                git push origin "refs/tags/$TAG"
-              fi
+              # Push the tag
+              # Note: Pushing with PAT (RELEASE_TOKEN) triggers downstream workflows, while GITHUB_TOKEN does not.
+              git push origin "refs/tags/$TAG"
               
               # Create a GitHub Release
               gh release create "$TAG" --title "$TAG" --generate-notes
