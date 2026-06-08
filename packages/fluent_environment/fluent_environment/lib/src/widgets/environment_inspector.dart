@@ -38,6 +38,8 @@ class EnvironmentInspector extends StatelessWidget {
           final sensitiveKeys = environment.sensitiveKeys
               .map((e) => e.toLowerCase())
               .toSet();
+          final availableEnvironments = environmentApi.availableEnvironments;
+          final registeredActions = environmentApi.registeredActions;
 
           return Container(
             padding: const EdgeInsets.all(16),
@@ -97,7 +99,7 @@ class EnvironmentInspector extends StatelessWidget {
                     ],
                   ),
                   const Divider(height: 24),
-                  if (environmentApi.availableEnvironments.length > 1) ...[
+                  if (availableEnvironments.length > 1) ...[
                     Text(
                       'Available Environments',
                       style: theme.textTheme.titleMedium?.copyWith(
@@ -109,12 +111,11 @@ class EnvironmentInspector extends StatelessWidget {
                       height: 40,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
-                        itemCount: environmentApi.availableEnvironments.length,
+                        itemCount: availableEnvironments.length,
                         separatorBuilder: (context, index) =>
                             const SizedBox(width: 8),
                         itemBuilder: (context, index) {
-                          final env =
-                              environmentApi.availableEnvironments[index];
+                          final env = availableEnvironments[index];
                           final isSelected = env == environment;
 
                           return ChoiceChip(
@@ -176,7 +177,7 @@ class EnvironmentInspector extends StatelessWidget {
                     ),
                     const Divider(height: 24),
                   ],
-                  if (environmentApi.registeredActions.isNotEmpty) ...[
+                  if (registeredActions.isNotEmpty) ...[
                     Text(
                       'Actions',
                       style: theme.textTheme.titleMedium?.copyWith(
@@ -194,9 +195,9 @@ class EnvironmentInspector extends StatelessWidget {
                             mainAxisSpacing: 8,
                             mainAxisExtent: 48,
                           ),
-                      itemCount: environmentApi.registeredActions.length,
+                      itemCount: registeredActions.length,
                       itemBuilder: (context, index) {
-                        final action = environmentApi.registeredActions[index];
+                        final action = registeredActions[index];
 
                         return OutlinedButton.icon(
                           onPressed: () {
