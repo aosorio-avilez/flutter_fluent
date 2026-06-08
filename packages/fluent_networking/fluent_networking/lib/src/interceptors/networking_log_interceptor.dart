@@ -250,8 +250,9 @@ class NetworkingLogInterceptor extends Interceptor {
         final value = entry.value;
 
         // Optimized sensitive key check
-        final isSensitive =
-            _sensitiveBodyKeys.contains(key.toString().toLowerCase());
+        final isSensitive = _sensitiveBodyKeys.contains(
+          key.toString().toLowerCase(),
+        );
 
         if (isSensitive) {
           result ??= Map<dynamic, dynamic>.of(data);
