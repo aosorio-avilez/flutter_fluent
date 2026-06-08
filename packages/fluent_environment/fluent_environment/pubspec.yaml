@@ -1,6 +1,6 @@
 name: fluent_environment
 description: Package that provides a way to register your environment globally and display it.
-version: 0.9.0
+version: 0.9.1
 resolution: workspace
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_environment/fluent_environment
 

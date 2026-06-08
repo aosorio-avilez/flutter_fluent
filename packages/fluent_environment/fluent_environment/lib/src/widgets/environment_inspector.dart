@@ -118,7 +118,16 @@ class EnvironmentInspector extends StatelessWidget {
                           final isSelected = env == environment;
 
                           return ChoiceChip(
+                            avatar: Container(
+                              width: 12,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color: env.color,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
                             label: Text(env.name),
+                            tooltip: 'Switch to ${env.name}',
                             selected: isSelected,
                             onSelected: (selected) {
                               if (selected) {

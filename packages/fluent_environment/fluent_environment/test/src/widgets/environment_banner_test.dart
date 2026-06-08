@@ -1,5 +1,6 @@
 import 'package:fluent_environment/fluent_environment.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -288,4 +289,47 @@ void main() {
     final bannerWidget = tester.widget<Banner>(find.byType(Banner));
     expect(bannerWidget.color, Colors.orange);
   });
+
+  testWidgets(
+    'should trigger medium haptic feedback on long press',
+    (tester) async {
+      // Arrange
+      final log = <MethodCall>[];
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (methodCall) async {
+          log.add(methodCall);
+          return null;
+        },
+      );
+
+      when(() => mockEnv.type).thenReturn(EnvironmentType.dev);
+      when(() => mockEnv.name).thenReturn('DEV');
+      when(() => mockEnv.color).thenReturn(Colors.red);
+      when(() => mockEnvApi.environment).thenReturn(mockEnv);
+      when(() => mockEnvApi.showInspector(any())).thenAnswer((_) async {});
+
+      // Act
+      await tester.pumpWidget(
+        const MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+            body: EnvironmentBanner(
+              enableInspector: true,
+              child: Text('Content'),
+            ),
+          ),
+        ),
+      );
+
+      await tester.longPress(find.byType(Banner));
+      await tester.pump();
+
+      // Assert
+      final hapticCall = log.firstWhere(
+        (call) => call.method == 'HapticFeedback.vibrate',
+      );
+      expect(hapticCall.arguments, 'HapticFeedbackType.mediumImpact');
+    },
+  );
 }

@@ -1,4 +1,13 @@
+## 0.9.2
+
+* PERF: Optimized `NetworkingLogInterceptor` formatting by decoding JSON string data prior to sanitization.
+* PERF: Used `uri.hasQuery` check instead of allocating a `queryParameters` map when checking for empty query params.
+* PERF: Avoided redundant empty map allocation when merging request options without extra configuration.
+* PERF: Reduced map lookups during API error mapping by fetching error message directly without redundant `containsKey` checks.
+* PERF: Simplified sensitive keys lookup in logs by directly checking lowercase keys against lowercased predefined sets.
+
 ## 0.9.1
+
 
 * PERF: Optimized `NetworkingLogInterceptor` header formatting to use a lazy `sync*` generator and avoided closure allocation overhead in the logging path.
 * PERF: Cached `queryParametersAll` lookup in URI sanitization to reduce getter invocations.

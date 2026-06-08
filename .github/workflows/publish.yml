@@ -1,0 +1,92 @@
+name: Publish to pub.dev
+
+on:
+  push:
+    tags:
+      - '*-v*' # Triggers on e.g., fluent_navigation-v1.6.9
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for pub.dev OIDC authentication
+      contents: read
+
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v6
+
+      - name: 🎯 Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: 📦 Cache Pub dependencies
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.pub-cache
+            **/.dart_tool/
+          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-cache-
+
+      - name: ⚙️ Install Tools
+        run: ./.github/workflows/scripts/install-tools.sh
+
+      - name: 📦 Install Dependencies
+        run: melos bs
+
+      - name: 🔍 Resolve Target Package and Directory
+        run: |
+          TAG_NAME="${{ github.ref_name }}"
+          echo "Triggered by tag: $TAG_NAME"
+          
+          # Extract package name by stripping the -v* version suffix
+          PACKAGE_NAME=$(echo "$TAG_NAME" | sed -E 's/-v[0-9]+.*//')
+          
+          # Find the package directory containing this package name
+          PACKAGE_DIR=""
+          while read -r file; do
+            if [[ "$file" == *"/example/"* ]]; then
+              continue
+            fi
+            
+            name_in_file=$(grep "^name:" "$file" | head -n1 | awk '{print $2}' | sed "s/['\"]//g")
+            if [ "$name_in_file" = "$PACKAGE_NAME" ]; then
+              PACKAGE_DIR=$(dirname "$file")
+              break
+            fi
+          done < <(find packages -name pubspec.yaml)
+          
+          if [ -z "$PACKAGE_DIR" ]; then
+            echo "Error: Package $PACKAGE_NAME not found in workspace"
+            exit 1
+          fi
+          
+          echo "Matched package: $PACKAGE_NAME at directory $PACKAGE_DIR"
+          echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_ENV
+          echo "PACKAGE_DIR=$PACKAGE_DIR" >> $GITHUB_ENV
+
+      - name: ✨ Check Formatting
+        run: melos exec --scope="${{ env.PACKAGE_NAME }}" -- "dart format . --set-exit-if-changed"
+
+      - name: 🕵️ Analyze
+        run: melos exec --scope="${{ env.PACKAGE_NAME }}" -- "flutter analyze --no-pub"
+
+      - name: 🧪 Run Tests
+        run: melos exec --scope="${{ env.PACKAGE_NAME }}" --dir-exists="test" -- "flutter test --no-pub --coverage --test-randomize-ordering-seed random"
+
+      - name: 📊 Check Coverage
+        run: melos exec --scope="${{ env.PACKAGE_NAME }}" --dir-exists="test" -- "cover check --no-display-files --min-coverage 90"
+
+      - name: 🚀 Publish to pub.dev
+        run: |
+          cd ${{ env.PACKAGE_DIR }}
+          dart pub publish --force
