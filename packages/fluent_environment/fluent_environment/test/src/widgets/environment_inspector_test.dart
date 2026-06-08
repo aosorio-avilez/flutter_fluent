@@ -1,5 +1,6 @@
 import 'package:fluent_environment/fluent_environment.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -247,4 +248,39 @@ void main() {
     // Assert
     verify(() => mockApi.setFeatureFlag('feature1', value: false)).called(1);
   });
+
+  testWidgets(
+    'should trigger light haptic feedback when copying value to clipboard',
+    (tester) async {
+      // Arrange
+      final log = <MethodCall>[];
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (methodCall) async {
+          log.add(methodCall);
+          return null;
+        },
+      );
+
+      when(() => mockEnv.values).thenReturn({'key': 'value'});
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: EnvironmentInspector(environmentApi: mockApi),
+          ),
+        ),
+      );
+
+      // Act
+      await tester.tap(find.byIcon(Icons.copy_all));
+      await tester.pump();
+
+      // Assert
+      final hapticCall = log.firstWhere(
+        (call) => call.method == 'HapticFeedback.vibrate',
+      );
+      expect(hapticCall.arguments, 'HapticFeedbackType.lightImpact');
+    },
+  );
 }

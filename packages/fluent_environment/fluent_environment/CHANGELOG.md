@@ -1,4 +1,11 @@
+## 0.9.1
+
+* FEAT: Added haptic feedback (`HapticFeedback.lightImpact` and `HapticFeedback.mediumImpact`) to environment switching, feature flag toggles, copy actions, and long-press inspector triggers.
+* STYLE: Wrapped environment name with `Expanded` and `TextOverflow.ellipsis` to prevent overflow in layout header.
+* STYLE: Added environment color indicator `avatar` and switch `tooltip` to `ChoiceChip` in environment switcher.
+
 ## 0.9.0
+
 
 * FEAT: Integrated Feature Flags support in `EnvironmentInspector` with interactive toggles.
 * FEAT: Implemented runtime feature flag overrides in `EnvironmentApiImpl`.

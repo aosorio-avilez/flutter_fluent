@@ -4,6 +4,7 @@ import 'package:fluent_environment_api/fluent_environment_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// A widget that displays an environment banner if
 /// the current environment is not production.
@@ -107,6 +108,7 @@ class EnvironmentBanner extends StatelessWidget {
                   child: GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onLongPress: () {
+                      unawaited(HapticFeedback.mediumImpact());
                       unawaited(
                         envApi.showInspector(
                           context,
