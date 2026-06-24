@@ -1,3 +1,7 @@
+## 0.9.3
+
+* FEAT: Expose `FormData` and `MultipartFile` from `dio` in the public barrel file.
+
 ## 0.9.2
 
 * PERF: Optimized `NetworkingLogInterceptor` formatting by decoding JSON string data prior to sanitization.

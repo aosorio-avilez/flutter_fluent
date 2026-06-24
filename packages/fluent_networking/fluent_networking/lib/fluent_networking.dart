@@ -2,6 +2,8 @@ export 'package:dio/dio.dart'
     show
         DioException,
         ErrorInterceptorHandler,
+        FormData,
+        MultipartFile,
         Options,
         RequestInterceptorHandler,
         RequestOptions,
