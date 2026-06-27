@@ -98,30 +98,43 @@ class EnvironmentBanner extends StatelessWidget {
           );
         }
 
-        if (enableInspector) {
+        if (!kReleaseMode || !env.isProduction || enableInspector) {
           content = Stack(
             children: [
               content,
               Positioned.fill(
                 child: Align(
                   alignment: _getAlignmentFromLocation(location),
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onLongPress: () {
-                      unawaited(HapticFeedback.mediumImpact());
-                      unawaited(
-                        envApi.showInspector(
-                          context,
-                          configValuesLabel: configValuesLabel,
-                          noValuesLabel: noValuesLabel,
-                          navigatorKey: navigatorKey,
-                        ),
-                      );
-                    },
-                    child: const SizedBox(
-                      width: 80,
-                      height: 80,
-                    ),
+                  child: Semantics(
+                    button: enableInspector,
+                    label: 'Environment: ${env.name}',
+                    onLongPressHint: enableInspector
+                        ? 'Long press to open environment inspector'
+                        : null,
+                    excludeSemantics: true,
+                    child: enableInspector
+                        ? GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onLongPress: () {
+                              unawaited(HapticFeedback.mediumImpact());
+                              unawaited(
+                                envApi.showInspector(
+                                  context,
+                                  configValuesLabel: configValuesLabel,
+                                  noValuesLabel: noValuesLabel,
+                                  navigatorKey: navigatorKey,
+                                ),
+                              );
+                            },
+                            child: const SizedBox(
+                              width: 80,
+                              height: 80,
+                            ),
+                          )
+                        : const SizedBox(
+                            width: 80,
+                            height: 80,
+                          ),
                   ),
                 ),
               ),
@@ -129,14 +142,7 @@ class EnvironmentBanner extends StatelessWidget {
           );
         }
 
-        return Semantics(
-          label: 'Environment: ${env.name}',
-          container: true,
-          onLongPressHint: enableInspector
-              ? 'Long press to open environment inspector'
-              : null,
-          child: content,
-        );
+        return content;
       },
     );
   }

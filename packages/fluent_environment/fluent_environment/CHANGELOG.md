@@ -1,3 +1,7 @@
+## 0.10.1
+
+* FIX: Resolved global semantics overlay issue in `EnvironmentBanner` by restricting `Semantics` boundaries to the interactive corner of the banner instead of wrapping the entire application layout.
+
 ## 0.10.0
 
 * FEAT: Added custom environment actions section and UI grid to the inspector.
