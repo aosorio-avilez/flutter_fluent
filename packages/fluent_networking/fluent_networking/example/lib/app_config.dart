@@ -6,4 +6,7 @@ class ApiConfig extends NetworkingConfig {
 
   @override
   bool get enableLog => true;
+
+  @override
+  bool get enableCurlLog => true;
 }

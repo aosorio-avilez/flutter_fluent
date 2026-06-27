@@ -14,6 +14,7 @@ void main() {
     when(() => config.baseUrl).thenReturn('https://api.test');
     when(() => config.interceptors).thenReturn([]);
     when(() => config.enableLog).thenReturn(true);
+    when(() => config.enableCurlLog).thenReturn(false);
     when(() => config.sensitiveHeaders).thenReturn({});
     when(() => config.sensitiveBodyKeys).thenReturn({});
     when(() => config.sensitiveQueryParams).thenReturn({});
@@ -24,6 +25,23 @@ void main() {
 
     expect(Fluent.get<Dio>(), isA<Dio>());
     expect(Fluent.get<NetworkingApi>(), isA<NetworkingApiImpl>());
+  });
+
+  test('verify networking module registers curl interceptor', () async {
+    const config = NetworkingConfig(
+      baseUrl: 'https://api.test',
+      enableCurlLog: true,
+    );
+
+    await Fluent.build([const NetworkingModule(config: config)]);
+    addTearDown(Fluent.reset);
+
+    final dio = Fluent.get<Dio>();
+    final curlInterceptor = dio.interceptors
+        .where((i) => i.runtimeType.toString() == 'NetworkingCurlInterceptor')
+        .firstOrNull;
+
+    expect(curlInterceptor, isNotNull);
   });
 
   test('verify networking module registers retry interceptor', () async {

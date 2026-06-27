@@ -1,3 +1,9 @@
+## 0.10.0
+
+* FEAT: Added `NetworkingCurlInterceptor` to convert and log outgoing HTTP requests as ready-to-use cURL commands.
+* FEAT: Added `enableCurlLog` property to `NetworkingConfig` to configure cURL logging at runtime.
+* TEST: Added comprehensive unit tests for cURL conversion, including header formatting and sanitization, boosting package test coverage to 92.57%.
+
 ## 0.9.4
 
 * FIX: Wrapped `NetworkingLogInterceptor` callbacks (`onRequest`, `onResponse`, and `onError`) in exception isolation try-catch blocks to prevent logging errors from disrupting the HTTP request/response propagation.
