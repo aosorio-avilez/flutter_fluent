@@ -6,6 +6,7 @@ class NetworkingConfig {
     this.baseUrl = '',
     this.interceptors = const [],
     this.enableLog = false,
+    this.enableCurlLog = false,
     this.sensitiveHeaders = const {},
     this.sensitiveBodyKeys = const {},
     this.sensitiveQueryParams = const {},
@@ -20,6 +21,9 @@ class NetworkingConfig {
 
   /// Enable log to show the request and response
   final bool enableLog;
+
+  /// Enable curl log to show outgoing requests as curl commands
+  final bool enableCurlLog;
 
   /// Custom headers to redact in logs
   final Set<String> sensitiveHeaders;
