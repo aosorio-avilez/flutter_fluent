@@ -499,5 +499,83 @@ void main() {
         returnsNormally,
       );
     });
+
+    test('onRequest should proceed and call handler.next even if '
+        'logging throws an exception', () {
+      final options = RequestOptions(
+        path: 'https://api.example.com',
+        method: 'POST',
+        data: _ThrowingObject(),
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      expect(
+        () => interceptor.onRequest(options, handler),
+        returnsNormally,
+      );
+      verify(() => handler.next(options)).called(1);
+      verify(
+        () => mockLoggerApi.logError(
+          any<String>(that: contains('Failed to log request')),
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(1);
+    });
+
+    test('onResponse should proceed and call handler.next even if '
+        'logging throws an exception', () {
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(
+          path: 'https://api.example.com',
+          method: 'POST',
+        ),
+        data: _ThrowingObject(),
+      );
+      final handler = MockResponseInterceptorHandler();
+
+      expect(
+        () => interceptor.onResponse(response, handler),
+        returnsNormally,
+      );
+      verify(() => handler.next(response)).called(1);
+      verify(
+        () => mockLoggerApi.logError(
+          any<String>(that: contains('Failed to log response')),
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(1);
+    });
+
+    test('onError should proceed and call handler.next even if '
+        'logging throws an exception', () {
+      final err = DioException(
+        requestOptions: RequestOptions(
+          path: 'https://api.example.com',
+          method: 'POST',
+        ),
+        response: Response(
+          requestOptions: RequestOptions(path: 'https://api.example.com'),
+          data: _ThrowingObject(),
+        ),
+      );
+      final handler = MockErrorInterceptorHandler();
+
+      expect(
+        () => interceptor.onError(err, handler),
+        returnsNormally,
+      );
+      verify(() => handler.next(err)).called(1);
+      verify(
+        () => mockLoggerApi.logError(
+          any<String>(that: contains('Failed to log error')),
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(1);
+    });
   });
+}
+
+class _ThrowingObject {
+  @override
+  String toString() => throw Exception('Simulated toString failure');
 }

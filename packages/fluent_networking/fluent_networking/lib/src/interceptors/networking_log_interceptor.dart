@@ -82,7 +82,18 @@ class NetworkingLogInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     options.extra[_extraStartTime] = DateTime.now().millisecondsSinceEpoch;
-    _logRequest(options);
+    try {
+      _logRequest(options);
+    } on Object catch (e, s) {
+      try {
+        _logger?.logError(
+          '❌ NetworkingLogInterceptor: Failed to log request: $e',
+          stackTrace: s,
+        );
+      } on Object {
+        // Silently ignore if logging itself fails
+      }
+    }
     super.onRequest(options, handler);
   }
 
@@ -124,7 +135,18 @@ class NetworkingLogInterceptor extends Interceptor {
     Response<dynamic> response,
     ResponseInterceptorHandler handler,
   ) {
-    _logResponse(response);
+    try {
+      _logResponse(response);
+    } on Object catch (e, s) {
+      try {
+        _logger?.logError(
+          '❌ NetworkingLogInterceptor: Failed to log response: $e',
+          stackTrace: s,
+        );
+      } on Object {
+        // Silently ignore if logging itself fails
+      }
+    }
     super.onResponse(response, handler);
   }
 
@@ -172,7 +194,18 @@ class NetworkingLogInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    _logErrorAsync(err);
+    try {
+      _logErrorAsync(err);
+    } on Object catch (e, s) {
+      try {
+        _logger?.logError(
+          '❌ NetworkingLogInterceptor: Failed to log error: $e',
+          stackTrace: s,
+        );
+      } on Object {
+        // Silently ignore if logging itself fails
+      }
+    }
     super.onError(err, handler);
   }
 
