@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:isolate';
 
 import 'package:dio/dio.dart';
 import 'package:fluent_logger_api/fluent_logger_api.dart';
@@ -80,27 +82,52 @@ class NetworkingLogInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     options.extra[_extraStartTime] = DateTime.now().millisecondsSinceEpoch;
-    _log(_yieldRequestLog(options));
+    try {
+      _logRequest(options);
+    } on Object catch (e, s) {
+      try {
+        _logger?.logError(
+          '❌ NetworkingLogInterceptor: Failed to log request: $e',
+          stackTrace: s,
+        );
+      } on Object {
+        // Silently ignore if logging itself fails
+      }
+    }
     super.onRequest(options, handler);
   }
 
-  Iterable<String> _yieldRequestLog(RequestOptions options) sync* {
-    yield '┌ HTTP REQUEST ───────────────────────────────────────────────────';
-    yield '│ Method: ${options.method.toUpperCase()}';
-    yield '│ URI: ${_sanitizeUri(options.uri)}';
-    if (options.headers.isNotEmpty) {
-      yield '│ Headers:';
-      for (final header in _formatHeaders(options.headers)) {
-        yield '│   $header';
-      }
+  void _logRequest(RequestOptions options) {
+    if (_logger == null) return;
+
+    final method = options.method.toUpperCase();
+    final uri = _sanitizeUri(options.uri);
+    final headers = _formatHeaders(options.headers).toList();
+    final data = _toSendableData(options.data);
+    final sensitiveBodyKeys = _sensitiveBodyKeys;
+
+    if (_isLargeData(data)) {
+      unawaited(
+        Isolate.run(() {
+          return _formatRequestLog(
+            method: method,
+            uri: uri,
+            headers: headers,
+            data: data,
+            sensitiveBodyKeys: sensitiveBodyKeys,
+          );
+        }).then(_log).catchError((_) {}),
+      );
+    } else {
+      final lines = _formatRequestLog(
+        method: method,
+        uri: uri,
+        headers: headers,
+        data: data,
+        sensitiveBodyKeys: sensitiveBodyKeys,
+      );
+      _log(lines);
     }
-    if (options.data != null) {
-      yield '│ Body:';
-      for (final line in LineSplitter.split(_formatData(options.data))) {
-        yield '│   $line';
-      }
-    }
-    yield '└──────────────────────────────────────────────────────────────────';
   }
 
   @override
@@ -108,80 +135,244 @@ class NetworkingLogInterceptor extends Interceptor {
     Response<dynamic> response,
     ResponseInterceptorHandler handler,
   ) {
-    _log(_yieldResponseLog(response));
+    try {
+      _logResponse(response);
+    } on Object catch (e, s) {
+      try {
+        _logger?.logError(
+          '❌ NetworkingLogInterceptor: Failed to log response: $e',
+          stackTrace: s,
+        );
+      } on Object {
+        // Silently ignore if logging itself fails
+      }
+    }
     super.onResponse(response, handler);
   }
 
-  Iterable<String> _yieldResponseLog(Response<dynamic> response) sync* {
-    final duration = _getDuration(response.requestOptions);
-    final status = response.statusCode;
-    final statusName = response.statusMessage ?? 'Unknown';
+  void _logResponse(Response<dynamic> response) {
+    if (_logger == null) return;
 
-    yield '┌ HTTP RESPONSE ──────────────────────────────────────────────────';
-    yield '│ Success: [${response.requestOptions.method.toUpperCase()}] '
-        '${_sanitizeUri(response.requestOptions.uri)}';
-    yield '│ Status: $status $statusName';
-    if (duration != null) {
-      yield '│ Duration: ${duration}ms';
+    final method = response.requestOptions.method.toUpperCase();
+    final uri = _sanitizeUri(response.requestOptions.uri);
+    final statusCode = response.statusCode;
+    final statusMessage = response.statusMessage ?? 'Unknown';
+    final duration = _getDuration(response.requestOptions);
+    final headers = _formatHeaders(response.headers.map).toList();
+    final data = _toSendableData(response.data);
+    final sensitiveBodyKeys = _sensitiveBodyKeys;
+
+    if (_isLargeData(data)) {
+      unawaited(
+        Isolate.run(() {
+          return _formatResponseLog(
+            method: method,
+            uri: uri,
+            statusCode: statusCode,
+            statusMessage: statusMessage,
+            duration: duration,
+            headers: headers,
+            data: data,
+            sensitiveBodyKeys: sensitiveBodyKeys,
+          );
+        }).then(_log).catchError((_) {}),
+      );
+    } else {
+      final lines = _formatResponseLog(
+        method: method,
+        uri: uri,
+        statusCode: statusCode,
+        statusMessage: statusMessage,
+        duration: duration,
+        headers: headers,
+        data: data,
+        sensitiveBodyKeys: sensitiveBodyKeys,
+      );
+      _log(lines);
     }
-    if (response.headers.map.isNotEmpty) {
-      yield '│ Headers:';
-      for (final header in _formatHeaders(response.headers.map)) {
-        yield '│   $header';
-      }
-    }
-    if (response.data != null) {
-      yield '│ Body:';
-      for (final line in LineSplitter.split(_formatData(response.data))) {
-        yield '│   $line';
-      }
-    }
-    yield '└──────────────────────────────────────────────────────────────────';
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    _logError(_yieldErrorLog(err), stackTrace: err.stackTrace);
+    try {
+      _logErrorAsync(err);
+    } on Object catch (e, s) {
+      try {
+        _logger?.logError(
+          '❌ NetworkingLogInterceptor: Failed to log error: $e',
+          stackTrace: s,
+        );
+      } on Object {
+        // Silently ignore if logging itself fails
+      }
+    }
     super.onError(err, handler);
   }
 
-  Iterable<String> _yieldErrorLog(DioException err) sync* {
-    final duration = _getDuration(err.requestOptions);
-    final status = err.response?.statusCode;
-    final message = err.message;
+  void _logErrorAsync(DioException err) {
+    if (_logger == null) return;
 
-    yield '┌ HTTP ERROR ─────────────────────────────────────────────────────';
-    yield '│ Failure: [${err.requestOptions.method.toUpperCase()}] '
-        '${_sanitizeUri(err.requestOptions.uri)}';
-    if (status != null) {
-      yield '│ Status: $status';
+    final method = err.requestOptions.method.toUpperCase();
+    final uri = _sanitizeUri(err.requestOptions.uri);
+    final statusCode = err.response?.statusCode;
+    final message = err.message;
+    final duration = _getDuration(err.requestOptions);
+    final responseHeaders = err.response != null
+        ? _formatHeaders(err.response!.headers.map).toList()
+        : const <String>[];
+    final responseData = _toSendableData(err.response?.data);
+    final error = err.error?.toString();
+    final sensitiveBodyKeys = _sensitiveBodyKeys;
+    final stackTrace = err.stackTrace;
+
+    if (_isLargeData(responseData)) {
+      unawaited(
+        Isolate.run(() {
+              return _formatErrorLog(
+                method: method,
+                uri: uri,
+                statusCode: statusCode,
+                message: message,
+                duration: duration,
+                responseHeaders: responseHeaders,
+                responseData: responseData,
+                error: error,
+                sensitiveBodyKeys: sensitiveBodyKeys,
+              );
+            })
+            .then((lines) {
+              _logError(lines, stackTrace: stackTrace);
+            })
+            .catchError((_) {}),
+      );
+    } else {
+      final lines = _formatErrorLog(
+        method: method,
+        uri: uri,
+        statusCode: statusCode,
+        message: message,
+        duration: duration,
+        responseHeaders: responseHeaders,
+        responseData: responseData,
+        error: error,
+        sensitiveBodyKeys: sensitiveBodyKeys,
+      );
+      _logError(lines, stackTrace: stackTrace);
     }
-    yield '│ Message: $message';
-    if (duration != null) {
-      yield '│ Duration: ${duration}ms';
-    }
-    if (err.response?.headers.map.isNotEmpty ?? false) {
-      yield '│ Response Headers:';
-      for (final header in _formatHeaders(err.response!.headers.map)) {
-        yield '│   $header';
-      }
-    }
-    if (err.response?.data != null) {
-      yield '│ Response Body:';
-      for (final line in LineSplitter.split(_formatData(err.response!.data))) {
-        yield '│   $line';
-      }
-    }
-    if (err.error != null) {
-      yield '│ Error: ${err.error}';
-    }
-    yield '└──────────────────────────────────────────────────────────────────';
   }
 
-  /// Formats request or response headers.
-  ///
-  /// Note: [headers] can be `Map<String, dynamic>` (from requests) or
-  /// `Map<String, List<String>>` (from response/error).
+  static List<String> _formatRequestLog({
+    required String method,
+    required String uri,
+    required List<String> headers,
+    required dynamic data,
+    required Set<String> sensitiveBodyKeys,
+  }) {
+    final lines = <String>[
+      '┌ HTTP REQUEST ───────────────────────────────────────────────────',
+      '│ Method: $method',
+      '│ URI: $uri',
+    ];
+    if (headers.isNotEmpty) {
+      lines.add('│ Headers:');
+      for (final header in headers) {
+        lines.add('│   $header');
+      }
+    }
+    if (data != null) {
+      lines.add('│ Body:');
+      final formatted = _formatDataStatic(data, sensitiveBodyKeys);
+      for (final line in LineSplitter.split(formatted)) {
+        lines.add('│   $line');
+      }
+    }
+    lines.add(
+      '└──────────────────────────────────────────────────────────────────',
+    );
+    return lines;
+  }
+
+  static List<String> _formatResponseLog({
+    required String method,
+    required String uri,
+    required int? statusCode,
+    required String statusMessage,
+    required int? duration,
+    required List<String> headers,
+    required dynamic data,
+    required Set<String> sensitiveBodyKeys,
+  }) {
+    final lines = <String>[
+      '┌ HTTP RESPONSE ──────────────────────────────────────────────────',
+      '│ Success: [$method] $uri',
+      '│ Status: $statusCode $statusMessage',
+    ];
+    if (duration != null) {
+      lines.add('│ Duration: ${duration}ms');
+    }
+    if (headers.isNotEmpty) {
+      lines.add('│ Headers:');
+      for (final header in headers) {
+        lines.add('│   $header');
+      }
+    }
+    if (data != null) {
+      lines.add('│ Body:');
+      final formatted = _formatDataStatic(data, sensitiveBodyKeys);
+      for (final line in LineSplitter.split(formatted)) {
+        lines.add('│   $line');
+      }
+    }
+    lines.add(
+      '└──────────────────────────────────────────────────────────────────',
+    );
+    return lines;
+  }
+
+  static List<String> _formatErrorLog({
+    required String method,
+    required String uri,
+    required int? statusCode,
+    required String? message,
+    required int? duration,
+    required List<String> responseHeaders,
+    required dynamic responseData,
+    required String? error,
+    required Set<String> sensitiveBodyKeys,
+  }) {
+    final lines = <String>[
+      '┌ HTTP ERROR ─────────────────────────────────────────────────────',
+      '│ Failure: [$method] $uri',
+    ];
+    if (statusCode != null) {
+      lines.add('│ Status: $statusCode');
+    }
+    lines.add('│ Message: $message');
+    if (duration != null) {
+      lines.add('│ Duration: ${duration}ms');
+    }
+    if (responseHeaders.isNotEmpty) {
+      lines.add('│ Response Headers:');
+      for (final header in responseHeaders) {
+        lines.add('│   $header');
+      }
+    }
+    if (responseData != null) {
+      lines.add('│ Response Body:');
+      final formatted = _formatDataStatic(responseData, sensitiveBodyKeys);
+      for (final line in LineSplitter.split(formatted)) {
+        lines.add('│   $line');
+      }
+    }
+    if (error != null) {
+      lines.add('│ Error: $error');
+    }
+    lines.add(
+      '└──────────────────────────────────────────────────────────────────',
+    );
+    return lines;
+  }
+
   Iterable<String> _formatHeaders(Map<String, dynamic> headers) sync* {
     for (final entry in headers.entries) {
       final key = entry.key;
@@ -191,13 +382,17 @@ class NetworkingLogInterceptor extends Interceptor {
     }
   }
 
-  String _formatData(dynamic data) {
+  static String _formatDataStatic(dynamic data, Set<String> sensitiveBodyKeys) {
     try {
       if (data is String) {
         final decoded = json.decode(data);
-        return _encoder.convert(_sanitizeBody(decoded));
+        final sanitized = _sanitizeBodyStatic(
+          decoded,
+          sensitiveBodyKeys,
+        );
+        return _encoder.convert(sanitized);
       }
-      final sanitized = _sanitizeBody(data);
+      final sanitized = _sanitizeBodyStatic(data, sensitiveBodyKeys);
       return _encoder.convert(sanitized);
     } on Object catch (_) {
       // Return raw data if it fails to format as JSON
@@ -227,39 +422,31 @@ class NetworkingLogInterceptor extends Interceptor {
         : uri.toString();
   }
 
-  dynamic _sanitizeBody(dynamic data) {
-    if (_sensitiveBodyKeys.isEmpty) return data;
+  static dynamic _sanitizeBodyStatic(
+    dynamic data,
+    Set<String> sensitiveBodyKeys,
+  ) {
+    if (sensitiveBodyKeys.isEmpty) return data;
 
-    if (data is FormData) {
-      final fields = <String, dynamic>{};
-      for (final entry in data.fields) {
-        final isSensitive =
-            _sensitiveBodyKeys.contains(entry.key) ||
-            _sensitiveBodyKeys.contains(entry.key.toLowerCase());
-        fields[entry.key] = isSensitive ? '***REDACTED***' : entry.value;
-      }
-      for (final entry in data.files) {
-        fields[entry.key] = '[FILE: ${entry.value.filename}]';
-      }
-      return fields;
-    } else if (data is Map) {
+    if (data is Map) {
       Map<dynamic, dynamic>? result;
 
       for (final entry in data.entries) {
         final key = entry.key;
         final value = entry.value;
 
-        // Optimized sensitive key check
-        final isSensitive = _sensitiveBodyKeys.contains(
-          key.toString().toLowerCase(),
-        );
+        // Optimized sensitive key check: check exact string first
+        final keyStr = key.toString();
+        final isSensitive =
+            sensitiveBodyKeys.contains(keyStr) ||
+            sensitiveBodyKeys.contains(keyStr.toLowerCase());
 
         if (isSensitive) {
           result ??= Map<dynamic, dynamic>.of(data);
           result[key] = '***REDACTED***';
         } else if (value is Map || value is List) {
           // Only recurse for nested structures
-          final sanitizedValue = _sanitizeBody(value);
+          final sanitizedValue = _sanitizeBodyStatic(value, sensitiveBodyKeys);
           if (!identical(sanitizedValue, value)) {
             result ??= Map<dynamic, dynamic>.of(data);
             result[key] = sanitizedValue;
@@ -272,7 +459,7 @@ class NetworkingLogInterceptor extends Interceptor {
       for (var i = 0; i < data.length; i++) {
         final value = data[i];
         if (value is Map || value is List) {
-          final sanitizedValue = _sanitizeBody(value);
+          final sanitizedValue = _sanitizeBodyStatic(value, sensitiveBodyKeys);
           if (!identical(sanitizedValue, value)) {
             result ??= List<dynamic>.of(data);
             result[i] = sanitizedValue;
@@ -284,6 +471,39 @@ class NetworkingLogInterceptor extends Interceptor {
     return data;
   }
 
+  static Object? _toSendableData(dynamic data) {
+    if (data == null) return null;
+    if (data is String || data is num || data is bool) return data;
+    if (data is FormData) {
+      final fields = <String, dynamic>{};
+      for (final entry in data.fields) {
+        fields[entry.key] = entry.value;
+      }
+      for (final entry in data.files) {
+        fields[entry.key] = '[FILE: ${entry.value.filename}]';
+      }
+      return fields;
+    }
+    if (data is Map || data is List) {
+      return data;
+    }
+    return data.toString();
+  }
+
+  static bool _isLargeData(dynamic data) {
+    if (data == null) return false;
+    if (data is String) {
+      return data.length > 10000;
+    }
+    if (data is Map) {
+      return data.length > 50;
+    }
+    if (data is List) {
+      return data.length > 50;
+    }
+    return false;
+  }
+
   int? _getDuration(RequestOptions options) {
     final startTime = options.extra[_extraStartTime] as int?;
     if (startTime == null) return null;
@@ -292,8 +512,8 @@ class NetworkingLogInterceptor extends Interceptor {
 
   void _log(Iterable<String> lines) {
     if (_logger == null) return;
-    // Optimized: Use for-in loop to avoid closure allocation overhead in
-    // performance-critical logging path.
+    // We intentionally use a for-in loop here rather than `.forEach` to bypass
+    // the extra closure allocation overhead in performance-critical hot paths.
     // ignore: prefer_foreach
     for (final line in lines) {
       _logger.logInfo(line);

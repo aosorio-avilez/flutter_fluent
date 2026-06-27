@@ -453,6 +453,41 @@ void main() {
       verify(() => handler.next(err)).called(1);
     });
 
+    test(
+      'onResponse should log large JSON response asynchronously using Isolate',
+      () async {
+        // Create a large body to trigger the async isolate path (length > 50)
+        final largeData = List.generate(
+          60,
+          (index) => {'id': index, 'value': 'item_$index'},
+        );
+        final response = Response<dynamic>(
+          requestOptions: RequestOptions(path: 'https://api.example.com'),
+          statusCode: 200,
+          data: largeData,
+        );
+        final handler = MockResponseInterceptorHandler();
+
+        interceptor.onResponse(response, handler);
+
+        // Verify immediate continuation
+        verify(() => handler.next(response)).called(1);
+
+        // Wait for the async Isolate call and logging to complete
+        await untilCalled(
+          () => mockLoggerApi.logInfo(
+            any<String>(that: contains('HTTP RESPONSE')),
+          ),
+        );
+
+        verify(
+          () => mockLoggerApi.logInfo(
+            any<String>(that: contains('HTTP RESPONSE')),
+          ),
+        ).called(1);
+      },
+    );
+
     test('should handle gracefully if LoggerApi is not provided', () async {
       final noLoggerInterceptor = NetworkingLogInterceptor(logger: null);
 
@@ -464,5 +499,83 @@ void main() {
         returnsNormally,
       );
     });
+
+    test('onRequest should proceed and call handler.next even if '
+        'logging throws an exception', () {
+      final options = RequestOptions(
+        path: 'https://api.example.com',
+        method: 'POST',
+        data: _ThrowingObject(),
+      );
+      final handler = MockRequestInterceptorHandler();
+
+      expect(
+        () => interceptor.onRequest(options, handler),
+        returnsNormally,
+      );
+      verify(() => handler.next(options)).called(1);
+      verify(
+        () => mockLoggerApi.logError(
+          any<String>(that: contains('Failed to log request')),
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(1);
+    });
+
+    test('onResponse should proceed and call handler.next even if '
+        'logging throws an exception', () {
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(
+          path: 'https://api.example.com',
+          method: 'POST',
+        ),
+        data: _ThrowingObject(),
+      );
+      final handler = MockResponseInterceptorHandler();
+
+      expect(
+        () => interceptor.onResponse(response, handler),
+        returnsNormally,
+      );
+      verify(() => handler.next(response)).called(1);
+      verify(
+        () => mockLoggerApi.logError(
+          any<String>(that: contains('Failed to log response')),
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(1);
+    });
+
+    test('onError should proceed and call handler.next even if '
+        'logging throws an exception', () {
+      final err = DioException(
+        requestOptions: RequestOptions(
+          path: 'https://api.example.com',
+          method: 'POST',
+        ),
+        response: Response(
+          requestOptions: RequestOptions(path: 'https://api.example.com'),
+          data: _ThrowingObject(),
+        ),
+      );
+      final handler = MockErrorInterceptorHandler();
+
+      expect(
+        () => interceptor.onError(err, handler),
+        returnsNormally,
+      );
+      verify(() => handler.next(err)).called(1);
+      verify(
+        () => mockLoggerApi.logError(
+          any<String>(that: contains('Failed to log error')),
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(1);
+    });
   });
+}
+
+class _ThrowingObject {
+  @override
+  String toString() => throw Exception('Simulated toString failure');
 }

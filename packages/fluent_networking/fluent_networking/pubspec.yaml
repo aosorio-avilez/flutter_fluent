@@ -1,6 +1,6 @@
 name: fluent_networking
 description: Package that provides a simple way to make http requests
-version: 0.9.3
+version: 0.9.4
 resolution: workspace
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_networking/fluent_networking
 

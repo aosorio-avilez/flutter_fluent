@@ -1,3 +1,10 @@
+## 0.9.4
+
+* FIX: Wrapped `NetworkingLogInterceptor` callbacks (`onRequest`, `onResponse`, and `onError`) in exception isolation try-catch blocks to prevent logging errors from disrupting the HTTP request/response propagation.
+* PERF: Optimized `NetworkingLogInterceptor` to perform JSON decoding, deep sanitization, and pretty-print JSON encoding on a background isolate using `Isolate.run()` for large payloads, preventing main UI thread blocking.
+* PERF: Optimized sensitive body keys lookup by checking the exact string first, avoiding costly `.toLowerCase()` string allocations.
+* FIX: Resolved compile-time duplicate set elements error for `'token'` in `_defaultSensitiveQueryParams`.
+
 ## 0.9.3
 
 * FEAT: Expose `FormData` and `MultipartFile` from `dio` in the public barrel file.
