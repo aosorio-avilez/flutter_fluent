@@ -195,20 +195,22 @@ class NetworkingLogInterceptor extends Interceptor {
     if (_isLargeData(responseData)) {
       unawaited(
         Isolate.run(() {
-          return _formatErrorLog(
-            method: method,
-            uri: uri,
-            statusCode: statusCode,
-            message: message,
-            duration: duration,
-            responseHeaders: responseHeaders,
-            responseData: responseData,
-            error: error,
-            sensitiveBodyKeys: sensitiveBodyKeys,
-          );
-        }).then((lines) {
-          _logError(lines, stackTrace: stackTrace);
-        }).catchError((_) {}),
+              return _formatErrorLog(
+                method: method,
+                uri: uri,
+                statusCode: statusCode,
+                message: message,
+                duration: duration,
+                responseHeaders: responseHeaders,
+                responseData: responseData,
+                error: error,
+                sensitiveBodyKeys: sensitiveBodyKeys,
+              );
+            })
+            .then((lines) {
+              _logError(lines, stackTrace: stackTrace);
+            })
+            .catchError((_) {}),
       );
     } else {
       final lines = _formatErrorLog(
@@ -402,7 +404,8 @@ class NetworkingLogInterceptor extends Interceptor {
 
         // Optimized sensitive key check: check exact string first
         final keyStr = key.toString();
-        final isSensitive = sensitiveBodyKeys.contains(keyStr) ||
+        final isSensitive =
+            sensitiveBodyKeys.contains(keyStr) ||
             sensitiveBodyKeys.contains(keyStr.toLowerCase());
 
         if (isSensitive) {
