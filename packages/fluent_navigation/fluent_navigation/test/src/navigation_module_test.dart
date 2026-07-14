@@ -42,6 +42,9 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp.router(
+        theme: ThemeData(
+          splashFactory: NoSplash.splashFactory,
+        ),
         routerConfig: router,
       ),
     );
@@ -78,6 +81,9 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp.router(
+        theme: ThemeData(
+          splashFactory: NoSplash.splashFactory,
+        ),
         routerConfig: router,
       ),
     );
@@ -123,6 +129,9 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp.router(
+        theme: ThemeData(
+          splashFactory: NoSplash.splashFactory,
+        ),
         routerConfig: router,
       ),
     );
@@ -168,6 +177,9 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp.router(
+        theme: ThemeData(
+          splashFactory: NoSplash.splashFactory,
+        ),
         routerConfig: router,
       ),
     );

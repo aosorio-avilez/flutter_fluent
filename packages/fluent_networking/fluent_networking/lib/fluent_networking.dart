@@ -5,6 +5,7 @@ export 'package:dio/dio.dart'
         FormData,
         MultipartFile,
         Options,
+        ProgressCallback,
         RequestInterceptorHandler,
         RequestOptions,
         Response,

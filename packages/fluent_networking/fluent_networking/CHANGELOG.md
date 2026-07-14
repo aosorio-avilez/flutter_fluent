@@ -1,3 +1,7 @@
+## Unreleased
+
+* FEAT: Added `download` method to `NetworkingApi` to support downloading files directly using Dio's native download implementation.
+
 ## 0.10.0
 
 * FEAT: Added `NetworkingCurlInterceptor` to convert and log outgoing HTTP requests as ready-to-use cURL commands.

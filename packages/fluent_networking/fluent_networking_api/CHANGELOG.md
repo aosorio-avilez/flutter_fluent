@@ -1,3 +1,7 @@
+## Unreleased
+
+* FEAT: Added `download` method signature to `NetworkingApi` contract with optional `ProgressCallback` support.
+
 ## 0.4.0
 
 * **FEAT**: Add caching support to networking API.

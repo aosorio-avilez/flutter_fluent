@@ -96,6 +96,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          theme: ThemeData(splashFactory: NoSplash.splashFactory),
           home: Scaffold(
             body: Builder(
               builder: (context) => ElevatedButton(
@@ -136,6 +137,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData(splashFactory: NoSplash.splashFactory),
         navigatorKey: navigatorKey,
         home: const Scaffold(body: Text('Home')),
       ),

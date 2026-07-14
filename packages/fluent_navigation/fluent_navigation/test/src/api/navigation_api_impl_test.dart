@@ -102,6 +102,9 @@ Future<void> pumpAppRouter(WidgetTester tester) async {
 
   await tester.pumpWidget(
     MaterialApp.router(
+      theme: ThemeData(
+        splashFactory: NoSplash.splashFactory,
+      ),
       routerConfig: router,
     ),
   );
