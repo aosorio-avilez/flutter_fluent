@@ -91,6 +91,25 @@ class NetworkingApiImpl extends NetworkingApi {
     );
   }
 
+  @override
+  Future<ResponseResult<T>> download<T>(
+    String url,
+    dynamic savePath, {
+    ProgressCallback? onReceiveProgress,
+    Options? options,
+    RetryConfig? retryConfig,
+    CacheConfig? cacheConfig,
+  }) {
+    return _execute(
+      () => _httpClient.download(
+        url,
+        savePath,
+        onReceiveProgress: onReceiveProgress,
+        options: _mergeOptions(options, retryConfig, cacheConfig),
+      ),
+    );
+  }
+
   Options _mergeOptions(
     Options? options,
     RetryConfig? retryConfig,

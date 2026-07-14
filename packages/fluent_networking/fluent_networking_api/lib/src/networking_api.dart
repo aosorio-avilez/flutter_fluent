@@ -53,4 +53,15 @@ abstract class NetworkingApi {
     RetryConfig? retryConfig,
     CacheConfig? cacheConfig,
   });
+
+  /// Downloads a file or binary from [url] and saves it to [savePath].
+  /// Optionally, [onReceiveProgress] can be provided to monitor progress.
+  Future<ResponseResult<T>> download<T>(
+    String url,
+    dynamic savePath, {
+    ProgressCallback? onReceiveProgress,
+    Options? options,
+    RetryConfig? retryConfig,
+    CacheConfig? cacheConfig,
+  });
 }

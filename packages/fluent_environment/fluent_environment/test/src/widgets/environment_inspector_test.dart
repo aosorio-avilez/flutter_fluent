@@ -43,6 +43,7 @@ void main() {
     // Act
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData(splashFactory: NoSplash.splashFactory),
         home: Scaffold(
           body: EnvironmentInspector(environmentApi: mockApi),
         ),
@@ -89,6 +90,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData(splashFactory: NoSplash.splashFactory),
         home: Scaffold(
           body: EnvironmentInspector(environmentApi: mockApi),
         ),
@@ -114,6 +116,7 @@ void main() {
     // Act
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData(splashFactory: NoSplash.splashFactory),
         home: Scaffold(
           body: EnvironmentInspector(environmentApi: mockApi),
         ),
@@ -134,6 +137,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData(splashFactory: NoSplash.splashFactory),
         home: Scaffold(
           body: EnvironmentInspector(environmentApi: mockApi),
         ),
@@ -164,6 +168,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData(splashFactory: NoSplash.splashFactory),
         home: Scaffold(
           body: EnvironmentInspector(environmentApi: mockApi),
         ),
@@ -215,6 +220,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData(splashFactory: NoSplash.splashFactory),
         home: Scaffold(
           body: EnvironmentInspector(environmentApi: mockApi),
         ),
@@ -267,6 +273,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          theme: ThemeData(splashFactory: NoSplash.splashFactory),
           home: Scaffold(
             body: EnvironmentInspector(environmentApi: mockApi),
           ),
@@ -297,6 +304,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData(splashFactory: NoSplash.splashFactory),
         home: Scaffold(
           body: EnvironmentInspector(environmentApi: mockApi),
         ),

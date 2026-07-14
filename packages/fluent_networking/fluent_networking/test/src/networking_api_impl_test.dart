@@ -270,5 +270,94 @@ void main() {
         expect((result as Failure).error.code, 500);
       });
     });
+
+    group('DOWNLOAD', () {
+      test('should return Success when status is 200', () async {
+        when(
+          () => mockDio.download(
+            any<String>(),
+            any<dynamic>(),
+            onReceiveProgress: any<ProgressCallback>(
+              named: 'onReceiveProgress',
+            ),
+            options: any<Options>(named: 'options'),
+          ),
+        ).thenAnswer(
+          (_) async => Response(
+            requestOptions: RequestOptions(path: '/'),
+            statusCode: 200,
+          ),
+        );
+
+        final result = await networkingApi.download<void>('/', 'path/to/save');
+
+        expect(result, isA<Success<void>>());
+      });
+
+      test('should pass onReceiveProgress to Dio.download', () async {
+        var progressCalled = false;
+        void testProgress(int count, int total) {
+          progressCalled = true;
+        }
+
+        when(
+          () => mockDio.download(
+            any<String>(),
+            any<dynamic>(),
+            onReceiveProgress: any<ProgressCallback>(
+              named: 'onReceiveProgress',
+            ),
+            options: any<Options>(named: 'options'),
+          ),
+        ).thenAnswer(
+          (invocation) async {
+            final callback =
+                invocation.namedArguments[#onReceiveProgress]
+                    as ProgressCallback?;
+            callback?.call(50, 100);
+            return Response(
+              requestOptions: RequestOptions(path: '/'),
+              statusCode: 200,
+            );
+          },
+        );
+
+        await networkingApi.download<void>(
+          '/',
+          'path/to/save',
+          onReceiveProgress: testProgress,
+        );
+
+        expect(progressCalled, isTrue);
+      });
+
+      test('should return Failure when Dio throws', () async {
+        when(
+          () => mockDio.download(
+            any<String>(),
+            any<dynamic>(),
+            onReceiveProgress: any<ProgressCallback>(
+              named: 'onReceiveProgress',
+            ),
+            options: any<Options>(named: 'options'),
+          ),
+        ).thenThrow(
+          DioException(
+            requestOptions: RequestOptions(path: '/'),
+            response: Response(
+              requestOptions: RequestOptions(path: '/'),
+              statusCode: 500,
+              data: {'message': 'Download Failed'},
+            ),
+          ),
+        );
+
+        final result = await networkingApi.download<void>('/', 'path/to/save');
+
+        expect(result, isA<Failure<void>>());
+        expect((result as Failure).error.code, 500);
+        expect(result.error.message, 'Download Failed');
+      });
+    });
   });
 }
