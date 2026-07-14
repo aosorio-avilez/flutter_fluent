@@ -1,4 +1,4 @@
-## Unreleased
+## 0.5.0
 
 * FEAT: Added `download` method signature to `NetworkingApi` contract with optional `ProgressCallback` support.
 

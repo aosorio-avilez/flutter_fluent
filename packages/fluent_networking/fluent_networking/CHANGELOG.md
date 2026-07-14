@@ -1,4 +1,4 @@
-## Unreleased
+## 0.11.0
 
 * FEAT: Added `download` method to `NetworkingApi` to support downloading files directly using Dio's native download implementation.
 
