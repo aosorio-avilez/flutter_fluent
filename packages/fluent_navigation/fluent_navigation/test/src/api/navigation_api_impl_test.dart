@@ -95,6 +95,23 @@ void main() {
     expect(find.byKey(const Key('firstPage')), findsOneWidget);
     expect(find.text('Hello from first page'), findsOneWidget);
   });
+
+  testWidgets('verify popUntil', (tester) async {
+    await pumpAppRouter(tester);
+
+    await tester.tap(find.byKey(const Key('pushButton')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('pushThirdButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('thirdPage')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('popUntilButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('firstPage')), findsOneWidget);
+  });
 }
 
 Future<void> pumpAppRouter(WidgetTester tester) async {
@@ -162,12 +179,39 @@ void mockRoutes() {
       builder: (context, state) {
         return Scaffold(
           key: const Key('secondPage'),
+          body: Column(
+            children: [
+              ElevatedButton(
+                key: const Key('popButton'),
+                onPressed: () {
+                  Fluent.get<NavigationApi>().pop(true);
+                },
+                child: const Text('Go back to previous route'),
+              ),
+              ElevatedButton(
+                key: const Key('pushThirdButton'),
+                onPressed: () async {
+                  await Fluent.get<NavigationApi>().pushTo<void>('third');
+                },
+                child: const Text('Go to third route'),
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      name: 'third',
+      path: '/third',
+      builder: (context, state) {
+        return Scaffold(
+          key: const Key('thirdPage'),
           body: ElevatedButton(
-            key: const Key('popButton'),
+            key: const Key('popUntilButton'),
             onPressed: () {
-              Fluent.get<NavigationApi>().pop(true);
+              Fluent.get<NavigationApi>().popUntil('first');
             },
-            child: const Text('Go back to previous route'),
+            child: const Text('Pop until first route'),
           ),
         );
       },
