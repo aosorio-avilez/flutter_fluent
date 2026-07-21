@@ -72,4 +72,13 @@ class NavigationApiImpl extends NavigationApi {
       _router.pop(result);
     }
   }
+
+  @override
+  void popUntil(String routeName) {
+    _navigatorKey.currentState?.popUntil((route) {
+      return route.settings.name == routeName ||
+          route.settings.name == '/$routeName' ||
+          route.isFirst;
+    });
+  }
 }

@@ -1,3 +1,7 @@
+## 1.3.0
+
+*   Added `popUntil` method to `NavigationApi` interface.
+
 ## 1.2.0
 
 *   Added `replaceWith` method to `NavigationApi` interface.

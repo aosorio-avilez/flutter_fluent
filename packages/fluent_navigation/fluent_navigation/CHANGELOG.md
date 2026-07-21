@@ -1,3 +1,8 @@
+## 1.10.0
+
+* **Feature**: Added `popUntil` method to `NavigationApiImpl` to allow popping routes until reaching a specific route name.
+* **Chore**: Updated `fluent_navigation_api` dependency constraint to `^1.3.0`.
+
 ## 1.9.0
 
 * CHORE: Updated `fluent_sdk` dependency to `^0.8.0`.

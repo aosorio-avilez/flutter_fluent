@@ -15,6 +15,10 @@ class PageD extends StatelessWidget {
             onPressed: () => Fluent.get<NavigationApi>().pop(),
             child: const Text("Go back"),
           ),
+          ElevatedButton(
+            onPressed: () => Fluent.get<NavigationApi>().popUntil('b'),
+            child: const Text("Pop until b"),
+          ),
         ],
       ),
     );

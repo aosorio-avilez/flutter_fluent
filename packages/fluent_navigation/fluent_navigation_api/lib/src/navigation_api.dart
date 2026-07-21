@@ -40,6 +40,9 @@ abstract class NavigationApi {
   /// And pass it an optional result.
   void pop<T>([T? result]);
 
+  /// Pop the routes until the given route name.
+  void popUntil(String routeName);
+
   /// Get the router configuration
   RouterConfig<Object> get router;
 
