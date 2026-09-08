@@ -1,3 +1,7 @@
+## 1.11.1
+
+* **Fix**: Integrated internal `FluentNavigatorObserver` to accurately track route stack changes and dispatch immediate notifications during imperative navigation (`pushTo` and `pop`).
+
 ## 1.11.0
 
 * **Feature**: Added `currentPath` getter to `NavigationApiImpl` to obtain the current route path without query parameters.

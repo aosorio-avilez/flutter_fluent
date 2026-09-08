@@ -146,6 +146,18 @@ void main() {
 
       expect(api.currentPath, equals('/first'));
       expect(api.currentLocation, equals('/first'));
+
+      // Imperative pushTo
+      await tester.tap(find.byKey(const Key('pushButton')));
+      await tester.pumpAndSettle();
+
+      expect(api.currentPath, equals('/second'));
+
+      // Imperative pop
+      await tester.tap(find.byKey(const Key('popButton')));
+      await tester.pumpAndSettle();
+
+      expect(api.currentPath, equals('/first'));
     },
   );
 
