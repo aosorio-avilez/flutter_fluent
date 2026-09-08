@@ -1,14 +1,17 @@
+import 'package:fluent_navigation/src/utils/fluent_navigator_observer.dart';
 import 'package:fluent_navigation_api/fluent_navigation_api.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 class NavigationApiImpl extends NavigationApi {
-  NavigationApiImpl(this._router, this._navigatorKey);
+  NavigationApiImpl(this._router, this._navigatorKey, this._observer);
 
   /// Internal reference to the registered [GoRouter].
   final GoRouter _router;
 
   final GlobalKey<NavigatorState> _navigatorKey;
+
+  final FluentNavigatorObserver _observer;
 
   @override
   GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
@@ -83,13 +86,18 @@ class NavigationApiImpl extends NavigationApi {
   }
 
   @override
-  String get currentPath =>
-      _router.routerDelegate.currentConfiguration.uri.path;
+  String get currentPath => _observer.currentPath;
 
   @override
-  String get currentLocation =>
-      _router.routerDelegate.currentConfiguration.uri.toString();
+  String get currentLocation {
+    final uri = _router.routerDelegate.currentConfiguration.uri;
+    if (uri.path == _observer.currentPath ||
+        uri.toString() == _observer.currentPath) {
+      return uri.toString();
+    }
+    return _observer.currentPath;
+  }
 
   @override
-  Listenable get routeListenable => _router.routerDelegate;
+  Listenable get routeListenable => _observer;
 }

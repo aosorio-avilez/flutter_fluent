@@ -1,6 +1,7 @@
 import 'package:fluent_navigation/src/api/internal_navigation_api.dart';
 import 'package:fluent_navigation/src/api/internal_navigation_api_impl.dart';
 import 'package:fluent_navigation/src/api/navigation_api_impl.dart';
+import 'package:fluent_navigation/src/utils/fluent_navigator_observer.dart';
 import 'package:fluent_navigation_api/fluent_navigation_api.dart';
 import 'package:fluent_sdk/fluent_sdk.dart';
 import 'package:flutter/widgets.dart';
@@ -34,11 +35,15 @@ class NavigationModule extends FluentModule {
     GoRouter.optionURLReflectsImperativeAPIs = optionURLReflectsImperativeAPIs;
 
     registry
+      ..registerLazySingleton<FluentNavigatorObserver>(
+        (it) => FluentNavigatorObserver(),
+      )
       ..registerLazySingleton<GoRouter>(
         (it) {
           return GoRouter(
             initialLocation: initialLocation,
             navigatorKey: rootNavigatorKey,
+            observers: [it<FluentNavigatorObserver>()],
             routes: it<InternalNavigationApi>().getRegisteredRoutes(),
             redirect: (context, state) => redirect?.call(state.uri.toString()),
             refreshListenable: refreshListenable,
@@ -51,7 +56,11 @@ class NavigationModule extends FluentModule {
       // Use lazy singleton to defer initialization
       // until the API is actually used.
       ..registerLazySingleton<NavigationApi>(
-        (it) => NavigationApiImpl(it<GoRouter>(), rootNavigatorKey),
+        (it) => NavigationApiImpl(
+          it<GoRouter>(),
+          rootNavigatorKey,
+          it<FluentNavigatorObserver>(),
+        ),
       );
   }
 }
