@@ -81,4 +81,15 @@ class NavigationApiImpl extends NavigationApi {
           route.isFirst;
     });
   }
+
+  @override
+  String get currentPath =>
+      _router.routerDelegate.currentConfiguration.uri.path;
+
+  @override
+  String get currentLocation =>
+      _router.routerDelegate.currentConfiguration.uri.toString();
+
+  @override
+  Listenable get routeListenable => _router.routerDelegate;
 }

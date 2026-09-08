@@ -48,4 +48,14 @@ abstract class NavigationApi {
 
   /// Get the navigator key
   GlobalKey<NavigatorState> get navigatorKey;
+
+  /// Returns the current route path without query parameters (e.g. `/stations`).
+  String get currentPath;
+
+  /// Returns the full current navigation location/URI string,
+  /// including query parameters (e.g. `/stations?filter=active`).
+  String get currentLocation;
+
+  /// A [Listenable] that notifies listeners whenever the current route changes.
+  Listenable get routeListenable;
 }

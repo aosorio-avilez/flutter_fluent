@@ -112,6 +112,68 @@ void main() {
 
     expect(find.byKey(const Key('firstPage')), findsOneWidget);
   });
+
+  test('verify routeListenable returns a Listenable', () async {
+    final listenable = Fluent.get<NavigationApi>().routeListenable;
+
+    expect(listenable, isA<Listenable>());
+  });
+
+  testWidgets(
+    'verify currentPath and currentLocation on initial route and transitions',
+    (tester) async {
+      await pumpAppRouter(tester);
+
+      final api = Fluent.get<NavigationApi>();
+
+      expect(api.currentPath, equals('/first'));
+      expect(api.currentLocation, equals('/first'));
+
+      api.navigateTo('second', queryParams: {'filter': 'active'});
+      await tester.pumpAndSettle();
+
+      expect(api.currentPath, equals('/second'));
+      expect(api.currentLocation, equals('/second?filter=active'));
+
+      api.navigateTo('third');
+      await tester.pumpAndSettle();
+
+      expect(api.currentPath, equals('/third'));
+      expect(api.currentLocation, equals('/third'));
+
+      api.navigateTo('first');
+      await tester.pumpAndSettle();
+
+      expect(api.currentPath, equals('/first'));
+      expect(api.currentLocation, equals('/first'));
+    },
+  );
+
+  testWidgets('verify routeListenable notifies on route change', (
+    tester,
+  ) async {
+    await pumpAppRouter(tester);
+
+    final api = Fluent.get<NavigationApi>();
+    var notifications = 0;
+    void listener() => notifications++;
+
+    api.routeListenable.addListener(listener);
+    addTearDown(() => api.routeListenable.removeListener(listener));
+
+    expect(notifications, equals(0));
+
+    await tester.tap(find.byKey(const Key('pushButton')));
+    await tester.pumpAndSettle();
+
+    expect(notifications, greaterThan(0));
+
+    final countBeforePop = notifications;
+    await tester.tap(find.byKey(const Key('popButton')));
+    await tester.pumpAndSettle();
+
+    expect(notifications, greaterThan(countBeforePop));
+  });
 }
 
 Future<void> pumpAppRouter(WidgetTester tester) async {
