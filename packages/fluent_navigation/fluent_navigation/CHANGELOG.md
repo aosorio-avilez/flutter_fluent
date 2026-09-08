@@ -1,3 +1,10 @@
+## 1.11.0
+
+* **Feature**: Added `currentPath` getter to `NavigationApiImpl` to obtain the current route path without query parameters.
+* **Feature**: Added `currentLocation` getter to `NavigationApiImpl` to obtain the full active route URI string.
+* **Feature**: Added `routeListenable` getter to `NavigationApiImpl` returning the router delegate as a `Listenable`.
+* **Chore**: Updated `fluent_navigation_api` dependency constraint to `^1.4.0`.
+
 ## 1.10.0
 
 * **Feature**: Added `popUntil` method to `NavigationApiImpl` to allow popping routes until reaching a specific route name.

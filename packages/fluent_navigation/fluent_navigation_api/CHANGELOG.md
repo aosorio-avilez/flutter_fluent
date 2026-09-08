@@ -1,3 +1,9 @@
+## 1.4.0
+
+*   Added `currentPath` getter to `NavigationApi` interface to retrieve the active route path without query parameters.
+*   Added `currentLocation` getter to `NavigationApi` interface to retrieve the full active URI string.
+*   Added `routeListenable` getter to `NavigationApi` interface to reactively listen to route changes.
+
 ## 1.3.0
 
 *   Added `popUntil` method to `NavigationApi` interface.
