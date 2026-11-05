@@ -407,7 +407,9 @@ class _CmsExampleAppState extends State<CmsExampleApp> {
 
     return MaterialApp(
       title: 'Fluent CMS Omnichannel Demo',
-      theme: ThemeData.dark(useMaterial3: true),
+      theme: ThemeData.dark(
+        useMaterial3: true,
+      ).copyWith(splashFactory: InkRipple.splashFactory),
       navigatorKey: navigatorKey,
       builder: (context, child) => EnvironmentBanner(
         enableInspector: true,
