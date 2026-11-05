@@ -5,6 +5,7 @@ environment:
 
 workspace:
   - packages/fluent_cms/fluent_cms
+  - packages/fluent_cms/fluent_cms/example
   - packages/fluent_cms/fluent_cms_api
   - packages/fluent_environment/fluent_environment
   - packages/fluent_environment/fluent_environment/example
