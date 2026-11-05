@@ -4,6 +4,8 @@ environment:
   sdk: '^3.9.2'
 
 workspace:
+  - packages/fluent_cms/fluent_cms
+  - packages/fluent_cms/fluent_cms_api
   - packages/fluent_environment/fluent_environment
   - packages/fluent_environment/fluent_environment/example
   - packages/fluent_environment/fluent_environment_api

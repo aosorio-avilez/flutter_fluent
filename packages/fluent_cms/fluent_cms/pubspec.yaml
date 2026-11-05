@@ -1,0 +1,23 @@
+name: fluent_cms
+description: Enterprise Server-Driven UI (SDUI) and Headless CMS engine for flutter_fluent.
+version: 0.1.0
+resolution: workspace
+repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_cms/fluent_cms
+
+environment:
+  sdk: '^3.9.2'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fluent_sdk: ^0.8.0
+  fluent_cms_api: ^0.1.0
+  fluent_logger_api: ^0.0.5
+  fluent_networking_api: ^0.5.0
+  fluent_environment_api: ^0.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.3
+  very_good_analysis: ^10.0.0

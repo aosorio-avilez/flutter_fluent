@@ -1,0 +1,19 @@
+name: fluent_cms_api
+description: A common interface for the fluent_cms package.
+version: 0.1.0
+resolution: workspace
+repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_cms/fluent_cms_api
+
+environment:
+  sdk: '^3.9.2'
+
+dependencies:
+  equatable: ^2.0.5
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.3
+  very_good_analysis: ^10.0.0
