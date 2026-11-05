@@ -61,6 +61,9 @@ typedef CmsActionObserver = void Function(CmsActionEvent event);
 
 /// Primary public contract registered in `Fluent.get<CmsApi>()`.
 abstract class CmsApi {
+  /// Creates a [CmsApi].
+  const CmsApi();
+
   /// Registers a semantic [SduiModule] in the CMS module registry.
   void registerModule(SduiModule module);
 

@@ -7,6 +7,9 @@ typedef CmsFieldValidator = String? Function(Object? value);
 /// Contract for a page-scoped reactive state store supporting two-way binding,
 /// optimistic mutations, and form validation.
 abstract class CmsPageStore {
+  /// Creates a [CmsPageStore].
+  const CmsPageStore();
+
   /// Retrieves the current value for [key] cast to [T], or `null` if absent
   /// or incompatible.
   T? getValue<T>(String key);
