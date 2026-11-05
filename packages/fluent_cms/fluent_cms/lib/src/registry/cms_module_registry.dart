@@ -1,5 +1,7 @@
+import 'package:fluent_cms/src/registry/fallback_module_widget.dart';
 import 'package:fluent_cms_api/fluent_cms_api.dart';
 import 'package:fluent_logger_api/fluent_logger_api.dart';
+import 'package:flutter/widgets.dart';
 
 /// Result of resolving and validating a [ModuleNode] against
 /// [CmsModuleRegistry].
@@ -89,5 +91,33 @@ class CmsModuleRegistry {
     }
 
     return ModuleResolutionResult(module: module);
+  }
+
+  /// Resolves [node] and builds its widget, returning a [FallbackModuleWidget]
+  /// when unregistered or violating [ZoneConstraints].
+  Widget resolveModuleWidget({
+    required BuildContext context,
+    required ModuleNode node,
+    required CmsModuleContext moduleContext,
+    double? availableWidth,
+    bool isPinned = false,
+    bool isStickyBottom = false,
+    bool showDiagnostics = false,
+  }) {
+    final resolution = resolveForZone(
+      node,
+      availableWidth: availableWidth,
+      isPinned: isPinned,
+      isStickyBottom: isStickyBottom,
+    );
+    if (!resolution.isValid) {
+      return FallbackModuleWidget(
+        moduleId: node.id,
+        moduleType: node.type,
+        reason: resolution.failureReason ?? 'Invalid module resolution.',
+        showDiagnostics: showDiagnostics,
+      );
+    }
+    return resolution.module!.build(context, moduleContext);
   }
 }

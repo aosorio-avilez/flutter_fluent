@@ -20,3 +20,8 @@ export 'src/registry/cms_module_registry.dart';
 export 'src/registry/fallback_module_widget.dart';
 export 'src/state/page_scoped_reactive_store.dart';
 export 'src/theme/theme_token_resolver.dart';
+export 'src/widgets/cms_page_controller.dart';
+export 'src/widgets/cms_page_view.dart';
+export 'src/widgets/module_wrapper_widget.dart';
+export 'src/widgets/repeater_module.dart';
+export 'src/widgets/responsive_zone_layout.dart';
