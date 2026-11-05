@@ -1,0 +1,426 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/aosorio-avilez/flutter_fluent/main/packages/fluent_cms/fluent_cms/schema/cms_schema.json",
+  "title": "Fluent CMS Master Schema v1.0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "pageId",
+    "layout",
+    "zones"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "default": "1.0.0"
+    },
+    "pageId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cacheTtlSeconds": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "refreshable": {
+      "type": "boolean",
+      "default": false
+    },
+    "preserveStateOnRefresh": {
+      "type": "boolean",
+      "default": true
+    },
+    "dataContext": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "asyncSources": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/AsyncSource"
+      }
+    },
+    "layout": {
+      "$ref": "#/$defs/ResponsiveLayoutConfig"
+    },
+    "zones": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/ContentZone"
+      }
+    }
+  },
+  "$defs": {
+    "AsyncSource": {
+      "type": "object",
+      "required": [
+        "endpoint"
+      ],
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE"
+          ],
+          "default": "GET"
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "ttlSeconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fallback": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "ResponsiveLayoutConfig": {
+      "type": "object",
+      "required": [
+        "mobile"
+      ],
+      "properties": {
+        "mobile": {
+          "$ref": "#/$defs/BreakpointLayout"
+        },
+        "tablet": {
+          "$ref": "#/$defs/BreakpointLayout"
+        },
+        "desktop": {
+          "$ref": "#/$defs/BreakpointLayout"
+        }
+      }
+    },
+    "BreakpointLayout": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "single_column",
+            "grid_12_cols"
+          ],
+          "default": "single_column"
+        },
+        "zonesOrder": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ColumnSpanConfig"
+          }
+        }
+      }
+    },
+    "ColumnSpanConfig": {
+      "type": "object",
+      "required": [
+        "span",
+        "zones"
+      ],
+      "properties": {
+        "span": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "zones": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ContentZone": {
+      "type": "object",
+      "required": [
+        "modules"
+      ],
+      "properties": {
+        "pinned": {
+          "type": "boolean",
+          "default": false
+        },
+        "stickyBottom": {
+          "type": "boolean",
+          "default": false
+        },
+        "visibleWhen": {
+          "type": "string"
+        },
+        "padding": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "object"
+            }
+          ]
+        },
+        "modules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ModuleNode"
+          }
+        }
+      }
+    },
+    "ModuleNode": {
+      "type": "object",
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique instance identifier on the page."
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Registered SDUI module key."
+        },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "android",
+              "ios",
+              "web",
+              "desktop",
+              "macos",
+              "windows",
+              "linux"
+            ]
+          }
+        },
+        "visibleWhen": {
+          "type": "string"
+        },
+        "requiresData": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "hideOnError": {
+          "type": "boolean",
+          "default": true
+        },
+        "keepAlive": {
+          "type": "boolean",
+          "default": false
+        },
+        "a11y": {
+          "$ref": "#/$defs/A11yConfig"
+        },
+        "props": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "responsiveProps": {
+          "type": "object",
+          "properties": {
+            "mobile": {
+              "type": "object"
+            },
+            "tablet": {
+              "type": "object"
+            },
+            "desktop": {
+              "type": "object"
+            }
+          },
+          "additionalProperties": false
+        },
+        "actions": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/ActionNode"
+          }
+        }
+      }
+    },
+    "A11yConfig": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "hint": {
+          "type": "string"
+        },
+        "isButton": {
+          "type": "boolean",
+          "default": false
+        },
+        "isHeader": {
+          "type": "boolean",
+          "default": false
+        },
+        "excludeSemantics": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "ActionNode": {
+      "type": "object",
+      "required": [
+        "actionType"
+      ],
+      "properties": {
+        "actionType": {
+          "type": "string",
+          "enum": [
+            "navigation",
+            "external_url",
+            "state_mutation",
+            "modal_zone",
+            "scroll_to",
+            "analytics_only",
+            "custom_command"
+          ]
+        },
+        "target": {
+          "type": "string"
+        },
+        "concurrency": {
+          "type": "string",
+          "enum": [
+            "dropIfBusy",
+            "debounce",
+            "throttle",
+            "allowParallel"
+          ],
+          "default": "dropIfBusy"
+        },
+        "debounceMs": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 300
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "optimisticState": {
+          "$ref": "#/$defs/OptimisticMutation"
+        },
+        "analytics": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "onSuccess": {
+          "$ref": "#/$defs/ActionNode"
+        },
+        "onError": {
+          "$ref": "#/$defs/ActionNode"
+        }
+      }
+    },
+    "OptimisticMutation": {
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {},
+        "rollbackOnError": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "RepeaterConfig": {
+      "type": "object",
+      "required": [
+        "itemsDataPath",
+        "itemTemplate"
+      ],
+      "properties": {
+        "layoutMode": {
+          "type": "string",
+          "enum": [
+            "list",
+            "grid"
+          ],
+          "default": "list"
+        },
+        "crossAxisCount": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "object"
+            }
+          ]
+        },
+        "itemsDataPath": {
+          "type": "string"
+        },
+        "pagination": {
+          "$ref": "#/$defs/PaginationConfig"
+        },
+        "itemTemplate": {
+          "$ref": "#/$defs/ModuleNode"
+        }
+      }
+    },
+    "PaginationConfig": {
+      "type": "object",
+      "required": [
+        "endpoint"
+      ],
+      "properties": {
+        "endpoint": {
+          "type": "string"
+        },
+        "pageParam": {
+          "type": "string",
+          "default": "page"
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 20
+        }
+      }
+    }
+  }
+}
