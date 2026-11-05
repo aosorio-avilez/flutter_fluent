@@ -1,3 +1,6 @@
+import 'package:fluent_cms/src/hydration/async_data_source_manager.dart';
+import 'package:fluent_cms/src/hydration/built_in_pipes.dart';
+import 'package:fluent_cms/src/theme/theme_token_resolver.dart';
 import 'package:fluent_cms_api/fluent_cms_api.dart';
 import 'package:flutter/foundation.dart';
 
@@ -28,6 +31,8 @@ typedef CmsPageJsonFetcher =
 class CmsConfig {
   /// Creates a [CmsConfig].
   const CmsConfig({
+    this.hydrate = false,
+    this.hydrationEngine,
     this.mobileMaxWidth = 600,
     this.tabletMaxWidth = 1024,
     this.allowedHosts,
@@ -37,10 +42,23 @@ class CmsConfig {
     this.initialModules = const <SduiModule>[],
     this.initialPipes = const <PipeTransformer>[],
     this.initialCommandHandlers = const <String, CmsCommandHandler>{},
+    this.translationResolver,
+    this.translationDictionary = const <String, String>{},
+    this.themeTokenResolver,
     this.onNavigate,
     this.onExternalUrl,
     this.pageJsonFetcher,
+    this.asyncDataFetcher,
   });
+
+  /// Whether dynamic `{{...}}` hydration is enabled globally by default.
+  ///
+  /// When `false` (Tier 1 default), `NoOpHydrationEngine` is used unless a
+  /// page or view opts into hydration.
+  final bool hydrate;
+
+  /// Optional custom [HydrationEngine] overriding the default selection.
+  final HydrationEngine? hydrationEngine;
 
   /// Maximum viewport width in logical pixels considered `mobile`.
   final double mobileMaxWidth;
@@ -71,6 +89,15 @@ class CmsConfig {
   /// Custom command handlers registered during `CmsModule.onCreate`.
   final Map<String, CmsCommandHandler> initialCommandHandlers;
 
+  /// Optional callback used by the built-in `translate` pipe.
+  final CmsTranslationResolver? translationResolver;
+
+  /// Optional static dictionary used by the built-in `translate` pipe.
+  final Map<String, String> translationDictionary;
+
+  /// Optional custom [ThemeTokenResolver] for semantic design tokens.
+  final ThemeTokenResolver? themeTokenResolver;
+
   /// Optional navigation callback invoked on `actionType: 'navigation'`.
   final CmsNavigationHandler? onNavigate;
 
@@ -80,6 +107,10 @@ class CmsConfig {
 
   /// Optional custom fetcher used by `CmsApi.fetchPage`.
   final CmsPageJsonFetcher? pageJsonFetcher;
+
+  /// Optional custom fetcher used by `NetworkingAsyncDataSource` for
+  /// `asyncSources`.
+  final CmsAsyncDataFetcher? asyncDataFetcher;
 
   /// Validates whether [uriString] uses an allowed HTTP/HTTPS scheme and
   /// belongs to [allowedHosts] (when configured).

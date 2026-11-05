@@ -1,8 +1,12 @@
 import 'dart:convert';
 
 import 'package:fluent_cms/src/cms_config.dart';
+import 'package:fluent_cms/src/hydration/async_data_source_manager.dart';
+import 'package:fluent_cms/src/hydration/mixed_hydration_engine.dart';
+import 'package:fluent_cms/src/hydration/pipe_transformer_registry.dart';
 import 'package:fluent_cms/src/parser/hybrid_cms_json_parser.dart';
 import 'package:fluent_cms/src/registry/cms_module_registry.dart';
+import 'package:fluent_cms/src/theme/theme_token_resolver.dart';
 import 'package:fluent_cms_api/fluent_cms_api.dart';
 import 'package:fluent_logger_api/fluent_logger_api.dart';
 import 'package:fluent_networking_api/fluent_networking_api.dart';
@@ -38,13 +42,24 @@ class CmsApiImpl implements CmsApi {
          logger: logger,
          initialModules: config.initialModules,
        ),
+       _pipeRegistry = PipeTransformerRegistry(
+         logger: logger,
+         translationResolver: config.translationResolver,
+         translationDictionary: config.translationDictionary,
+         initialPipes: config.initialPipes,
+       ),
+       _themeTokenResolver = config.themeTokenResolver ?? ThemeTokenResolver(),
+       _asyncDataSource = NetworkingAsyncDataSource(
+         config: config,
+         networkingApi: networkingApi,
+         customFetcher: config.asyncDataFetcher,
+         logger: logger,
+       ),
        _debugBordersNotifier = ValueNotifier<bool>(
          !const bool.fromEnvironment('dart.vm.product') &&
              config.enableDebugOverlay,
        ) {
-    for (final pipe in config.initialPipes) {
-      _pipes[pipe.name] = pipe;
-    }
+    _mixedHydrationEngine = MixedHydrationEngine(pipeRegistry: _pipeRegistry);
     for (final entry in config.initialCommandHandlers.entries) {
       _commandHandlers[entry.key] = entry.value;
     }
@@ -59,7 +74,10 @@ class CmsApiImpl implements CmsApi {
   final LoggerApi? _logger;
   final NetworkingApi? _networkingApi;
   final CmsModuleRegistry _moduleRegistry;
-  final Map<String, PipeTransformer> _pipes = <String, PipeTransformer>{};
+  final PipeTransformerRegistry _pipeRegistry;
+  late final MixedHydrationEngine _mixedHydrationEngine;
+  final ThemeTokenResolver _themeTokenResolver;
+  final AsyncDataSource _asyncDataSource;
   final Map<String, CmsCommandHandler> _commandHandlers =
       <String, CmsCommandHandler>{};
   final List<CmsActionObserver> _actionObservers = <CmsActionObserver>[];
@@ -68,6 +86,38 @@ class CmsApiImpl implements CmsApi {
 
   /// Exposes the underlying [CmsModuleRegistry] for the layout engine.
   CmsModuleRegistry get moduleRegistry => _moduleRegistry;
+
+  /// Exposes the [PipeTransformerRegistry] containing built-in and custom
+  /// pipes.
+  PipeTransformerRegistry get pipeRegistry => _pipeRegistry;
+
+  /// Exposes the opt-in [MixedHydrationEngine].
+  MixedHydrationEngine get mixedHydrationEngine => _mixedHydrationEngine;
+
+  /// Returns the active [HydrationEngine] based on [CmsConfig.hydrate] and
+  /// [CmsConfig.hydrationEngine].
+  HydrationEngine get hydrationEngine {
+    final override = config.hydrationEngine;
+    if (override != null) return override;
+    return config.hydrate ? _mixedHydrationEngine : const NoOpHydrationEngine();
+  }
+
+  /// Exposes the [ThemeTokenResolver] for semantic design tokens.
+  ThemeTokenResolver get themeTokenResolver => _themeTokenResolver;
+
+  /// Exposes the default [AsyncDataSource] for resolving `asyncSources`.
+  AsyncDataSource get asyncDataSource => _asyncDataSource;
+
+  /// Creates a page-scoped [AsyncDataSourceManager] for [sources].
+  AsyncDataSourceManager createAsyncManager(
+    Map<String, AsyncSource>? sources,
+  ) {
+    return AsyncDataSourceManager(
+      dataSource: _asyncDataSource,
+      sources: sources,
+      logger: _logger,
+    );
+  }
 
   /// Unmodifiable view of registered custom command handlers.
   Map<String, CmsCommandHandler> get commandHandlers =>
@@ -90,11 +140,11 @@ class CmsApiImpl implements CmsApi {
 
   @override
   void registerPipe(PipeTransformer pipe) {
-    _pipes[pipe.name] = pipe;
+    _pipeRegistry.register(pipe);
   }
 
   @override
-  PipeTransformer? getPipe(String name) => _pipes[name];
+  PipeTransformer? getPipe(String name) => _pipeRegistry.getPipe(name);
 
   @override
   void registerCommandHandler(String commandName, CmsCommandHandler handler) {
