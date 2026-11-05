@@ -1,6 +1,28 @@
 import 'package:fluent_cms_api/fluent_cms_api.dart';
 import 'package:flutter/foundation.dart';
 
+/// Callback used to handle declarative `'navigation'` actions.
+typedef CmsNavigationHandler =
+    Future<bool> Function(
+      String target,
+      Map<String, dynamic>? payload,
+    );
+
+/// Callback used to handle validated `'external_url'` actions.
+typedef CmsExternalUrlHandler =
+    Future<bool> Function(
+      Uri uri,
+      Map<String, dynamic>? payload,
+    );
+
+/// Optional custom fetcher for raw page JSON strings when `NetworkingApi` is
+/// not used or overridden.
+typedef CmsPageJsonFetcher =
+    Future<String> Function(
+      String pageIdOrEndpoint, {
+      bool forceRefresh,
+    });
+
 /// Global configuration for `CmsModule` and the `fluent_cms` engine.
 @immutable
 class CmsConfig {
@@ -14,6 +36,10 @@ class CmsConfig {
     this.defaultImpressionDuration = const Duration(milliseconds: 800),
     this.initialModules = const <SduiModule>[],
     this.initialPipes = const <PipeTransformer>[],
+    this.initialCommandHandlers = const <String, CmsCommandHandler>{},
+    this.onNavigate,
+    this.onExternalUrl,
+    this.pageJsonFetcher,
   });
 
   /// Maximum viewport width in logical pixels considered `mobile`.
@@ -41,6 +67,19 @@ class CmsConfig {
 
   /// Custom [PipeTransformer]s registered during `CmsModule.onCreate`.
   final List<PipeTransformer> initialPipes;
+
+  /// Custom command handlers registered during `CmsModule.onCreate`.
+  final Map<String, CmsCommandHandler> initialCommandHandlers;
+
+  /// Optional navigation callback invoked on `actionType: 'navigation'`.
+  final CmsNavigationHandler? onNavigate;
+
+  /// Optional callback invoked on `actionType: 'external_url'` after passing
+  /// [isUriAllowed].
+  final CmsExternalUrlHandler? onExternalUrl;
+
+  /// Optional custom fetcher used by `CmsApi.fetchPage`.
+  final CmsPageJsonFetcher? pageJsonFetcher;
 
   /// Validates whether [uriString] uses an allowed HTTP/HTTPS scheme and
   /// belongs to [allowedHosts] (when configured).
