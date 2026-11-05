@@ -290,6 +290,9 @@ class CmsProps extends Equatable {
 
 /// Execution context delivered to `SduiModule.build`.
 abstract class CmsModuleContext {
+  /// Creates a [CmsModuleContext].
+  const CmsModuleContext();
+
   /// Unique instance identifier of the module.
   String get moduleId;
 

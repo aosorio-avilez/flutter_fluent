@@ -78,6 +78,9 @@ class HydrationScope extends Equatable {
 /// Contract for resolving `{{...}}` placeholders, pipes, and `visibleWhen`
 /// conditions.
 abstract class HydrationEngine {
+  /// Creates a [HydrationEngine].
+  const HydrationEngine();
+
   /// Resolves a string containing optional `{{...}}` placeholders.
   String resolveString(
     String input,

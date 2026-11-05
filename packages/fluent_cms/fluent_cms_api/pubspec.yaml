@@ -1,6 +1,6 @@
 name: fluent_cms_api
-description: A common interface for the fluent_cms package.
-version: 0.1.0
+description: Public API contracts, immutable AST models, hydration interfaces, and schema generator for fluent_cms.
+version: 0.1.1
 resolution: workspace
 repository: https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_cms/fluent_cms_api
 
@@ -8,7 +8,7 @@ environment:
   sdk: '^3.9.2'
 
 dependencies:
-  equatable: ^2.0.5
+  equatable: '>=2.0.5 <4.0.0'
   flutter:
     sdk: flutter
 
