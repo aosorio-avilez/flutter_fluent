@@ -8,7 +8,7 @@ FlutterFluent is a set of Flutter packages that helps apps to use common feature
 ## Packages
 
 | Name | Pub | Source | Android | iOS | Web | Windows | Linux | Mac |
-| - | - | - | - | - | - | -- | -- | -- | -- |
+| - | - | - | - | - | - | - | - | - |
 | Fluent CMS | [![Fluent CMS pub.dev badge](https://img.shields.io/pub/v/fluent_cms.svg)](https://pub.dev/packages/fluent_cms) | [fluent_cms](https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_cms/fluent_cms) | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
 | Fluent Environment | [![Fluent Environment pub.dev badge](https://img.shields.io/pub/v/fluent_environment.svg)](https://pub.dev/packages/fluent_environment) | [fluent_environment](https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_environment) | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
 | Fluent Localization | [![Fluent Localization pub.dev badge](https://img.shields.io/pub/v/fluent_localization.svg)](https://pub.dev/packages/fluent_localization) | [fluent_localization](https://github.com/aosorio-avilez/flutter_fluent/tree/main/packages/fluent_localization) | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |

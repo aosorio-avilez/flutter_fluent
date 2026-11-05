@@ -9,6 +9,7 @@
 .history
 .svn/
 migrate_working_dir/
+packages/fluent_cms/fluent_cms/ARCHITECTURE_BLUEPRINT.md
 
 # IntelliJ related
 *.iml
